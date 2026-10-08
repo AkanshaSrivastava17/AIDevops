@@ -5,12 +5,13 @@ on:
     branches: [ master, main ]
   push:
     branches: [ master, main ]
+  workflow_dispatch:
 
 jobs:
   ai-devops-pipeline:
-    name: AI Change Impact, Test Execution & QA Deployment
-    # Decided in Section 13.4: self-hosted runner with Ollama + Docker
-    runs-on: self-hosted
+    # Supports GitHub-hosted runners (ubuntu-latest) out-of-the-box,
+    # as well as self-hosted runners when connected to a local Ollama machine.
+    runs-on: ubuntu-latest
 
     steps:
       - name: 1. Checkout Repository
@@ -91,6 +92,7 @@ jobs:
 
       - name: 11. Deploy Candidate Image to QA Environment
         run: |
+          pkill -f uvicorn || true
           docker-compose -f docker/docker-compose.yml up -d
 
       - name: 12. Automated QA Health Check Gate (GET /health)
