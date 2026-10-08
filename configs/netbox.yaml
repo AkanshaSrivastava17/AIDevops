@@ -1,0 +1,18 @@
+# Primary evaluation benchmark repository configuration
+repository_id: "netbox"
+name: "NetBox"
+repository_url: "https://github.com/netbox-community/netbox"
+pinned_commit: "a7f92b4c810d9e112e4f0144d18fa2bf91012345"
+default_branch: "master"
+language: "Python"
+test_framework: "pytest"
+test_directories:
+  - "netbox/tests"
+  - "tests"
+component_rules_file: "data/evaluation/component_map.json"
+minimum_history_thresholds:
+  min_commits: 50
+  min_issues: 20
+  min_prs: 20
+evaluation_flag: true
+description: "NetBox is the leading Network Source of Truth and IPAM application, providing modular Django architecture across DCIM, IPAM, Tenancy, Virtualization, Circuits, Wireless, and Utilities."

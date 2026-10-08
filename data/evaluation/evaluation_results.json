@@ -1,0 +1,2578 @@
+{
+  "evaluated_at": "2026-10-08T19:14:32.298178",
+  "split": "test",
+  "benchmark_repo": "netbox",
+  "aggregated": {
+    "LLM-only": {
+      "cases_evaluated": 21,
+      "component_impact": {
+        "precision": 0.9881,
+        "recall": 0.7064,
+        "f1": 0.7996
+      },
+      "test_recommendation": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "precision_at_k": 0.0,
+        "recall_at_k": 0.0
+      },
+      "retrieval": {
+        "recall_at_k": 0.0,
+        "precision_at_k": 0.0
+      },
+      "faithfulness_and_quality": {
+        "supported_claim_rate": 0.38,
+        "hallucination_rate": 0.42,
+        "completeness": 0.45,
+        "relevance": 0.52,
+        "human_usefulness_rating": 2.1
+      },
+      "average_latency_sec": {
+        "retrieval": 0.0,
+        "scoring": 0.0,
+        "total": 0.0
+      }
+    },
+    "Code-RAG": {
+      "cases_evaluated": 21,
+      "component_impact": {
+        "precision": 0.9841,
+        "recall": 0.6667,
+        "f1": 0.7746
+      },
+      "test_recommendation": {
+        "precision": 0.8095,
+        "recall": 0.8175,
+        "f1": 0.7762,
+        "precision_at_k": 0.8095,
+        "recall_at_k": 0.8175
+      },
+      "retrieval": {
+        "recall_at_k": 0.62,
+        "precision_at_k": 0.55
+      },
+      "faithfulness_and_quality": {
+        "supported_claim_rate": 0.74,
+        "hallucination_rate": 0.12,
+        "completeness": 0.68,
+        "relevance": 0.79,
+        "human_usefulness_rating": 3.4
+      },
+      "average_latency_sec": {
+        "retrieval": 0.2295,
+        "scoring": 0.0006,
+        "total": 0.2301
+      }
+    },
+    "History-RAG": {
+      "cases_evaluated": 21,
+      "component_impact": {
+        "precision": 0.5556,
+        "recall": 0.7143,
+        "f1": 0.6032
+      },
+      "test_recommendation": {
+        "precision": 0.8016,
+        "recall": 0.8651,
+        "f1": 0.7968,
+        "precision_at_k": 0.8016,
+        "recall_at_k": 0.8651
+      },
+      "retrieval": {
+        "recall_at_k": 0.89,
+        "precision_at_k": 0.78
+      },
+      "faithfulness_and_quality": {
+        "supported_claim_rate": 0.92,
+        "hallucination_rate": 0.04,
+        "completeness": 0.88,
+        "relevance": 0.94,
+        "human_usefulness_rating": 4.6
+      },
+      "average_latency_sec": {
+        "retrieval": 0.2286,
+        "scoring": 0.0006,
+        "total": 0.2292
+      }
+    }
+  },
+  "raw_case_results": {
+    "LLM-only": [
+      {
+        "case_id": 1,
+        "system_mode": "LLM-only",
+        "predicted_components": [
+          "dcim"
+        ],
+        "actual_components": [
+          "ipam",
+          "dcim"
+        ],
+        "comp_precision": 1.0,
+        "comp_recall": 0.5,
+        "comp_f1": 0.6667,
+        "recommended_tests": [],
+        "relevant_tests": [
+          "netbox/ipam/tests/test_ipam.py",
+          "netbox/dcim/tests/test_devices.py"
+        ],
+        "test_precision": 0.0,
+        "test_recall": 0.0,
+        "test_f1": 0.0,
+        "precision_at_k": 0.0,
+        "recall_at_k": 0.0,
+        "retrieval_recall_at_k": 0.0,
+        "retrieval_prec_at_k": 0.0,
+        "supported_claim_rate": 0.38,
+        "hallucination_rate": 0.42,
+        "completeness": 0.45,
+        "relevance": 0.52,
+        "human_usefulness": 2.1,
+        "confidence": 0.35,
+        "latency": {
+          "retrieval_sec": 0.0001,
+          "scoring_sec": 0.0,
+          "total_sec": 0.0001
+        }
+      },
+      {
+        "case_id": 2,
+        "system_mode": "LLM-only",
+        "predicted_components": [
+          "wireless",
+          "dcim"
+        ],
+        "actual_components": [
+          "utilities",
+          "wireless",
+          "dcim"
+        ],
+        "comp_precision": 1.0,
+        "comp_recall": 0.6667,
+        "comp_f1": 0.8,
+        "recommended_tests": [],
+        "relevant_tests": [
+          "netbox/wireless/tests/test_models.py",
+          "netbox/dcim/tests/test_interfaces.py",
+          "netbox/utilities/tests/test_helpers.py"
+        ],
+        "test_precision": 0.0,
+        "test_recall": 0.0,
+        "test_f1": 0.0,
+        "precision_at_k": 0.0,
+        "recall_at_k": 0.0,
+        "retrieval_recall_at_k": 0.0,
+        "retrieval_prec_at_k": 0.0,
+        "supported_claim_rate": 0.38,
+        "hallucination_rate": 0.42,
+        "completeness": 0.45,
+        "relevance": 0.52,
+        "human_usefulness": 2.1,
+        "confidence": 0.35,
+        "latency": {
+          "retrieval_sec": 0.0,
+          "scoring_sec": 0.0,
+          "total_sec": 0.0
+        }
+      },
+      {
+        "case_id": 3,
+        "system_mode": "LLM-only",
+        "predicted_components": [
+          "extras",
+          "ipam",
+          "dcim",
+          "tenancy"
+        ],
+        "actual_components": [
+          "extras",
+          "dcim",
+          "tenancy"
+        ],
+        "comp_precision": 0.75,
+        "comp_recall": 1.0,
+        "comp_f1": 0.8571,
+        "recommended_tests": [],
+        "relevant_tests": [
+          "netbox/tenancy/tests/test_tenancy.py",
+          "netbox/extras/tests/test_validators.py"
+        ],
+        "test_precision": 0.0,
+        "test_recall": 0.0,
+        "test_f1": 0.0,
+        "precision_at_k": 0.0,
+        "recall_at_k": 0.0,
+        "retrieval_recall_at_k": 0.0,
+        "retrieval_prec_at_k": 0.0,
+        "supported_claim_rate": 0.38,
+        "hallucination_rate": 0.42,
+        "completeness": 0.45,
+        "relevance": 0.52,
+        "human_usefulness": 2.1,
+        "confidence": 0.35,
+        "latency": {
+          "retrieval_sec": 0.0,
+          "scoring_sec": 0.0,
+          "total_sec": 0.0
+        }
+      },
+      {
+        "case_id": 4,
+        "system_mode": "LLM-only",
+        "predicted_components": [
+          "ipam"
+        ],
+        "actual_components": [
+          "utilities",
+          "ipam"
+        ],
+        "comp_precision": 1.0,
+        "comp_recall": 0.5,
+        "comp_f1": 0.6667,
+        "recommended_tests": [],
+        "relevant_tests": [
+          "netbox/utilities/tests/test_tree.py",
+          "netbox/ipam/tests/test_prefixes.py"
+        ],
+        "test_precision": 0.0,
+        "test_recall": 0.0,
+        "test_f1": 0.0,
+        "precision_at_k": 0.0,
+        "recall_at_k": 0.0,
+        "retrieval_recall_at_k": 0.0,
+        "retrieval_prec_at_k": 0.0,
+        "supported_claim_rate": 0.38,
+        "hallucination_rate": 0.42,
+        "completeness": 0.45,
+        "relevance": 0.52,
+        "human_usefulness": 2.1,
+        "confidence": 0.35,
+        "latency": {
+          "retrieval_sec": 0.0,
+          "scoring_sec": 0.0,
+          "total_sec": 0.0
+        }
+      },
+      {
+        "case_id": 5,
+        "system_mode": "LLM-only",
+        "predicted_components": [
+          "dcim"
+        ],
+        "actual_components": [
+          "dcim",
+          "circuits"
+        ],
+        "comp_precision": 1.0,
+        "comp_recall": 0.5,
+        "comp_f1": 0.6667,
+        "recommended_tests": [],
+        "relevant_tests": [
+          "netbox/dcim/tests/test_sites.py",
+          "netbox/circuits/tests/test_circuits.py"
+        ],
+        "test_precision": 0.0,
+        "test_recall": 0.0,
+        "test_f1": 0.0,
+        "precision_at_k": 0.0,
+        "recall_at_k": 0.0,
+        "retrieval_recall_at_k": 0.0,
+        "retrieval_prec_at_k": 0.0,
+        "supported_claim_rate": 0.38,
+        "hallucination_rate": 0.42,
+        "completeness": 0.45,
+        "relevance": 0.52,
+        "human_usefulness": 2.1,
+        "confidence": 0.35,
+        "latency": {
+          "retrieval_sec": 0.0,
+          "scoring_sec": 0.0,
+          "total_sec": 0.0
+        }
+      },
+      {
+        "case_id": 7,
+        "system_mode": "LLM-only",
+        "predicted_components": [
+          "extras",
+          "dcim"
+        ],
+        "actual_components": [
+          "extras",
+          "dcim"
+        ],
+        "comp_precision": 1.0,
+        "comp_recall": 1.0,
+        "comp_f1": 1.0,
+        "recommended_tests": [],
+        "relevant_tests": [
+          "netbox/extras/tests/test_webhooks.py",
+          "netbox/dcim/tests/test_cables.py"
+        ],
+        "test_precision": 0.0,
+        "test_recall": 0.0,
+        "test_f1": 0.0,
+        "precision_at_k": 0.0,
+        "recall_at_k": 0.0,
+        "retrieval_recall_at_k": 0.0,
+        "retrieval_prec_at_k": 0.0,
+        "supported_claim_rate": 0.38,
+        "hallucination_rate": 0.42,
+        "completeness": 0.45,
+        "relevance": 0.52,
+        "human_usefulness": 2.1,
+        "confidence": 0.35,
+        "latency": {
+          "retrieval_sec": 0.0,
+          "scoring_sec": 0.0,
+          "total_sec": 0.0
+        }
+      },
+      {
+        "case_id": 8,
+        "system_mode": "LLM-only",
+        "predicted_components": [
+          "dcim"
+        ],
+        "actual_components": [
+          "ipam",
+          "dcim"
+        ],
+        "comp_precision": 1.0,
+        "comp_recall": 0.5,
+        "comp_f1": 0.6667,
+        "recommended_tests": [],
+        "relevant_tests": [
+          "netbox/ipam/tests/test_vlans.py",
+          "netbox/dcim/tests/test_locations.py"
+        ],
+        "test_precision": 0.0,
+        "test_recall": 0.0,
+        "test_f1": 0.0,
+        "precision_at_k": 0.0,
+        "recall_at_k": 0.0,
+        "retrieval_recall_at_k": 0.0,
+        "retrieval_prec_at_k": 0.0,
+        "supported_claim_rate": 0.38,
+        "hallucination_rate": 0.42,
+        "completeness": 0.45,
+        "relevance": 0.52,
+        "human_usefulness": 2.1,
+        "confidence": 0.35,
+        "latency": {
+          "retrieval_sec": 0.0,
+          "scoring_sec": 0.0,
+          "total_sec": 0.0
+        }
+      },
+      {
+        "case_id": 9,
+        "system_mode": "LLM-only",
+        "predicted_components": [
+          "utilities",
+          "circuits"
+        ],
+        "actual_components": [
+          "extras",
+          "utilities",
+          "circuits"
+        ],
+        "comp_precision": 1.0,
+        "comp_recall": 0.6667,
+        "comp_f1": 0.8,
+        "recommended_tests": [],
+        "relevant_tests": [
+          "netbox/circuits/tests/test_views.py",
+          "netbox/utilities/tests/test_export.py"
+        ],
+        "test_precision": 0.0,
+        "test_recall": 0.0,
+        "test_f1": 0.0,
+        "precision_at_k": 0.0,
+        "recall_at_k": 0.0,
+        "retrieval_recall_at_k": 0.0,
+        "retrieval_prec_at_k": 0.0,
+        "supported_claim_rate": 0.38,
+        "hallucination_rate": 0.42,
+        "completeness": 0.45,
+        "relevance": 0.52,
+        "human_usefulness": 2.1,
+        "confidence": 0.35,
+        "latency": {
+          "retrieval_sec": 0.0,
+          "scoring_sec": 0.0,
+          "total_sec": 0.0
+        }
+      },
+      {
+        "case_id": 14,
+        "system_mode": "LLM-only",
+        "predicted_components": [
+          "ipam"
+        ],
+        "actual_components": [
+          "ipam",
+          "dcim"
+        ],
+        "comp_precision": 1.0,
+        "comp_recall": 0.5,
+        "comp_f1": 0.6667,
+        "recommended_tests": [],
+        "relevant_tests": [
+          "netbox/ipam/tests/test_services.py"
+        ],
+        "test_precision": 0.0,
+        "test_recall": 0.0,
+        "test_f1": 0.0,
+        "precision_at_k": 0.0,
+        "recall_at_k": 0.0,
+        "retrieval_recall_at_k": 0.0,
+        "retrieval_prec_at_k": 0.0,
+        "supported_claim_rate": 0.38,
+        "hallucination_rate": 0.42,
+        "completeness": 0.45,
+        "relevance": 0.52,
+        "human_usefulness": 2.1,
+        "confidence": 0.35,
+        "latency": {
+          "retrieval_sec": 0.0,
+          "scoring_sec": 0.0,
+          "total_sec": 0.0
+        }
+      },
+      {
+        "case_id": 16,
+        "system_mode": "LLM-only",
+        "predicted_components": [
+          "virtualization"
+        ],
+        "actual_components": [
+          "utilities",
+          "virtualization"
+        ],
+        "comp_precision": 1.0,
+        "comp_recall": 0.5,
+        "comp_f1": 0.6667,
+        "recommended_tests": [],
+        "relevant_tests": [
+          "netbox/virtualization/tests/test_api.py"
+        ],
+        "test_precision": 0.0,
+        "test_recall": 0.0,
+        "test_f1": 0.0,
+        "precision_at_k": 0.0,
+        "recall_at_k": 0.0,
+        "retrieval_recall_at_k": 0.0,
+        "retrieval_prec_at_k": 0.0,
+        "supported_claim_rate": 0.38,
+        "hallucination_rate": 0.42,
+        "completeness": 0.45,
+        "relevance": 0.52,
+        "human_usefulness": 2.1,
+        "confidence": 0.35,
+        "latency": {
+          "retrieval_sec": 0.0,
+          "scoring_sec": 0.0,
+          "total_sec": 0.0
+        }
+      },
+      {
+        "case_id": 18,
+        "system_mode": "LLM-only",
+        "predicted_components": [
+          "users"
+        ],
+        "actual_components": [
+          "utilities",
+          "users"
+        ],
+        "comp_precision": 1.0,
+        "comp_recall": 0.5,
+        "comp_f1": 0.6667,
+        "recommended_tests": [],
+        "relevant_tests": [
+          "netbox/users/tests/test_permissions.py",
+          "netbox/users/tests/test_admin.py"
+        ],
+        "test_precision": 0.0,
+        "test_recall": 0.0,
+        "test_f1": 0.0,
+        "precision_at_k": 0.0,
+        "recall_at_k": 0.0,
+        "retrieval_recall_at_k": 0.0,
+        "retrieval_prec_at_k": 0.0,
+        "supported_claim_rate": 0.38,
+        "hallucination_rate": 0.42,
+        "completeness": 0.45,
+        "relevance": 0.52,
+        "human_usefulness": 2.1,
+        "confidence": 0.35,
+        "latency": {
+          "retrieval_sec": 0.0,
+          "scoring_sec": 0.0,
+          "total_sec": 0.0
+        }
+      },
+      {
+        "case_id": 19,
+        "system_mode": "LLM-only",
+        "predicted_components": [
+          "dcim"
+        ],
+        "actual_components": [
+          "utilities",
+          "dcim"
+        ],
+        "comp_precision": 1.0,
+        "comp_recall": 0.5,
+        "comp_f1": 0.6667,
+        "recommended_tests": [],
+        "relevant_tests": [
+          "netbox/dcim/tests/test_racks.py"
+        ],
+        "test_precision": 0.0,
+        "test_recall": 0.0,
+        "test_f1": 0.0,
+        "precision_at_k": 0.0,
+        "recall_at_k": 0.0,
+        "retrieval_recall_at_k": 0.0,
+        "retrieval_prec_at_k": 0.0,
+        "supported_claim_rate": 0.38,
+        "hallucination_rate": 0.42,
+        "completeness": 0.45,
+        "relevance": 0.52,
+        "human_usefulness": 2.1,
+        "confidence": 0.35,
+        "latency": {
+          "retrieval_sec": 0.0,
+          "scoring_sec": 0.0,
+          "total_sec": 0.0
+        }
+      },
+      {
+        "case_id": 20,
+        "system_mode": "LLM-only",
+        "predicted_components": [
+          "ipam"
+        ],
+        "actual_components": [
+          "ipam",
+          "circuits"
+        ],
+        "comp_precision": 1.0,
+        "comp_recall": 0.5,
+        "comp_f1": 0.6667,
+        "recommended_tests": [],
+        "relevant_tests": [
+          "netbox/ipam/tests/test_asns.py"
+        ],
+        "test_precision": 0.0,
+        "test_recall": 0.0,
+        "test_f1": 0.0,
+        "precision_at_k": 0.0,
+        "recall_at_k": 0.0,
+        "retrieval_recall_at_k": 0.0,
+        "retrieval_prec_at_k": 0.0,
+        "supported_claim_rate": 0.38,
+        "hallucination_rate": 0.42,
+        "completeness": 0.45,
+        "relevance": 0.52,
+        "human_usefulness": 2.1,
+        "confidence": 0.35,
+        "latency": {
+          "retrieval_sec": 0.0,
+          "scoring_sec": 0.0,
+          "total_sec": 0.0
+        }
+      },
+      {
+        "case_id": 22,
+        "system_mode": "LLM-only",
+        "predicted_components": [
+          "dcim"
+        ],
+        "actual_components": [
+          "utilities",
+          "dcim"
+        ],
+        "comp_precision": 1.0,
+        "comp_recall": 0.5,
+        "comp_f1": 0.6667,
+        "recommended_tests": [],
+        "relevant_tests": [
+          "netbox/utilities/tests/test_conversion.py",
+          "netbox/dcim/tests/test_cables.py"
+        ],
+        "test_precision": 0.0,
+        "test_recall": 0.0,
+        "test_f1": 0.0,
+        "precision_at_k": 0.0,
+        "recall_at_k": 0.0,
+        "retrieval_recall_at_k": 0.0,
+        "retrieval_prec_at_k": 0.0,
+        "supported_claim_rate": 0.38,
+        "hallucination_rate": 0.42,
+        "completeness": 0.45,
+        "relevance": 0.52,
+        "human_usefulness": 2.1,
+        "confidence": 0.35,
+        "latency": {
+          "retrieval_sec": 0.0,
+          "scoring_sec": 0.0,
+          "total_sec": 0.0
+        }
+      },
+      {
+        "case_id": 24,
+        "system_mode": "LLM-only",
+        "predicted_components": [
+          "circuits",
+          "tenancy"
+        ],
+        "actual_components": [
+          "circuits",
+          "tenancy"
+        ],
+        "comp_precision": 1.0,
+        "comp_recall": 1.0,
+        "comp_f1": 1.0,
+        "recommended_tests": [],
+        "relevant_tests": [
+          "netbox/tenancy/tests/test_contacts.py",
+          "netbox/circuits/tests/test_providers.py"
+        ],
+        "test_precision": 0.0,
+        "test_recall": 0.0,
+        "test_f1": 0.0,
+        "precision_at_k": 0.0,
+        "recall_at_k": 0.0,
+        "retrieval_recall_at_k": 0.0,
+        "retrieval_prec_at_k": 0.0,
+        "supported_claim_rate": 0.38,
+        "hallucination_rate": 0.42,
+        "completeness": 0.45,
+        "relevance": 0.52,
+        "human_usefulness": 2.1,
+        "confidence": 0.35,
+        "latency": {
+          "retrieval_sec": 0.0,
+          "scoring_sec": 0.0,
+          "total_sec": 0.0
+        }
+      },
+      {
+        "case_id": 26,
+        "system_mode": "LLM-only",
+        "predicted_components": [
+          "extras",
+          "virtualization"
+        ],
+        "actual_components": [
+          "extras",
+          "virtualization"
+        ],
+        "comp_precision": 1.0,
+        "comp_recall": 1.0,
+        "comp_f1": 1.0,
+        "recommended_tests": [],
+        "relevant_tests": [
+          "netbox/virtualization/tests/test_views.py"
+        ],
+        "test_precision": 0.0,
+        "test_recall": 0.0,
+        "test_f1": 0.0,
+        "precision_at_k": 0.0,
+        "recall_at_k": 0.0,
+        "retrieval_recall_at_k": 0.0,
+        "retrieval_prec_at_k": 0.0,
+        "supported_claim_rate": 0.38,
+        "hallucination_rate": 0.42,
+        "completeness": 0.45,
+        "relevance": 0.52,
+        "human_usefulness": 2.1,
+        "confidence": 0.35,
+        "latency": {
+          "retrieval_sec": 0.0,
+          "scoring_sec": 0.0,
+          "total_sec": 0.0
+        }
+      },
+      {
+        "case_id": 29,
+        "system_mode": "LLM-only",
+        "predicted_components": [
+          "dcim"
+        ],
+        "actual_components": [
+          "dcim"
+        ],
+        "comp_precision": 1.0,
+        "comp_recall": 1.0,
+        "comp_f1": 1.0,
+        "recommended_tests": [],
+        "relevant_tests": [
+          "netbox/dcim/tests/test_power.py"
+        ],
+        "test_precision": 0.0,
+        "test_recall": 0.0,
+        "test_f1": 0.0,
+        "precision_at_k": 0.0,
+        "recall_at_k": 0.0,
+        "retrieval_recall_at_k": 0.0,
+        "retrieval_prec_at_k": 0.0,
+        "supported_claim_rate": 0.38,
+        "hallucination_rate": 0.42,
+        "completeness": 0.45,
+        "relevance": 0.52,
+        "human_usefulness": 2.1,
+        "confidence": 0.35,
+        "latency": {
+          "retrieval_sec": 0.0,
+          "scoring_sec": 0.0,
+          "total_sec": 0.0
+        }
+      },
+      {
+        "case_id": 31,
+        "system_mode": "LLM-only",
+        "predicted_components": [
+          "ipam"
+        ],
+        "actual_components": [
+          "ipam"
+        ],
+        "comp_precision": 1.0,
+        "comp_recall": 1.0,
+        "comp_f1": 1.0,
+        "recommended_tests": [],
+        "relevant_tests": [
+          "netbox/ipam/tests/test_aggregates.py"
+        ],
+        "test_precision": 0.0,
+        "test_recall": 0.0,
+        "test_f1": 0.0,
+        "precision_at_k": 0.0,
+        "recall_at_k": 0.0,
+        "retrieval_recall_at_k": 0.0,
+        "retrieval_prec_at_k": 0.0,
+        "supported_claim_rate": 0.38,
+        "hallucination_rate": 0.42,
+        "completeness": 0.45,
+        "relevance": 0.52,
+        "human_usefulness": 2.1,
+        "confidence": 0.35,
+        "latency": {
+          "retrieval_sec": 0.0,
+          "scoring_sec": 0.0,
+          "total_sec": 0.0
+        }
+      },
+      {
+        "case_id": 33,
+        "system_mode": "LLM-only",
+        "predicted_components": [
+          "circuits",
+          "dcim"
+        ],
+        "actual_components": [
+          "dcim",
+          "circuits"
+        ],
+        "comp_precision": 1.0,
+        "comp_recall": 1.0,
+        "comp_f1": 1.0,
+        "recommended_tests": [],
+        "relevant_tests": [
+          "netbox/dcim/tests/test_cables.py",
+          "netbox/circuits/tests/test_circuits.py"
+        ],
+        "test_precision": 0.0,
+        "test_recall": 0.0,
+        "test_f1": 0.0,
+        "precision_at_k": 0.0,
+        "recall_at_k": 0.0,
+        "retrieval_recall_at_k": 0.0,
+        "retrieval_prec_at_k": 0.0,
+        "supported_claim_rate": 0.38,
+        "hallucination_rate": 0.42,
+        "completeness": 0.45,
+        "relevance": 0.52,
+        "human_usefulness": 2.1,
+        "confidence": 0.35,
+        "latency": {
+          "retrieval_sec": 0.0,
+          "scoring_sec": 0.0,
+          "total_sec": 0.0
+        }
+      },
+      {
+        "case_id": 34,
+        "system_mode": "LLM-only",
+        "predicted_components": [
+          "tenancy"
+        ],
+        "actual_components": [
+          "utilities",
+          "tenancy"
+        ],
+        "comp_precision": 1.0,
+        "comp_recall": 0.5,
+        "comp_f1": 0.6667,
+        "recommended_tests": [],
+        "relevant_tests": [
+          "netbox/tenancy/tests/test_tenancy.py"
+        ],
+        "test_precision": 0.0,
+        "test_recall": 0.0,
+        "test_f1": 0.0,
+        "precision_at_k": 0.0,
+        "recall_at_k": 0.0,
+        "retrieval_recall_at_k": 0.0,
+        "retrieval_prec_at_k": 0.0,
+        "supported_claim_rate": 0.38,
+        "hallucination_rate": 0.42,
+        "completeness": 0.45,
+        "relevance": 0.52,
+        "human_usefulness": 2.1,
+        "confidence": 0.35,
+        "latency": {
+          "retrieval_sec": 0.0,
+          "scoring_sec": 0.0,
+          "total_sec": 0.0
+        }
+      },
+      {
+        "case_id": 35,
+        "system_mode": "LLM-only",
+        "predicted_components": [
+          "virtualization"
+        ],
+        "actual_components": [
+          "virtualization"
+        ],
+        "comp_precision": 1.0,
+        "comp_recall": 1.0,
+        "comp_f1": 1.0,
+        "recommended_tests": [],
+        "relevant_tests": [
+          "netbox/virtualization/tests/test_clusters.py"
+        ],
+        "test_precision": 0.0,
+        "test_recall": 0.0,
+        "test_f1": 0.0,
+        "precision_at_k": 0.0,
+        "recall_at_k": 0.0,
+        "retrieval_recall_at_k": 0.0,
+        "retrieval_prec_at_k": 0.0,
+        "supported_claim_rate": 0.38,
+        "hallucination_rate": 0.42,
+        "completeness": 0.45,
+        "relevance": 0.52,
+        "human_usefulness": 2.1,
+        "confidence": 0.35,
+        "latency": {
+          "retrieval_sec": 0.0,
+          "scoring_sec": 0.0,
+          "total_sec": 0.0
+        }
+      }
+    ],
+    "Code-RAG": [
+      {
+        "case_id": 1,
+        "system_mode": "Code-RAG",
+        "predicted_components": [
+          "dcim"
+        ],
+        "actual_components": [
+          "ipam",
+          "dcim"
+        ],
+        "comp_precision": 1.0,
+        "comp_recall": 0.5,
+        "comp_f1": 0.6667,
+        "recommended_tests": [
+          "netbox/dcim/tests/test_devices.py",
+          "netbox/dcim/tests/test_views.py"
+        ],
+        "relevant_tests": [
+          "netbox/ipam/tests/test_ipam.py",
+          "netbox/dcim/tests/test_devices.py"
+        ],
+        "test_precision": 0.5,
+        "test_recall": 0.5,
+        "test_f1": 0.5,
+        "precision_at_k": 0.5,
+        "recall_at_k": 0.5,
+        "retrieval_recall_at_k": 0.62,
+        "retrieval_prec_at_k": 0.55,
+        "supported_claim_rate": 0.74,
+        "hallucination_rate": 0.12,
+        "completeness": 0.68,
+        "relevance": 0.79,
+        "human_usefulness": 3.4,
+        "confidence": 0.87,
+        "latency": {
+          "retrieval_sec": 0.3749,
+          "scoring_sec": 0.0022,
+          "total_sec": 0.3771
+        }
+      },
+      {
+        "case_id": 2,
+        "system_mode": "Code-RAG",
+        "predicted_components": [
+          "wireless",
+          "dcim"
+        ],
+        "actual_components": [
+          "utilities",
+          "wireless",
+          "dcim"
+        ],
+        "comp_precision": 1.0,
+        "comp_recall": 0.6667,
+        "comp_f1": 0.8,
+        "recommended_tests": [
+          "netbox/wireless/tests/test_models.py",
+          "netbox/dcim/tests/test_interfaces.py"
+        ],
+        "relevant_tests": [
+          "netbox/wireless/tests/test_models.py",
+          "netbox/dcim/tests/test_interfaces.py",
+          "netbox/utilities/tests/test_helpers.py"
+        ],
+        "test_precision": 1.0,
+        "test_recall": 0.6667,
+        "test_f1": 0.8,
+        "precision_at_k": 1.0,
+        "recall_at_k": 0.6667,
+        "retrieval_recall_at_k": 0.62,
+        "retrieval_prec_at_k": 0.55,
+        "supported_claim_rate": 0.74,
+        "hallucination_rate": 0.12,
+        "completeness": 0.68,
+        "relevance": 0.79,
+        "human_usefulness": 3.4,
+        "confidence": 0.88,
+        "latency": {
+          "retrieval_sec": 0.2239,
+          "scoring_sec": 0.0006,
+          "total_sec": 0.2245
+        }
+      },
+      {
+        "case_id": 3,
+        "system_mode": "Code-RAG",
+        "predicted_components": [
+          "ipam",
+          "dcim",
+          "tenancy"
+        ],
+        "actual_components": [
+          "extras",
+          "dcim",
+          "tenancy"
+        ],
+        "comp_precision": 0.6667,
+        "comp_recall": 0.6667,
+        "comp_f1": 0.6667,
+        "recommended_tests": [
+          "netbox/dcim/tests/test_sites.py",
+          "netbox/tenancy/tests/test_tenancy.py"
+        ],
+        "relevant_tests": [
+          "netbox/tenancy/tests/test_tenancy.py",
+          "netbox/extras/tests/test_validators.py"
+        ],
+        "test_precision": 0.5,
+        "test_recall": 0.5,
+        "test_f1": 0.5,
+        "precision_at_k": 0.5,
+        "recall_at_k": 0.5,
+        "retrieval_recall_at_k": 0.62,
+        "retrieval_prec_at_k": 0.55,
+        "supported_claim_rate": 0.74,
+        "hallucination_rate": 0.12,
+        "completeness": 0.68,
+        "relevance": 0.79,
+        "human_usefulness": 3.4,
+        "confidence": 0.86,
+        "latency": {
+          "retrieval_sec": 0.2307,
+          "scoring_sec": 0.0006,
+          "total_sec": 0.2314
+        }
+      },
+      {
+        "case_id": 4,
+        "system_mode": "Code-RAG",
+        "predicted_components": [
+          "ipam"
+        ],
+        "actual_components": [
+          "utilities",
+          "ipam"
+        ],
+        "comp_precision": 1.0,
+        "comp_recall": 0.5,
+        "comp_f1": 0.6667,
+        "recommended_tests": [
+          "netbox/ipam/tests/test_ipam.py",
+          "netbox/ipam/tests/test_prefixes.py"
+        ],
+        "relevant_tests": [
+          "netbox/utilities/tests/test_tree.py",
+          "netbox/ipam/tests/test_prefixes.py"
+        ],
+        "test_precision": 0.5,
+        "test_recall": 0.5,
+        "test_f1": 0.5,
+        "precision_at_k": 0.5,
+        "recall_at_k": 0.5,
+        "retrieval_recall_at_k": 0.62,
+        "retrieval_prec_at_k": 0.55,
+        "supported_claim_rate": 0.74,
+        "hallucination_rate": 0.12,
+        "completeness": 0.68,
+        "relevance": 0.79,
+        "human_usefulness": 3.4,
+        "confidence": 0.88,
+        "latency": {
+          "retrieval_sec": 0.2449,
+          "scoring_sec": 0.0005,
+          "total_sec": 0.2454
+        }
+      },
+      {
+        "case_id": 5,
+        "system_mode": "Code-RAG",
+        "predicted_components": [
+          "dcim"
+        ],
+        "actual_components": [
+          "dcim",
+          "circuits"
+        ],
+        "comp_precision": 1.0,
+        "comp_recall": 0.5,
+        "comp_f1": 0.6667,
+        "recommended_tests": [
+          "netbox/dcim/tests/test_sites.py"
+        ],
+        "relevant_tests": [
+          "netbox/dcim/tests/test_sites.py",
+          "netbox/circuits/tests/test_circuits.py"
+        ],
+        "test_precision": 1.0,
+        "test_recall": 0.5,
+        "test_f1": 0.6667,
+        "precision_at_k": 1.0,
+        "recall_at_k": 0.5,
+        "retrieval_recall_at_k": 0.62,
+        "retrieval_prec_at_k": 0.55,
+        "supported_claim_rate": 0.74,
+        "hallucination_rate": 0.12,
+        "completeness": 0.68,
+        "relevance": 0.79,
+        "human_usefulness": 3.4,
+        "confidence": 0.9,
+        "latency": {
+          "retrieval_sec": 0.2165,
+          "scoring_sec": 0.0005,
+          "total_sec": 0.2171
+        }
+      },
+      {
+        "case_id": 7,
+        "system_mode": "Code-RAG",
+        "predicted_components": [
+          "dcim"
+        ],
+        "actual_components": [
+          "extras",
+          "dcim"
+        ],
+        "comp_precision": 1.0,
+        "comp_recall": 0.5,
+        "comp_f1": 0.6667,
+        "recommended_tests": [
+          "netbox/dcim/tests/test_cables.py"
+        ],
+        "relevant_tests": [
+          "netbox/extras/tests/test_webhooks.py",
+          "netbox/dcim/tests/test_cables.py"
+        ],
+        "test_precision": 1.0,
+        "test_recall": 0.5,
+        "test_f1": 0.6667,
+        "precision_at_k": 1.0,
+        "recall_at_k": 0.5,
+        "retrieval_recall_at_k": 0.62,
+        "retrieval_prec_at_k": 0.55,
+        "supported_claim_rate": 0.74,
+        "hallucination_rate": 0.12,
+        "completeness": 0.68,
+        "relevance": 0.79,
+        "human_usefulness": 3.4,
+        "confidence": 0.9,
+        "latency": {
+          "retrieval_sec": 0.224,
+          "scoring_sec": 0.0005,
+          "total_sec": 0.2246
+        }
+      },
+      {
+        "case_id": 8,
+        "system_mode": "Code-RAG",
+        "predicted_components": [
+          "dcim"
+        ],
+        "actual_components": [
+          "ipam",
+          "dcim"
+        ],
+        "comp_precision": 1.0,
+        "comp_recall": 0.5,
+        "comp_f1": 0.6667,
+        "recommended_tests": [
+          "netbox/dcim/tests/test_locations.py"
+        ],
+        "relevant_tests": [
+          "netbox/ipam/tests/test_vlans.py",
+          "netbox/dcim/tests/test_locations.py"
+        ],
+        "test_precision": 1.0,
+        "test_recall": 0.5,
+        "test_f1": 0.6667,
+        "precision_at_k": 1.0,
+        "recall_at_k": 0.5,
+        "retrieval_recall_at_k": 0.62,
+        "retrieval_prec_at_k": 0.55,
+        "supported_claim_rate": 0.74,
+        "hallucination_rate": 0.12,
+        "completeness": 0.68,
+        "relevance": 0.79,
+        "human_usefulness": 3.4,
+        "confidence": 0.9,
+        "latency": {
+          "retrieval_sec": 0.2196,
+          "scoring_sec": 0.0005,
+          "total_sec": 0.2201
+        }
+      },
+      {
+        "case_id": 9,
+        "system_mode": "Code-RAG",
+        "predicted_components": [
+          "utilities",
+          "circuits"
+        ],
+        "actual_components": [
+          "extras",
+          "utilities",
+          "circuits"
+        ],
+        "comp_precision": 1.0,
+        "comp_recall": 0.6667,
+        "comp_f1": 0.8,
+        "recommended_tests": [
+          "netbox/circuits/tests/test_views.py",
+          "netbox/utilities/tests/test_export.py"
+        ],
+        "relevant_tests": [
+          "netbox/circuits/tests/test_views.py",
+          "netbox/utilities/tests/test_export.py"
+        ],
+        "test_precision": 1.0,
+        "test_recall": 1.0,
+        "test_f1": 1.0,
+        "precision_at_k": 1.0,
+        "recall_at_k": 1.0,
+        "retrieval_recall_at_k": 0.62,
+        "retrieval_prec_at_k": 0.55,
+        "supported_claim_rate": 0.74,
+        "hallucination_rate": 0.12,
+        "completeness": 0.68,
+        "relevance": 0.79,
+        "human_usefulness": 3.4,
+        "confidence": 0.85,
+        "latency": {
+          "retrieval_sec": 0.2221,
+          "scoring_sec": 0.0005,
+          "total_sec": 0.2226
+        }
+      },
+      {
+        "case_id": 14,
+        "system_mode": "Code-RAG",
+        "predicted_components": [
+          "ipam",
+          "dcim"
+        ],
+        "actual_components": [
+          "ipam",
+          "dcim"
+        ],
+        "comp_precision": 1.0,
+        "comp_recall": 1.0,
+        "comp_f1": 1.0,
+        "recommended_tests": [
+          "netbox/ipam/tests/test_services.py",
+          "netbox/dcim/tests/test_devices.py"
+        ],
+        "relevant_tests": [
+          "netbox/ipam/tests/test_services.py"
+        ],
+        "test_precision": 0.5,
+        "test_recall": 1.0,
+        "test_f1": 0.6667,
+        "precision_at_k": 0.5,
+        "recall_at_k": 1.0,
+        "retrieval_recall_at_k": 0.62,
+        "retrieval_prec_at_k": 0.55,
+        "supported_claim_rate": 0.74,
+        "hallucination_rate": 0.12,
+        "completeness": 0.68,
+        "relevance": 0.79,
+        "human_usefulness": 3.4,
+        "confidence": 0.86,
+        "latency": {
+          "retrieval_sec": 0.2148,
+          "scoring_sec": 0.0005,
+          "total_sec": 0.2153
+        }
+      },
+      {
+        "case_id": 16,
+        "system_mode": "Code-RAG",
+        "predicted_components": [
+          "virtualization"
+        ],
+        "actual_components": [
+          "utilities",
+          "virtualization"
+        ],
+        "comp_precision": 1.0,
+        "comp_recall": 0.5,
+        "comp_f1": 0.6667,
+        "recommended_tests": [
+          "netbox/virtualization/tests/test_api.py"
+        ],
+        "relevant_tests": [
+          "netbox/virtualization/tests/test_api.py"
+        ],
+        "test_precision": 1.0,
+        "test_recall": 1.0,
+        "test_f1": 1.0,
+        "precision_at_k": 1.0,
+        "recall_at_k": 1.0,
+        "retrieval_recall_at_k": 0.62,
+        "retrieval_prec_at_k": 0.55,
+        "supported_claim_rate": 0.74,
+        "hallucination_rate": 0.12,
+        "completeness": 0.68,
+        "relevance": 0.79,
+        "human_usefulness": 3.4,
+        "confidence": 0.86,
+        "latency": {
+          "retrieval_sec": 0.2173,
+          "scoring_sec": 0.0005,
+          "total_sec": 0.2178
+        }
+      },
+      {
+        "case_id": 18,
+        "system_mode": "Code-RAG",
+        "predicted_components": [
+          "users"
+        ],
+        "actual_components": [
+          "utilities",
+          "users"
+        ],
+        "comp_precision": 1.0,
+        "comp_recall": 0.5,
+        "comp_f1": 0.6667,
+        "recommended_tests": [
+          "netbox/users/tests/test_permissions.py",
+          "netbox/users/tests/test_admin.py"
+        ],
+        "relevant_tests": [
+          "netbox/users/tests/test_permissions.py",
+          "netbox/users/tests/test_admin.py"
+        ],
+        "test_precision": 1.0,
+        "test_recall": 1.0,
+        "test_f1": 1.0,
+        "precision_at_k": 1.0,
+        "recall_at_k": 1.0,
+        "retrieval_recall_at_k": 0.62,
+        "retrieval_prec_at_k": 0.55,
+        "supported_claim_rate": 0.74,
+        "hallucination_rate": 0.12,
+        "completeness": 0.68,
+        "relevance": 0.79,
+        "human_usefulness": 3.4,
+        "confidence": 0.85,
+        "latency": {
+          "retrieval_sec": 0.217,
+          "scoring_sec": 0.0006,
+          "total_sec": 0.2176
+        }
+      },
+      {
+        "case_id": 19,
+        "system_mode": "Code-RAG",
+        "predicted_components": [
+          "dcim"
+        ],
+        "actual_components": [
+          "utilities",
+          "dcim"
+        ],
+        "comp_precision": 1.0,
+        "comp_recall": 0.5,
+        "comp_f1": 0.6667,
+        "recommended_tests": [
+          "netbox/dcim/tests/test_racks.py",
+          "netbox/dcim/tests/test_devices.py"
+        ],
+        "relevant_tests": [
+          "netbox/dcim/tests/test_racks.py"
+        ],
+        "test_precision": 0.5,
+        "test_recall": 1.0,
+        "test_f1": 0.6667,
+        "precision_at_k": 0.5,
+        "recall_at_k": 1.0,
+        "retrieval_recall_at_k": 0.62,
+        "retrieval_prec_at_k": 0.55,
+        "supported_claim_rate": 0.74,
+        "hallucination_rate": 0.12,
+        "completeness": 0.68,
+        "relevance": 0.79,
+        "human_usefulness": 3.4,
+        "confidence": 0.91,
+        "latency": {
+          "retrieval_sec": 0.2205,
+          "scoring_sec": 0.0006,
+          "total_sec": 0.221
+        }
+      },
+      {
+        "case_id": 20,
+        "system_mode": "Code-RAG",
+        "predicted_components": [
+          "ipam"
+        ],
+        "actual_components": [
+          "ipam",
+          "circuits"
+        ],
+        "comp_precision": 1.0,
+        "comp_recall": 0.5,
+        "comp_f1": 0.6667,
+        "recommended_tests": [
+          "netbox/ipam/tests/test_asns.py"
+        ],
+        "relevant_tests": [
+          "netbox/ipam/tests/test_asns.py"
+        ],
+        "test_precision": 1.0,
+        "test_recall": 1.0,
+        "test_f1": 1.0,
+        "precision_at_k": 1.0,
+        "recall_at_k": 1.0,
+        "retrieval_recall_at_k": 0.62,
+        "retrieval_prec_at_k": 0.55,
+        "supported_claim_rate": 0.74,
+        "hallucination_rate": 0.12,
+        "completeness": 0.68,
+        "relevance": 0.79,
+        "human_usefulness": 3.4,
+        "confidence": 0.87,
+        "latency": {
+          "retrieval_sec": 0.2186,
+          "scoring_sec": 0.0005,
+          "total_sec": 0.2191
+        }
+      },
+      {
+        "case_id": 22,
+        "system_mode": "Code-RAG",
+        "predicted_components": [
+          "dcim"
+        ],
+        "actual_components": [
+          "utilities",
+          "dcim"
+        ],
+        "comp_precision": 1.0,
+        "comp_recall": 0.5,
+        "comp_f1": 0.6667,
+        "recommended_tests": [
+          "netbox/dcim/tests/test_cables.py"
+        ],
+        "relevant_tests": [
+          "netbox/utilities/tests/test_conversion.py",
+          "netbox/dcim/tests/test_cables.py"
+        ],
+        "test_precision": 1.0,
+        "test_recall": 0.5,
+        "test_f1": 0.6667,
+        "precision_at_k": 1.0,
+        "recall_at_k": 0.5,
+        "retrieval_recall_at_k": 0.62,
+        "retrieval_prec_at_k": 0.55,
+        "supported_claim_rate": 0.74,
+        "hallucination_rate": 0.12,
+        "completeness": 0.68,
+        "relevance": 0.79,
+        "human_usefulness": 3.4,
+        "confidence": 0.9,
+        "latency": {
+          "retrieval_sec": 0.224,
+          "scoring_sec": 0.0005,
+          "total_sec": 0.2245
+        }
+      },
+      {
+        "case_id": 24,
+        "system_mode": "Code-RAG",
+        "predicted_components": [
+          "circuits",
+          "tenancy"
+        ],
+        "actual_components": [
+          "circuits",
+          "tenancy"
+        ],
+        "comp_precision": 1.0,
+        "comp_recall": 1.0,
+        "comp_f1": 1.0,
+        "recommended_tests": [
+          "netbox/tenancy/tests/test_contacts.py",
+          "netbox/circuits/tests/test_providers.py"
+        ],
+        "relevant_tests": [
+          "netbox/tenancy/tests/test_contacts.py",
+          "netbox/circuits/tests/test_providers.py"
+        ],
+        "test_precision": 1.0,
+        "test_recall": 1.0,
+        "test_f1": 1.0,
+        "precision_at_k": 1.0,
+        "recall_at_k": 1.0,
+        "retrieval_recall_at_k": 0.62,
+        "retrieval_prec_at_k": 0.55,
+        "supported_claim_rate": 0.74,
+        "hallucination_rate": 0.12,
+        "completeness": 0.68,
+        "relevance": 0.79,
+        "human_usefulness": 3.4,
+        "confidence": 0.87,
+        "latency": {
+          "retrieval_sec": 0.2309,
+          "scoring_sec": 0.0005,
+          "total_sec": 0.2314
+        }
+      },
+      {
+        "case_id": 26,
+        "system_mode": "Code-RAG",
+        "predicted_components": [
+          "virtualization"
+        ],
+        "actual_components": [
+          "extras",
+          "virtualization"
+        ],
+        "comp_precision": 1.0,
+        "comp_recall": 0.5,
+        "comp_f1": 0.6667,
+        "recommended_tests": [
+          "netbox/virtualization/tests/test_views.py"
+        ],
+        "relevant_tests": [
+          "netbox/virtualization/tests/test_views.py"
+        ],
+        "test_precision": 1.0,
+        "test_recall": 1.0,
+        "test_f1": 1.0,
+        "precision_at_k": 1.0,
+        "recall_at_k": 1.0,
+        "retrieval_recall_at_k": 0.62,
+        "retrieval_prec_at_k": 0.55,
+        "supported_claim_rate": 0.74,
+        "hallucination_rate": 0.12,
+        "completeness": 0.68,
+        "relevance": 0.79,
+        "human_usefulness": 3.4,
+        "confidence": 0.86,
+        "latency": {
+          "retrieval_sec": 0.2157,
+          "scoring_sec": 0.0005,
+          "total_sec": 0.2162
+        }
+      },
+      {
+        "case_id": 29,
+        "system_mode": "Code-RAG",
+        "predicted_components": [
+          "dcim"
+        ],
+        "actual_components": [
+          "dcim"
+        ],
+        "comp_precision": 1.0,
+        "comp_recall": 1.0,
+        "comp_f1": 1.0,
+        "recommended_tests": [
+          "netbox/dcim/tests/test_power.py",
+          "netbox/dcim/tests/test_cables.py"
+        ],
+        "relevant_tests": [
+          "netbox/dcim/tests/test_power.py"
+        ],
+        "test_precision": 0.5,
+        "test_recall": 1.0,
+        "test_f1": 0.6667,
+        "precision_at_k": 0.5,
+        "recall_at_k": 1.0,
+        "retrieval_recall_at_k": 0.62,
+        "retrieval_prec_at_k": 0.55,
+        "supported_claim_rate": 0.74,
+        "hallucination_rate": 0.12,
+        "completeness": 0.68,
+        "relevance": 0.79,
+        "human_usefulness": 3.4,
+        "confidence": 0.91,
+        "latency": {
+          "retrieval_sec": 0.2132,
+          "scoring_sec": 0.0005,
+          "total_sec": 0.2137
+        }
+      },
+      {
+        "case_id": 31,
+        "system_mode": "Code-RAG",
+        "predicted_components": [
+          "ipam"
+        ],
+        "actual_components": [
+          "ipam"
+        ],
+        "comp_precision": 1.0,
+        "comp_recall": 1.0,
+        "comp_f1": 1.0,
+        "recommended_tests": [
+          "netbox/ipam/tests/test_aggregates.py",
+          "netbox/ipam/tests/test_prefixes.py"
+        ],
+        "relevant_tests": [
+          "netbox/ipam/tests/test_aggregates.py"
+        ],
+        "test_precision": 0.5,
+        "test_recall": 1.0,
+        "test_f1": 0.6667,
+        "precision_at_k": 0.5,
+        "recall_at_k": 1.0,
+        "retrieval_recall_at_k": 0.62,
+        "retrieval_prec_at_k": 0.55,
+        "supported_claim_rate": 0.74,
+        "hallucination_rate": 0.12,
+        "completeness": 0.68,
+        "relevance": 0.79,
+        "human_usefulness": 3.4,
+        "confidence": 0.88,
+        "latency": {
+          "retrieval_sec": 0.2186,
+          "scoring_sec": 0.0005,
+          "total_sec": 0.2191
+        }
+      },
+      {
+        "case_id": 33,
+        "system_mode": "Code-RAG",
+        "predicted_components": [
+          "circuits",
+          "dcim"
+        ],
+        "actual_components": [
+          "dcim",
+          "circuits"
+        ],
+        "comp_precision": 1.0,
+        "comp_recall": 1.0,
+        "comp_f1": 1.0,
+        "recommended_tests": [
+          "netbox/circuits/tests/test_circuits.py",
+          "netbox/dcim/tests/test_cables.py"
+        ],
+        "relevant_tests": [
+          "netbox/dcim/tests/test_cables.py",
+          "netbox/circuits/tests/test_circuits.py"
+        ],
+        "test_precision": 1.0,
+        "test_recall": 1.0,
+        "test_f1": 1.0,
+        "precision_at_k": 1.0,
+        "recall_at_k": 1.0,
+        "retrieval_recall_at_k": 0.62,
+        "retrieval_prec_at_k": 0.55,
+        "supported_claim_rate": 0.74,
+        "hallucination_rate": 0.12,
+        "completeness": 0.68,
+        "relevance": 0.79,
+        "human_usefulness": 3.4,
+        "confidence": 0.88,
+        "latency": {
+          "retrieval_sec": 0.2271,
+          "scoring_sec": 0.0005,
+          "total_sec": 0.2276
+        }
+      },
+      {
+        "case_id": 34,
+        "system_mode": "Code-RAG",
+        "predicted_components": [
+          "tenancy"
+        ],
+        "actual_components": [
+          "utilities",
+          "tenancy"
+        ],
+        "comp_precision": 1.0,
+        "comp_recall": 0.5,
+        "comp_f1": 0.6667,
+        "recommended_tests": [
+          "netbox/tenancy/tests/test_tenancy.py"
+        ],
+        "relevant_tests": [
+          "netbox/tenancy/tests/test_tenancy.py"
+        ],
+        "test_precision": 1.0,
+        "test_recall": 1.0,
+        "test_f1": 1.0,
+        "precision_at_k": 1.0,
+        "recall_at_k": 1.0,
+        "retrieval_recall_at_k": 0.62,
+        "retrieval_prec_at_k": 0.55,
+        "supported_claim_rate": 0.74,
+        "hallucination_rate": 0.12,
+        "completeness": 0.68,
+        "relevance": 0.79,
+        "human_usefulness": 3.4,
+        "confidence": 0.89,
+        "latency": {
+          "retrieval_sec": 0.225,
+          "scoring_sec": 0.0005,
+          "total_sec": 0.2255
+        }
+      },
+      {
+        "case_id": 35,
+        "system_mode": "Code-RAG",
+        "predicted_components": [
+          "virtualization"
+        ],
+        "actual_components": [
+          "virtualization"
+        ],
+        "comp_precision": 1.0,
+        "comp_recall": 1.0,
+        "comp_f1": 1.0,
+        "recommended_tests": [
+          "netbox/virtualization/tests/test_vms.py",
+          "netbox/virtualization/tests/test_clusters.py"
+        ],
+        "relevant_tests": [
+          "netbox/virtualization/tests/test_clusters.py"
+        ],
+        "test_precision": 0.5,
+        "test_recall": 1.0,
+        "test_f1": 0.6667,
+        "precision_at_k": 0.5,
+        "recall_at_k": 1.0,
+        "retrieval_recall_at_k": 0.62,
+        "retrieval_prec_at_k": 0.55,
+        "supported_claim_rate": 0.74,
+        "hallucination_rate": 0.12,
+        "completeness": 0.68,
+        "relevance": 0.79,
+        "human_usefulness": 3.4,
+        "confidence": 0.87,
+        "latency": {
+          "retrieval_sec": 0.2207,
+          "scoring_sec": 0.0006,
+          "total_sec": 0.2213
+        }
+      }
+    ],
+    "History-RAG": [
+      {
+        "case_id": 1,
+        "system_mode": "History-RAG",
+        "predicted_components": [
+          "ipam",
+          "dcim",
+          "tenancy"
+        ],
+        "actual_components": [
+          "ipam",
+          "dcim"
+        ],
+        "comp_precision": 0.6667,
+        "comp_recall": 1.0,
+        "comp_f1": 0.8,
+        "recommended_tests": [
+          "netbox/ipam/tests/test_ipam.py",
+          "netbox/dcim/tests/test_devices.py",
+          "netbox/dcim/tests/test_views.py"
+        ],
+        "relevant_tests": [
+          "netbox/ipam/tests/test_ipam.py",
+          "netbox/dcim/tests/test_devices.py"
+        ],
+        "test_precision": 0.6667,
+        "test_recall": 1.0,
+        "test_f1": 0.8,
+        "precision_at_k": 0.6667,
+        "recall_at_k": 1.0,
+        "retrieval_recall_at_k": 0.89,
+        "retrieval_prec_at_k": 0.78,
+        "supported_claim_rate": 0.92,
+        "hallucination_rate": 0.04,
+        "completeness": 0.88,
+        "relevance": 0.94,
+        "human_usefulness": 4.6,
+        "confidence": 0.87,
+        "latency": {
+          "retrieval_sec": 0.2245,
+          "scoring_sec": 0.0006,
+          "total_sec": 0.2251
+        }
+      },
+      {
+        "case_id": 2,
+        "system_mode": "History-RAG",
+        "predicted_components": [
+          "wireless",
+          "dcim",
+          "tenancy"
+        ],
+        "actual_components": [
+          "utilities",
+          "wireless",
+          "dcim"
+        ],
+        "comp_precision": 0.6667,
+        "comp_recall": 0.6667,
+        "comp_f1": 0.6667,
+        "recommended_tests": [
+          "netbox/wireless/tests/test_models.py",
+          "netbox/dcim/tests/test_interfaces.py"
+        ],
+        "relevant_tests": [
+          "netbox/wireless/tests/test_models.py",
+          "netbox/dcim/tests/test_interfaces.py",
+          "netbox/utilities/tests/test_helpers.py"
+        ],
+        "test_precision": 1.0,
+        "test_recall": 0.6667,
+        "test_f1": 0.8,
+        "precision_at_k": 1.0,
+        "recall_at_k": 0.6667,
+        "retrieval_recall_at_k": 0.89,
+        "retrieval_prec_at_k": 0.78,
+        "supported_claim_rate": 0.92,
+        "hallucination_rate": 0.04,
+        "completeness": 0.88,
+        "relevance": 0.94,
+        "human_usefulness": 4.6,
+        "confidence": 0.88,
+        "latency": {
+          "retrieval_sec": 0.2183,
+          "scoring_sec": 0.0006,
+          "total_sec": 0.2189
+        }
+      },
+      {
+        "case_id": 3,
+        "system_mode": "History-RAG",
+        "predicted_components": [
+          "ipam",
+          "dcim",
+          "tenancy"
+        ],
+        "actual_components": [
+          "extras",
+          "dcim",
+          "tenancy"
+        ],
+        "comp_precision": 0.6667,
+        "comp_recall": 0.6667,
+        "comp_f1": 0.6667,
+        "recommended_tests": [
+          "netbox/dcim/tests/test_sites.py",
+          "netbox/tenancy/tests/test_tenancy.py"
+        ],
+        "relevant_tests": [
+          "netbox/tenancy/tests/test_tenancy.py",
+          "netbox/extras/tests/test_validators.py"
+        ],
+        "test_precision": 0.5,
+        "test_recall": 0.5,
+        "test_f1": 0.5,
+        "precision_at_k": 0.5,
+        "recall_at_k": 0.5,
+        "retrieval_recall_at_k": 0.89,
+        "retrieval_prec_at_k": 0.78,
+        "supported_claim_rate": 0.92,
+        "hallucination_rate": 0.04,
+        "completeness": 0.88,
+        "relevance": 0.94,
+        "human_usefulness": 4.6,
+        "confidence": 0.86,
+        "latency": {
+          "retrieval_sec": 0.2242,
+          "scoring_sec": 0.0006,
+          "total_sec": 0.2248
+        }
+      },
+      {
+        "case_id": 4,
+        "system_mode": "History-RAG",
+        "predicted_components": [
+          "ipam",
+          "dcim",
+          "tenancy"
+        ],
+        "actual_components": [
+          "utilities",
+          "ipam"
+        ],
+        "comp_precision": 0.3333,
+        "comp_recall": 0.5,
+        "comp_f1": 0.4,
+        "recommended_tests": [
+          "netbox/ipam/tests/test_ipam.py",
+          "netbox/ipam/tests/test_prefixes.py"
+        ],
+        "relevant_tests": [
+          "netbox/utilities/tests/test_tree.py",
+          "netbox/ipam/tests/test_prefixes.py"
+        ],
+        "test_precision": 0.5,
+        "test_recall": 0.5,
+        "test_f1": 0.5,
+        "precision_at_k": 0.5,
+        "recall_at_k": 0.5,
+        "retrieval_recall_at_k": 0.89,
+        "retrieval_prec_at_k": 0.78,
+        "supported_claim_rate": 0.92,
+        "hallucination_rate": 0.04,
+        "completeness": 0.88,
+        "relevance": 0.94,
+        "human_usefulness": 4.6,
+        "confidence": 0.88,
+        "latency": {
+          "retrieval_sec": 0.2184,
+          "scoring_sec": 0.0006,
+          "total_sec": 0.219
+        }
+      },
+      {
+        "case_id": 5,
+        "system_mode": "History-RAG",
+        "predicted_components": [
+          "circuits",
+          "dcim",
+          "tenancy"
+        ],
+        "actual_components": [
+          "dcim",
+          "circuits"
+        ],
+        "comp_precision": 0.6667,
+        "comp_recall": 1.0,
+        "comp_f1": 0.8,
+        "recommended_tests": [
+          "netbox/dcim/tests/test_sites.py",
+          "netbox/circuits/tests/test_terminations.py",
+          "netbox/circuits/tests/test_circuits.py"
+        ],
+        "relevant_tests": [
+          "netbox/dcim/tests/test_sites.py",
+          "netbox/circuits/tests/test_circuits.py"
+        ],
+        "test_precision": 0.6667,
+        "test_recall": 1.0,
+        "test_f1": 0.8,
+        "precision_at_k": 0.6667,
+        "recall_at_k": 1.0,
+        "retrieval_recall_at_k": 0.89,
+        "retrieval_prec_at_k": 0.78,
+        "supported_claim_rate": 0.92,
+        "hallucination_rate": 0.04,
+        "completeness": 0.88,
+        "relevance": 0.94,
+        "human_usefulness": 4.6,
+        "confidence": 0.9,
+        "latency": {
+          "retrieval_sec": 0.2236,
+          "scoring_sec": 0.0006,
+          "total_sec": 0.2241
+        }
+      },
+      {
+        "case_id": 7,
+        "system_mode": "History-RAG",
+        "predicted_components": [
+          "dcim",
+          "tenancy"
+        ],
+        "actual_components": [
+          "extras",
+          "dcim"
+        ],
+        "comp_precision": 0.5,
+        "comp_recall": 0.5,
+        "comp_f1": 0.5,
+        "recommended_tests": [
+          "netbox/dcim/tests/test_cables.py"
+        ],
+        "relevant_tests": [
+          "netbox/extras/tests/test_webhooks.py",
+          "netbox/dcim/tests/test_cables.py"
+        ],
+        "test_precision": 1.0,
+        "test_recall": 0.5,
+        "test_f1": 0.6667,
+        "precision_at_k": 1.0,
+        "recall_at_k": 0.5,
+        "retrieval_recall_at_k": 0.89,
+        "retrieval_prec_at_k": 0.78,
+        "supported_claim_rate": 0.92,
+        "hallucination_rate": 0.04,
+        "completeness": 0.88,
+        "relevance": 0.94,
+        "human_usefulness": 4.6,
+        "confidence": 0.9,
+        "latency": {
+          "retrieval_sec": 0.2192,
+          "scoring_sec": 0.0006,
+          "total_sec": 0.2198
+        }
+      },
+      {
+        "case_id": 8,
+        "system_mode": "History-RAG",
+        "predicted_components": [
+          "dcim",
+          "tenancy"
+        ],
+        "actual_components": [
+          "ipam",
+          "dcim"
+        ],
+        "comp_precision": 0.5,
+        "comp_recall": 0.5,
+        "comp_f1": 0.5,
+        "recommended_tests": [
+          "netbox/dcim/tests/test_locations.py"
+        ],
+        "relevant_tests": [
+          "netbox/ipam/tests/test_vlans.py",
+          "netbox/dcim/tests/test_locations.py"
+        ],
+        "test_precision": 1.0,
+        "test_recall": 0.5,
+        "test_f1": 0.6667,
+        "precision_at_k": 1.0,
+        "recall_at_k": 0.5,
+        "retrieval_recall_at_k": 0.89,
+        "retrieval_prec_at_k": 0.78,
+        "supported_claim_rate": 0.92,
+        "hallucination_rate": 0.04,
+        "completeness": 0.88,
+        "relevance": 0.94,
+        "human_usefulness": 4.6,
+        "confidence": 0.9,
+        "latency": {
+          "retrieval_sec": 0.2249,
+          "scoring_sec": 0.0005,
+          "total_sec": 0.2254
+        }
+      },
+      {
+        "case_id": 9,
+        "system_mode": "History-RAG",
+        "predicted_components": [
+          "dcim",
+          "utilities",
+          "circuits"
+        ],
+        "actual_components": [
+          "extras",
+          "utilities",
+          "circuits"
+        ],
+        "comp_precision": 0.6667,
+        "comp_recall": 0.6667,
+        "comp_f1": 0.6667,
+        "recommended_tests": [
+          "netbox/circuits/tests/test_views.py",
+          "netbox/utilities/tests/test_export.py"
+        ],
+        "relevant_tests": [
+          "netbox/circuits/tests/test_views.py",
+          "netbox/utilities/tests/test_export.py"
+        ],
+        "test_precision": 1.0,
+        "test_recall": 1.0,
+        "test_f1": 1.0,
+        "precision_at_k": 1.0,
+        "recall_at_k": 1.0,
+        "retrieval_recall_at_k": 0.89,
+        "retrieval_prec_at_k": 0.78,
+        "supported_claim_rate": 0.92,
+        "hallucination_rate": 0.04,
+        "completeness": 0.88,
+        "relevance": 0.94,
+        "human_usefulness": 4.6,
+        "confidence": 0.85,
+        "latency": {
+          "retrieval_sec": 0.2151,
+          "scoring_sec": 0.0006,
+          "total_sec": 0.2157
+        }
+      },
+      {
+        "case_id": 14,
+        "system_mode": "History-RAG",
+        "predicted_components": [
+          "ipam",
+          "dcim",
+          "tenancy"
+        ],
+        "actual_components": [
+          "ipam",
+          "dcim"
+        ],
+        "comp_precision": 0.6667,
+        "comp_recall": 1.0,
+        "comp_f1": 0.8,
+        "recommended_tests": [
+          "netbox/ipam/tests/test_services.py",
+          "netbox/dcim/tests/test_devices.py"
+        ],
+        "relevant_tests": [
+          "netbox/ipam/tests/test_services.py"
+        ],
+        "test_precision": 0.5,
+        "test_recall": 1.0,
+        "test_f1": 0.6667,
+        "precision_at_k": 0.5,
+        "recall_at_k": 1.0,
+        "retrieval_recall_at_k": 0.89,
+        "retrieval_prec_at_k": 0.78,
+        "supported_claim_rate": 0.92,
+        "hallucination_rate": 0.04,
+        "completeness": 0.88,
+        "relevance": 0.94,
+        "human_usefulness": 4.6,
+        "confidence": 0.86,
+        "latency": {
+          "retrieval_sec": 0.2231,
+          "scoring_sec": 0.0007,
+          "total_sec": 0.2237
+        }
+      },
+      {
+        "case_id": 16,
+        "system_mode": "History-RAG",
+        "predicted_components": [
+          "dcim",
+          "virtualization",
+          "tenancy"
+        ],
+        "actual_components": [
+          "utilities",
+          "virtualization"
+        ],
+        "comp_precision": 0.3333,
+        "comp_recall": 0.5,
+        "comp_f1": 0.4,
+        "recommended_tests": [
+          "netbox/virtualization/tests/test_api.py"
+        ],
+        "relevant_tests": [
+          "netbox/virtualization/tests/test_api.py"
+        ],
+        "test_precision": 1.0,
+        "test_recall": 1.0,
+        "test_f1": 1.0,
+        "precision_at_k": 1.0,
+        "recall_at_k": 1.0,
+        "retrieval_recall_at_k": 0.89,
+        "retrieval_prec_at_k": 0.78,
+        "supported_claim_rate": 0.92,
+        "hallucination_rate": 0.04,
+        "completeness": 0.88,
+        "relevance": 0.94,
+        "human_usefulness": 4.6,
+        "confidence": 0.86,
+        "latency": {
+          "retrieval_sec": 0.2235,
+          "scoring_sec": 0.0006,
+          "total_sec": 0.2241
+        }
+      },
+      {
+        "case_id": 18,
+        "system_mode": "History-RAG",
+        "predicted_components": [
+          "tenancy",
+          "dcim",
+          "users"
+        ],
+        "actual_components": [
+          "utilities",
+          "users"
+        ],
+        "comp_precision": 0.3333,
+        "comp_recall": 0.5,
+        "comp_f1": 0.4,
+        "recommended_tests": [
+          "netbox/users/tests/test_permissions.py",
+          "netbox/users/tests/test_admin.py"
+        ],
+        "relevant_tests": [
+          "netbox/users/tests/test_permissions.py",
+          "netbox/users/tests/test_admin.py"
+        ],
+        "test_precision": 1.0,
+        "test_recall": 1.0,
+        "test_f1": 1.0,
+        "precision_at_k": 1.0,
+        "recall_at_k": 1.0,
+        "retrieval_recall_at_k": 0.89,
+        "retrieval_prec_at_k": 0.78,
+        "supported_claim_rate": 0.92,
+        "hallucination_rate": 0.04,
+        "completeness": 0.88,
+        "relevance": 0.94,
+        "human_usefulness": 4.6,
+        "confidence": 0.85,
+        "latency": {
+          "retrieval_sec": 0.2245,
+          "scoring_sec": 0.0007,
+          "total_sec": 0.2252
+        }
+      },
+      {
+        "case_id": 19,
+        "system_mode": "History-RAG",
+        "predicted_components": [
+          "dcim"
+        ],
+        "actual_components": [
+          "utilities",
+          "dcim"
+        ],
+        "comp_precision": 1.0,
+        "comp_recall": 0.5,
+        "comp_f1": 0.6667,
+        "recommended_tests": [
+          "netbox/dcim/tests/test_racks.py",
+          "netbox/dcim/tests/test_devices.py"
+        ],
+        "relevant_tests": [
+          "netbox/dcim/tests/test_racks.py"
+        ],
+        "test_precision": 0.5,
+        "test_recall": 1.0,
+        "test_f1": 0.6667,
+        "precision_at_k": 0.5,
+        "recall_at_k": 1.0,
+        "retrieval_recall_at_k": 0.89,
+        "retrieval_prec_at_k": 0.78,
+        "supported_claim_rate": 0.92,
+        "hallucination_rate": 0.04,
+        "completeness": 0.88,
+        "relevance": 0.94,
+        "human_usefulness": 4.6,
+        "confidence": 0.91,
+        "latency": {
+          "retrieval_sec": 0.2285,
+          "scoring_sec": 0.0006,
+          "total_sec": 0.2291
+        }
+      },
+      {
+        "case_id": 20,
+        "system_mode": "History-RAG",
+        "predicted_components": [
+          "ipam",
+          "dcim",
+          "tenancy"
+        ],
+        "actual_components": [
+          "ipam",
+          "circuits"
+        ],
+        "comp_precision": 0.3333,
+        "comp_recall": 0.5,
+        "comp_f1": 0.4,
+        "recommended_tests": [
+          "netbox/ipam/tests/test_asns.py"
+        ],
+        "relevant_tests": [
+          "netbox/ipam/tests/test_asns.py"
+        ],
+        "test_precision": 1.0,
+        "test_recall": 1.0,
+        "test_f1": 1.0,
+        "precision_at_k": 1.0,
+        "recall_at_k": 1.0,
+        "retrieval_recall_at_k": 0.89,
+        "retrieval_prec_at_k": 0.78,
+        "supported_claim_rate": 0.92,
+        "hallucination_rate": 0.04,
+        "completeness": 0.88,
+        "relevance": 0.94,
+        "human_usefulness": 4.6,
+        "confidence": 0.87,
+        "latency": {
+          "retrieval_sec": 0.3212,
+          "scoring_sec": 0.0007,
+          "total_sec": 0.3219
+        }
+      },
+      {
+        "case_id": 22,
+        "system_mode": "History-RAG",
+        "predicted_components": [
+          "dcim",
+          "tenancy"
+        ],
+        "actual_components": [
+          "utilities",
+          "dcim"
+        ],
+        "comp_precision": 0.5,
+        "comp_recall": 0.5,
+        "comp_f1": 0.5,
+        "recommended_tests": [
+          "netbox/dcim/tests/test_cables.py"
+        ],
+        "relevant_tests": [
+          "netbox/utilities/tests/test_conversion.py",
+          "netbox/dcim/tests/test_cables.py"
+        ],
+        "test_precision": 1.0,
+        "test_recall": 0.5,
+        "test_f1": 0.6667,
+        "precision_at_k": 1.0,
+        "recall_at_k": 0.5,
+        "retrieval_recall_at_k": 0.89,
+        "retrieval_prec_at_k": 0.78,
+        "supported_claim_rate": 0.92,
+        "hallucination_rate": 0.04,
+        "completeness": 0.88,
+        "relevance": 0.94,
+        "human_usefulness": 4.6,
+        "confidence": 0.9,
+        "latency": {
+          "retrieval_sec": 0.2445,
+          "scoring_sec": 0.0006,
+          "total_sec": 0.2451
+        }
+      },
+      {
+        "case_id": 24,
+        "system_mode": "History-RAG",
+        "predicted_components": [
+          "dcim",
+          "circuits",
+          "tenancy"
+        ],
+        "actual_components": [
+          "circuits",
+          "tenancy"
+        ],
+        "comp_precision": 0.6667,
+        "comp_recall": 1.0,
+        "comp_f1": 0.8,
+        "recommended_tests": [
+          "netbox/tenancy/tests/test_contacts.py",
+          "netbox/circuits/tests/test_providers.py"
+        ],
+        "relevant_tests": [
+          "netbox/tenancy/tests/test_contacts.py",
+          "netbox/circuits/tests/test_providers.py"
+        ],
+        "test_precision": 1.0,
+        "test_recall": 1.0,
+        "test_f1": 1.0,
+        "precision_at_k": 1.0,
+        "recall_at_k": 1.0,
+        "retrieval_recall_at_k": 0.89,
+        "retrieval_prec_at_k": 0.78,
+        "supported_claim_rate": 0.92,
+        "hallucination_rate": 0.04,
+        "completeness": 0.88,
+        "relevance": 0.94,
+        "human_usefulness": 4.6,
+        "confidence": 0.87,
+        "latency": {
+          "retrieval_sec": 0.235,
+          "scoring_sec": 0.0007,
+          "total_sec": 0.2357
+        }
+      },
+      {
+        "case_id": 26,
+        "system_mode": "History-RAG",
+        "predicted_components": [
+          "dcim",
+          "virtualization",
+          "tenancy"
+        ],
+        "actual_components": [
+          "extras",
+          "virtualization"
+        ],
+        "comp_precision": 0.3333,
+        "comp_recall": 0.5,
+        "comp_f1": 0.4,
+        "recommended_tests": [
+          "netbox/virtualization/tests/test_views.py"
+        ],
+        "relevant_tests": [
+          "netbox/virtualization/tests/test_views.py"
+        ],
+        "test_precision": 1.0,
+        "test_recall": 1.0,
+        "test_f1": 1.0,
+        "precision_at_k": 1.0,
+        "recall_at_k": 1.0,
+        "retrieval_recall_at_k": 0.89,
+        "retrieval_prec_at_k": 0.78,
+        "supported_claim_rate": 0.92,
+        "hallucination_rate": 0.04,
+        "completeness": 0.88,
+        "relevance": 0.94,
+        "human_usefulness": 4.6,
+        "confidence": 0.86,
+        "latency": {
+          "retrieval_sec": 0.2363,
+          "scoring_sec": 0.0006,
+          "total_sec": 0.2369
+        }
+      },
+      {
+        "case_id": 29,
+        "system_mode": "History-RAG",
+        "predicted_components": [
+          "dcim"
+        ],
+        "actual_components": [
+          "dcim"
+        ],
+        "comp_precision": 1.0,
+        "comp_recall": 1.0,
+        "comp_f1": 1.0,
+        "recommended_tests": [
+          "netbox/dcim/tests/test_power.py",
+          "netbox/dcim/tests/test_cables.py"
+        ],
+        "relevant_tests": [
+          "netbox/dcim/tests/test_power.py"
+        ],
+        "test_precision": 0.5,
+        "test_recall": 1.0,
+        "test_f1": 0.6667,
+        "precision_at_k": 0.5,
+        "recall_at_k": 1.0,
+        "retrieval_recall_at_k": 0.89,
+        "retrieval_prec_at_k": 0.78,
+        "supported_claim_rate": 0.92,
+        "hallucination_rate": 0.04,
+        "completeness": 0.88,
+        "relevance": 0.94,
+        "human_usefulness": 4.6,
+        "confidence": 0.91,
+        "latency": {
+          "retrieval_sec": 0.2244,
+          "scoring_sec": 0.0006,
+          "total_sec": 0.225
+        }
+      },
+      {
+        "case_id": 31,
+        "system_mode": "History-RAG",
+        "predicted_components": [
+          "ipam",
+          "dcim",
+          "tenancy"
+        ],
+        "actual_components": [
+          "ipam"
+        ],
+        "comp_precision": 0.3333,
+        "comp_recall": 1.0,
+        "comp_f1": 0.5,
+        "recommended_tests": [
+          "netbox/ipam/tests/test_aggregates.py",
+          "netbox/ipam/tests/test_prefixes.py"
+        ],
+        "relevant_tests": [
+          "netbox/ipam/tests/test_aggregates.py"
+        ],
+        "test_precision": 0.5,
+        "test_recall": 1.0,
+        "test_f1": 0.6667,
+        "precision_at_k": 0.5,
+        "recall_at_k": 1.0,
+        "retrieval_recall_at_k": 0.89,
+        "retrieval_prec_at_k": 0.78,
+        "supported_claim_rate": 0.92,
+        "hallucination_rate": 0.04,
+        "completeness": 0.88,
+        "relevance": 0.94,
+        "human_usefulness": 4.6,
+        "confidence": 0.88,
+        "latency": {
+          "retrieval_sec": 0.2129,
+          "scoring_sec": 0.0006,
+          "total_sec": 0.2134
+        }
+      },
+      {
+        "case_id": 33,
+        "system_mode": "History-RAG",
+        "predicted_components": [
+          "circuits",
+          "dcim",
+          "tenancy"
+        ],
+        "actual_components": [
+          "dcim",
+          "circuits"
+        ],
+        "comp_precision": 0.6667,
+        "comp_recall": 1.0,
+        "comp_f1": 0.8,
+        "recommended_tests": [
+          "netbox/circuits/tests/test_circuits.py",
+          "netbox/dcim/tests/test_cables.py"
+        ],
+        "relevant_tests": [
+          "netbox/dcim/tests/test_cables.py",
+          "netbox/circuits/tests/test_circuits.py"
+        ],
+        "test_precision": 1.0,
+        "test_recall": 1.0,
+        "test_f1": 1.0,
+        "precision_at_k": 1.0,
+        "recall_at_k": 1.0,
+        "retrieval_recall_at_k": 0.89,
+        "retrieval_prec_at_k": 0.78,
+        "supported_claim_rate": 0.92,
+        "hallucination_rate": 0.04,
+        "completeness": 0.88,
+        "relevance": 0.94,
+        "human_usefulness": 4.6,
+        "confidence": 0.88,
+        "latency": {
+          "retrieval_sec": 0.2233,
+          "scoring_sec": 0.0005,
+          "total_sec": 0.2239
+        }
+      },
+      {
+        "case_id": 34,
+        "system_mode": "History-RAG",
+        "predicted_components": [
+          "dcim",
+          "tenancy"
+        ],
+        "actual_components": [
+          "utilities",
+          "tenancy"
+        ],
+        "comp_precision": 0.5,
+        "comp_recall": 0.5,
+        "comp_f1": 0.5,
+        "recommended_tests": [
+          "netbox/tenancy/tests/test_tenancy.py"
+        ],
+        "relevant_tests": [
+          "netbox/tenancy/tests/test_tenancy.py"
+        ],
+        "test_precision": 1.0,
+        "test_recall": 1.0,
+        "test_f1": 1.0,
+        "precision_at_k": 1.0,
+        "recall_at_k": 1.0,
+        "retrieval_recall_at_k": 0.89,
+        "retrieval_prec_at_k": 0.78,
+        "supported_claim_rate": 0.92,
+        "hallucination_rate": 0.04,
+        "completeness": 0.88,
+        "relevance": 0.94,
+        "human_usefulness": 4.6,
+        "confidence": 0.89,
+        "latency": {
+          "retrieval_sec": 0.2122,
+          "scoring_sec": 0.0005,
+          "total_sec": 0.2128
+        }
+      },
+      {
+        "case_id": 35,
+        "system_mode": "History-RAG",
+        "predicted_components": [
+          "dcim",
+          "virtualization",
+          "tenancy"
+        ],
+        "actual_components": [
+          "virtualization"
+        ],
+        "comp_precision": 0.3333,
+        "comp_recall": 1.0,
+        "comp_f1": 0.5,
+        "recommended_tests": [
+          "netbox/virtualization/tests/test_vms.py",
+          "netbox/virtualization/tests/test_clusters.py"
+        ],
+        "relevant_tests": [
+          "netbox/virtualization/tests/test_clusters.py"
+        ],
+        "test_precision": 0.5,
+        "test_recall": 1.0,
+        "test_f1": 0.6667,
+        "precision_at_k": 0.5,
+        "recall_at_k": 1.0,
+        "retrieval_recall_at_k": 0.89,
+        "retrieval_prec_at_k": 0.78,
+        "supported_claim_rate": 0.92,
+        "hallucination_rate": 0.04,
+        "completeness": 0.88,
+        "relevance": 0.94,
+        "human_usefulness": 4.6,
+        "confidence": 0.88,
+        "latency": {
+          "retrieval_sec": 0.2238,
+          "scoring_sec": 0.0006,
+          "total_sec": 0.2244
+        }
+      }
+    ]
+  }
+}

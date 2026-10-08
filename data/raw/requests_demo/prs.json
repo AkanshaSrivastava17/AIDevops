@@ -1,0 +1,142 @@
+[
+  {
+    "id": "pr-401",
+    "title": "Requests PR #1: Thread safe HTTPAdapter mounting",
+    "body": "Locks session adapter dictionary during concurrent mounting.",
+    "component": "sessions",
+    "created_at": "2023-02-15T00:00:00Z",
+    "files_changed": [
+      "requests/sessions/session.py"
+    ]
+  },
+  {
+    "id": "pr-402",
+    "title": "Requests PR #2: Thread safe HTTPAdapter mounting",
+    "body": "Locks session adapter dictionary during concurrent mounting.",
+    "component": "sessions",
+    "created_at": "2023-02-25T00:00:00Z",
+    "files_changed": [
+      "requests/sessions/session.py"
+    ]
+  },
+  {
+    "id": "pr-403",
+    "title": "Requests PR #3: Thread safe HTTPAdapter mounting",
+    "body": "Locks session adapter dictionary during concurrent mounting.",
+    "component": "sessions",
+    "created_at": "2023-03-07T00:00:00Z",
+    "files_changed": [
+      "requests/sessions/session.py"
+    ]
+  },
+  {
+    "id": "pr-404",
+    "title": "Requests PR #4: Thread safe HTTPAdapter mounting",
+    "body": "Locks session adapter dictionary during concurrent mounting.",
+    "component": "sessions",
+    "created_at": "2023-03-17T00:00:00Z",
+    "files_changed": [
+      "requests/sessions/session.py"
+    ]
+  },
+  {
+    "id": "pr-405",
+    "title": "Requests PR #5: Thread safe HTTPAdapter mounting",
+    "body": "Locks session adapter dictionary during concurrent mounting.",
+    "component": "sessions",
+    "created_at": "2023-03-27T00:00:00Z",
+    "files_changed": [
+      "requests/sessions/session.py"
+    ]
+  },
+  {
+    "id": "pr-406",
+    "title": "Requests PR #6: Thread safe HTTPAdapter mounting",
+    "body": "Locks session adapter dictionary during concurrent mounting.",
+    "component": "sessions",
+    "created_at": "2023-04-06T00:00:00Z",
+    "files_changed": [
+      "requests/sessions/session.py"
+    ]
+  },
+  {
+    "id": "pr-407",
+    "title": "Requests PR #7: Thread safe HTTPAdapter mounting",
+    "body": "Locks session adapter dictionary during concurrent mounting.",
+    "component": "sessions",
+    "created_at": "2023-04-16T00:00:00Z",
+    "files_changed": [
+      "requests/sessions/session.py"
+    ]
+  },
+  {
+    "id": "pr-408",
+    "title": "Requests PR #8: Thread safe HTTPAdapter mounting",
+    "body": "Locks session adapter dictionary during concurrent mounting.",
+    "component": "sessions",
+    "created_at": "2023-04-26T00:00:00Z",
+    "files_changed": [
+      "requests/sessions/session.py"
+    ]
+  },
+  {
+    "id": "pr-409",
+    "title": "Requests PR #9: Thread safe HTTPAdapter mounting",
+    "body": "Locks session adapter dictionary during concurrent mounting.",
+    "component": "sessions",
+    "created_at": "2023-05-06T00:00:00Z",
+    "files_changed": [
+      "requests/sessions/session.py"
+    ]
+  },
+  {
+    "id": "pr-410",
+    "title": "Requests PR #10: Thread safe HTTPAdapter mounting",
+    "body": "Locks session adapter dictionary during concurrent mounting.",
+    "component": "sessions",
+    "created_at": "2023-05-16T00:00:00Z",
+    "files_changed": [
+      "requests/sessions/session.py"
+    ]
+  },
+  {
+    "id": "pr-411",
+    "title": "Requests PR #11: Thread safe HTTPAdapter mounting",
+    "body": "Locks session adapter dictionary during concurrent mounting.",
+    "component": "sessions",
+    "created_at": "2023-05-26T00:00:00Z",
+    "files_changed": [
+      "requests/sessions/session.py"
+    ]
+  },
+  {
+    "id": "pr-412",
+    "title": "Requests PR #12: Thread safe HTTPAdapter mounting",
+    "body": "Locks session adapter dictionary during concurrent mounting.",
+    "component": "sessions",
+    "created_at": "2023-06-05T00:00:00Z",
+    "files_changed": [
+      "requests/sessions/session.py"
+    ]
+  },
+  {
+    "id": "pr-413",
+    "title": "Requests PR #13: Thread safe HTTPAdapter mounting",
+    "body": "Locks session adapter dictionary during concurrent mounting.",
+    "component": "sessions",
+    "created_at": "2023-06-15T00:00:00Z",
+    "files_changed": [
+      "requests/sessions/session.py"
+    ]
+  },
+  {
+    "id": "pr-414",
+    "title": "Requests PR #14: Thread safe HTTPAdapter mounting",
+    "body": "Locks session adapter dictionary during concurrent mounting.",
+    "component": "sessions",
+    "created_at": "2023-06-25T00:00:00Z",
+    "files_changed": [
+      "requests/sessions/session.py"
+    ]
+  }
+]

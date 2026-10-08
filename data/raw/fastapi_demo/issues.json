@@ -1,0 +1,114 @@
+[
+  {
+    "id": "issue-101",
+    "title": "FastAPI dependency injection issue #1",
+    "body": "Support async generators in Depends() yield dependencies.",
+    "component": "routing",
+    "created_at": "2023-02-11T00:00:00Z",
+    "comments": []
+  },
+  {
+    "id": "issue-102",
+    "title": "FastAPI dependency injection issue #2",
+    "body": "Support async generators in Depends() yield dependencies.",
+    "component": "routing",
+    "created_at": "2023-02-21T00:00:00Z",
+    "comments": []
+  },
+  {
+    "id": "issue-103",
+    "title": "FastAPI dependency injection issue #3",
+    "body": "Support async generators in Depends() yield dependencies.",
+    "component": "routing",
+    "created_at": "2023-03-03T00:00:00Z",
+    "comments": []
+  },
+  {
+    "id": "issue-104",
+    "title": "FastAPI dependency injection issue #4",
+    "body": "Support async generators in Depends() yield dependencies.",
+    "component": "routing",
+    "created_at": "2023-03-13T00:00:00Z",
+    "comments": []
+  },
+  {
+    "id": "issue-105",
+    "title": "FastAPI dependency injection issue #5",
+    "body": "Support async generators in Depends() yield dependencies.",
+    "component": "routing",
+    "created_at": "2023-03-23T00:00:00Z",
+    "comments": []
+  },
+  {
+    "id": "issue-106",
+    "title": "FastAPI dependency injection issue #6",
+    "body": "Support async generators in Depends() yield dependencies.",
+    "component": "routing",
+    "created_at": "2023-04-02T00:00:00Z",
+    "comments": []
+  },
+  {
+    "id": "issue-107",
+    "title": "FastAPI dependency injection issue #7",
+    "body": "Support async generators in Depends() yield dependencies.",
+    "component": "routing",
+    "created_at": "2023-04-12T00:00:00Z",
+    "comments": []
+  },
+  {
+    "id": "issue-108",
+    "title": "FastAPI dependency injection issue #8",
+    "body": "Support async generators in Depends() yield dependencies.",
+    "component": "routing",
+    "created_at": "2023-04-22T00:00:00Z",
+    "comments": []
+  },
+  {
+    "id": "issue-109",
+    "title": "FastAPI dependency injection issue #9",
+    "body": "Support async generators in Depends() yield dependencies.",
+    "component": "routing",
+    "created_at": "2023-05-02T00:00:00Z",
+    "comments": []
+  },
+  {
+    "id": "issue-110",
+    "title": "FastAPI dependency injection issue #10",
+    "body": "Support async generators in Depends() yield dependencies.",
+    "component": "routing",
+    "created_at": "2023-05-12T00:00:00Z",
+    "comments": []
+  },
+  {
+    "id": "issue-111",
+    "title": "FastAPI dependency injection issue #11",
+    "body": "Support async generators in Depends() yield dependencies.",
+    "component": "routing",
+    "created_at": "2023-05-22T00:00:00Z",
+    "comments": []
+  },
+  {
+    "id": "issue-112",
+    "title": "FastAPI dependency injection issue #12",
+    "body": "Support async generators in Depends() yield dependencies.",
+    "component": "routing",
+    "created_at": "2023-06-01T00:00:00Z",
+    "comments": []
+  },
+  {
+    "id": "issue-113",
+    "title": "FastAPI dependency injection issue #13",
+    "body": "Support async generators in Depends() yield dependencies.",
+    "component": "routing",
+    "created_at": "2023-06-11T00:00:00Z",
+    "comments": []
+  },
+  {
+    "id": "issue-114",
+    "title": "FastAPI dependency injection issue #14",
+    "body": "Support async generators in Depends() yield dependencies.",
+    "component": "routing",
+    "created_at": "2023-06-21T00:00:00Z",
+    "comments": []
+  }
+]

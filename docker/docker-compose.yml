@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  historyrag-qa:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    image: historyrag:qa-latest
+    container_name: historyrag_qa_service
+    ports:
+      - "8000:8000"
+      - "8501:8501"
+    environment:
+      - APP_ENV=qa
+      - OLLAMA_HOST=http://host.docker.internal:11434
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    restart: unless-stopped

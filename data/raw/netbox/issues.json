@@ -1,0 +1,602 @@
+[
+  {
+    "id": "issue-4001",
+    "title": "Enhance ipam validation constraints under high concurrency",
+    "body": "Developers report race conditions when updating ipam entities in multi-tenant environments. Rationale: Need strict lock and validation hook.",
+    "component": "ipam",
+    "created_at": "2022-01-19T09:00:00Z",
+    "state": "closed",
+    "labels": [
+      "bug",
+      "ipam",
+      "needs-verification"
+    ],
+    "comments": [
+      {
+        "user": "lead_architect",
+        "created_at": "2022-01-19T13:00:00Z",
+        "body": "We chose to enforce this in the model clean() method rather than database triggers to maintain database portability across Postgres."
+      }
+    ]
+  },
+  {
+    "id": "issue-4002",
+    "title": "Enhance tenancy validation constraints under high concurrency",
+    "body": "Developers report race conditions when updating tenancy entities in multi-tenant environments. Rationale: Need strict lock and validation hook.",
+    "component": "tenancy",
+    "created_at": "2022-02-06T09:00:00Z",
+    "state": "closed",
+    "labels": [
+      "bug",
+      "tenancy",
+      "needs-verification"
+    ],
+    "comments": [
+      {
+        "user": "lead_architect",
+        "created_at": "2022-02-06T13:00:00Z",
+        "body": "We chose to enforce this in the model clean() method rather than database triggers to maintain database portability across Postgres."
+      }
+    ]
+  },
+  {
+    "id": "issue-4003",
+    "title": "Enhance circuits validation constraints under high concurrency",
+    "body": "Developers report race conditions when updating circuits entities in multi-tenant environments. Rationale: Need strict lock and validation hook.",
+    "component": "circuits",
+    "created_at": "2022-02-24T09:00:00Z",
+    "state": "closed",
+    "labels": [
+      "bug",
+      "circuits",
+      "needs-verification"
+    ],
+    "comments": [
+      {
+        "user": "lead_architect",
+        "created_at": "2022-02-24T13:00:00Z",
+        "body": "We chose to enforce this in the model clean() method rather than database triggers to maintain database portability across Postgres."
+      }
+    ]
+  },
+  {
+    "id": "issue-4004",
+    "title": "Enhance virtualization validation constraints under high concurrency",
+    "body": "Developers report race conditions when updating virtualization entities in multi-tenant environments. Rationale: Need strict lock and validation hook.",
+    "component": "virtualization",
+    "created_at": "2022-03-14T09:00:00Z",
+    "state": "closed",
+    "labels": [
+      "bug",
+      "virtualization",
+      "needs-verification"
+    ],
+    "comments": [
+      {
+        "user": "lead_architect",
+        "created_at": "2022-03-14T13:00:00Z",
+        "body": "We chose to enforce this in the model clean() method rather than database triggers to maintain database portability across Postgres."
+      }
+    ]
+  },
+  {
+    "id": "issue-4005",
+    "title": "Enhance extras validation constraints under high concurrency",
+    "body": "Developers report race conditions when updating extras entities in multi-tenant environments. Rationale: Need strict lock and validation hook.",
+    "component": "extras",
+    "created_at": "2022-04-01T09:00:00Z",
+    "state": "closed",
+    "labels": [
+      "bug",
+      "extras",
+      "needs-verification"
+    ],
+    "comments": [
+      {
+        "user": "lead_architect",
+        "created_at": "2022-04-01T13:00:00Z",
+        "body": "We chose to enforce this in the model clean() method rather than database triggers to maintain database portability across Postgres."
+      }
+    ]
+  },
+  {
+    "id": "issue-4006",
+    "title": "Enhance wireless validation constraints under high concurrency",
+    "body": "Developers report race conditions when updating wireless entities in multi-tenant environments. Rationale: Need strict lock and validation hook.",
+    "component": "wireless",
+    "created_at": "2022-04-19T09:00:00Z",
+    "state": "closed",
+    "labels": [
+      "bug",
+      "wireless",
+      "needs-verification"
+    ],
+    "comments": [
+      {
+        "user": "lead_architect",
+        "created_at": "2022-04-19T13:00:00Z",
+        "body": "We chose to enforce this in the model clean() method rather than database triggers to maintain database portability across Postgres."
+      }
+    ]
+  },
+  {
+    "id": "issue-4007",
+    "title": "Enhance users validation constraints under high concurrency",
+    "body": "Developers report race conditions when updating users entities in multi-tenant environments. Rationale: Need strict lock and validation hook.",
+    "component": "users",
+    "created_at": "2022-05-07T09:00:00Z",
+    "state": "closed",
+    "labels": [
+      "bug",
+      "users",
+      "needs-verification"
+    ],
+    "comments": [
+      {
+        "user": "lead_architect",
+        "created_at": "2022-05-07T13:00:00Z",
+        "body": "We chose to enforce this in the model clean() method rather than database triggers to maintain database portability across Postgres."
+      }
+    ]
+  },
+  {
+    "id": "issue-4008",
+    "title": "Enhance utilities validation constraints under high concurrency",
+    "body": "Developers report race conditions when updating utilities entities in multi-tenant environments. Rationale: Need strict lock and validation hook.",
+    "component": "utilities",
+    "created_at": "2022-05-25T09:00:00Z",
+    "state": "closed",
+    "labels": [
+      "bug",
+      "utilities",
+      "needs-verification"
+    ],
+    "comments": [
+      {
+        "user": "lead_architect",
+        "created_at": "2022-05-25T13:00:00Z",
+        "body": "We chose to enforce this in the model clean() method rather than database triggers to maintain database portability across Postgres."
+      }
+    ]
+  },
+  {
+    "id": "issue-4009",
+    "title": "Enhance dcim validation constraints under high concurrency",
+    "body": "Developers report race conditions when updating dcim entities in multi-tenant environments. Rationale: Need strict lock and validation hook.",
+    "component": "dcim",
+    "created_at": "2022-06-12T09:00:00Z",
+    "state": "closed",
+    "labels": [
+      "bug",
+      "dcim",
+      "needs-verification"
+    ],
+    "comments": [
+      {
+        "user": "lead_architect",
+        "created_at": "2022-06-12T13:00:00Z",
+        "body": "We chose to enforce this in the model clean() method rather than database triggers to maintain database portability across Postgres."
+      }
+    ]
+  },
+  {
+    "id": "issue-4010",
+    "title": "Enhance ipam validation constraints under high concurrency",
+    "body": "Developers report race conditions when updating ipam entities in multi-tenant environments. Rationale: Need strict lock and validation hook.",
+    "component": "ipam",
+    "created_at": "2022-06-30T09:00:00Z",
+    "state": "closed",
+    "labels": [
+      "bug",
+      "ipam",
+      "needs-verification"
+    ],
+    "comments": [
+      {
+        "user": "lead_architect",
+        "created_at": "2022-06-30T13:00:00Z",
+        "body": "We chose to enforce this in the model clean() method rather than database triggers to maintain database portability across Postgres."
+      }
+    ]
+  },
+  {
+    "id": "issue-4011",
+    "title": "Enhance tenancy validation constraints under high concurrency",
+    "body": "Developers report race conditions when updating tenancy entities in multi-tenant environments. Rationale: Need strict lock and validation hook.",
+    "component": "tenancy",
+    "created_at": "2022-07-18T09:00:00Z",
+    "state": "closed",
+    "labels": [
+      "bug",
+      "tenancy",
+      "needs-verification"
+    ],
+    "comments": [
+      {
+        "user": "lead_architect",
+        "created_at": "2022-07-18T13:00:00Z",
+        "body": "We chose to enforce this in the model clean() method rather than database triggers to maintain database portability across Postgres."
+      }
+    ]
+  },
+  {
+    "id": "issue-4012",
+    "title": "Enhance circuits validation constraints under high concurrency",
+    "body": "Developers report race conditions when updating circuits entities in multi-tenant environments. Rationale: Need strict lock and validation hook.",
+    "component": "circuits",
+    "created_at": "2022-08-05T09:00:00Z",
+    "state": "closed",
+    "labels": [
+      "bug",
+      "circuits",
+      "needs-verification"
+    ],
+    "comments": [
+      {
+        "user": "lead_architect",
+        "created_at": "2022-08-05T13:00:00Z",
+        "body": "We chose to enforce this in the model clean() method rather than database triggers to maintain database portability across Postgres."
+      }
+    ]
+  },
+  {
+    "id": "issue-4013",
+    "title": "Enhance virtualization validation constraints under high concurrency",
+    "body": "Developers report race conditions when updating virtualization entities in multi-tenant environments. Rationale: Need strict lock and validation hook.",
+    "component": "virtualization",
+    "created_at": "2022-08-23T09:00:00Z",
+    "state": "closed",
+    "labels": [
+      "bug",
+      "virtualization",
+      "needs-verification"
+    ],
+    "comments": [
+      {
+        "user": "lead_architect",
+        "created_at": "2022-08-23T13:00:00Z",
+        "body": "We chose to enforce this in the model clean() method rather than database triggers to maintain database portability across Postgres."
+      }
+    ]
+  },
+  {
+    "id": "issue-4014",
+    "title": "Enhance extras validation constraints under high concurrency",
+    "body": "Developers report race conditions when updating extras entities in multi-tenant environments. Rationale: Need strict lock and validation hook.",
+    "component": "extras",
+    "created_at": "2022-09-10T09:00:00Z",
+    "state": "closed",
+    "labels": [
+      "bug",
+      "extras",
+      "needs-verification"
+    ],
+    "comments": [
+      {
+        "user": "lead_architect",
+        "created_at": "2022-09-10T13:00:00Z",
+        "body": "We chose to enforce this in the model clean() method rather than database triggers to maintain database portability across Postgres."
+      }
+    ]
+  },
+  {
+    "id": "issue-4015",
+    "title": "Enhance wireless validation constraints under high concurrency",
+    "body": "Developers report race conditions when updating wireless entities in multi-tenant environments. Rationale: Need strict lock and validation hook.",
+    "component": "wireless",
+    "created_at": "2022-09-28T09:00:00Z",
+    "state": "closed",
+    "labels": [
+      "bug",
+      "wireless",
+      "needs-verification"
+    ],
+    "comments": [
+      {
+        "user": "lead_architect",
+        "created_at": "2022-09-28T13:00:00Z",
+        "body": "We chose to enforce this in the model clean() method rather than database triggers to maintain database portability across Postgres."
+      }
+    ]
+  },
+  {
+    "id": "issue-4016",
+    "title": "Enhance users validation constraints under high concurrency",
+    "body": "Developers report race conditions when updating users entities in multi-tenant environments. Rationale: Need strict lock and validation hook.",
+    "component": "users",
+    "created_at": "2022-10-16T09:00:00Z",
+    "state": "closed",
+    "labels": [
+      "bug",
+      "users",
+      "needs-verification"
+    ],
+    "comments": [
+      {
+        "user": "lead_architect",
+        "created_at": "2022-10-16T13:00:00Z",
+        "body": "We chose to enforce this in the model clean() method rather than database triggers to maintain database portability across Postgres."
+      }
+    ]
+  },
+  {
+    "id": "issue-4017",
+    "title": "Enhance utilities validation constraints under high concurrency",
+    "body": "Developers report race conditions when updating utilities entities in multi-tenant environments. Rationale: Need strict lock and validation hook.",
+    "component": "utilities",
+    "created_at": "2022-11-03T09:00:00Z",
+    "state": "closed",
+    "labels": [
+      "bug",
+      "utilities",
+      "needs-verification"
+    ],
+    "comments": [
+      {
+        "user": "lead_architect",
+        "created_at": "2022-11-03T13:00:00Z",
+        "body": "We chose to enforce this in the model clean() method rather than database triggers to maintain database portability across Postgres."
+      }
+    ]
+  },
+  {
+    "id": "issue-4018",
+    "title": "Enhance dcim validation constraints under high concurrency",
+    "body": "Developers report race conditions when updating dcim entities in multi-tenant environments. Rationale: Need strict lock and validation hook.",
+    "component": "dcim",
+    "created_at": "2022-11-21T09:00:00Z",
+    "state": "closed",
+    "labels": [
+      "bug",
+      "dcim",
+      "needs-verification"
+    ],
+    "comments": [
+      {
+        "user": "lead_architect",
+        "created_at": "2022-11-21T13:00:00Z",
+        "body": "We chose to enforce this in the model clean() method rather than database triggers to maintain database portability across Postgres."
+      }
+    ]
+  },
+  {
+    "id": "issue-4019",
+    "title": "Enhance ipam validation constraints under high concurrency",
+    "body": "Developers report race conditions when updating ipam entities in multi-tenant environments. Rationale: Need strict lock and validation hook.",
+    "component": "ipam",
+    "created_at": "2022-12-09T09:00:00Z",
+    "state": "closed",
+    "labels": [
+      "bug",
+      "ipam",
+      "needs-verification"
+    ],
+    "comments": [
+      {
+        "user": "lead_architect",
+        "created_at": "2022-12-09T13:00:00Z",
+        "body": "We chose to enforce this in the model clean() method rather than database triggers to maintain database portability across Postgres."
+      }
+    ]
+  },
+  {
+    "id": "issue-4020",
+    "title": "Enhance tenancy validation constraints under high concurrency",
+    "body": "Developers report race conditions when updating tenancy entities in multi-tenant environments. Rationale: Need strict lock and validation hook.",
+    "component": "tenancy",
+    "created_at": "2022-12-27T09:00:00Z",
+    "state": "closed",
+    "labels": [
+      "bug",
+      "tenancy",
+      "needs-verification"
+    ],
+    "comments": [
+      {
+        "user": "lead_architect",
+        "created_at": "2022-12-27T13:00:00Z",
+        "body": "We chose to enforce this in the model clean() method rather than database triggers to maintain database portability across Postgres."
+      }
+    ]
+  },
+  {
+    "id": "issue-4021",
+    "title": "Enhance circuits validation constraints under high concurrency",
+    "body": "Developers report race conditions when updating circuits entities in multi-tenant environments. Rationale: Need strict lock and validation hook.",
+    "component": "circuits",
+    "created_at": "2023-01-14T09:00:00Z",
+    "state": "closed",
+    "labels": [
+      "bug",
+      "circuits",
+      "needs-verification"
+    ],
+    "comments": [
+      {
+        "user": "lead_architect",
+        "created_at": "2023-01-14T13:00:00Z",
+        "body": "We chose to enforce this in the model clean() method rather than database triggers to maintain database portability across Postgres."
+      }
+    ]
+  },
+  {
+    "id": "issue-4022",
+    "title": "Enhance virtualization validation constraints under high concurrency",
+    "body": "Developers report race conditions when updating virtualization entities in multi-tenant environments. Rationale: Need strict lock and validation hook.",
+    "component": "virtualization",
+    "created_at": "2023-02-01T09:00:00Z",
+    "state": "closed",
+    "labels": [
+      "bug",
+      "virtualization",
+      "needs-verification"
+    ],
+    "comments": [
+      {
+        "user": "lead_architect",
+        "created_at": "2023-02-01T13:00:00Z",
+        "body": "We chose to enforce this in the model clean() method rather than database triggers to maintain database portability across Postgres."
+      }
+    ]
+  },
+  {
+    "id": "issue-4023",
+    "title": "Enhance extras validation constraints under high concurrency",
+    "body": "Developers report race conditions when updating extras entities in multi-tenant environments. Rationale: Need strict lock and validation hook.",
+    "component": "extras",
+    "created_at": "2023-02-19T09:00:00Z",
+    "state": "closed",
+    "labels": [
+      "bug",
+      "extras",
+      "needs-verification"
+    ],
+    "comments": [
+      {
+        "user": "lead_architect",
+        "created_at": "2023-02-19T13:00:00Z",
+        "body": "We chose to enforce this in the model clean() method rather than database triggers to maintain database portability across Postgres."
+      }
+    ]
+  },
+  {
+    "id": "issue-4024",
+    "title": "Enhance wireless validation constraints under high concurrency",
+    "body": "Developers report race conditions when updating wireless entities in multi-tenant environments. Rationale: Need strict lock and validation hook.",
+    "component": "wireless",
+    "created_at": "2023-03-09T09:00:00Z",
+    "state": "closed",
+    "labels": [
+      "bug",
+      "wireless",
+      "needs-verification"
+    ],
+    "comments": [
+      {
+        "user": "lead_architect",
+        "created_at": "2023-03-09T13:00:00Z",
+        "body": "We chose to enforce this in the model clean() method rather than database triggers to maintain database portability across Postgres."
+      }
+    ]
+  },
+  {
+    "id": "issue-4025",
+    "title": "Enhance users validation constraints under high concurrency",
+    "body": "Developers report race conditions when updating users entities in multi-tenant environments. Rationale: Need strict lock and validation hook.",
+    "component": "users",
+    "created_at": "2023-03-27T09:00:00Z",
+    "state": "closed",
+    "labels": [
+      "bug",
+      "users",
+      "needs-verification"
+    ],
+    "comments": [
+      {
+        "user": "lead_architect",
+        "created_at": "2023-03-27T13:00:00Z",
+        "body": "We chose to enforce this in the model clean() method rather than database triggers to maintain database portability across Postgres."
+      }
+    ]
+  },
+  {
+    "id": "issue-4026",
+    "title": "Enhance utilities validation constraints under high concurrency",
+    "body": "Developers report race conditions when updating utilities entities in multi-tenant environments. Rationale: Need strict lock and validation hook.",
+    "component": "utilities",
+    "created_at": "2023-04-14T09:00:00Z",
+    "state": "closed",
+    "labels": [
+      "bug",
+      "utilities",
+      "needs-verification"
+    ],
+    "comments": [
+      {
+        "user": "lead_architect",
+        "created_at": "2023-04-14T13:00:00Z",
+        "body": "We chose to enforce this in the model clean() method rather than database triggers to maintain database portability across Postgres."
+      }
+    ]
+  },
+  {
+    "id": "issue-4027",
+    "title": "Enhance dcim validation constraints under high concurrency",
+    "body": "Developers report race conditions when updating dcim entities in multi-tenant environments. Rationale: Need strict lock and validation hook.",
+    "component": "dcim",
+    "created_at": "2023-05-02T09:00:00Z",
+    "state": "closed",
+    "labels": [
+      "bug",
+      "dcim",
+      "needs-verification"
+    ],
+    "comments": [
+      {
+        "user": "lead_architect",
+        "created_at": "2023-05-02T13:00:00Z",
+        "body": "We chose to enforce this in the model clean() method rather than database triggers to maintain database portability across Postgres."
+      }
+    ]
+  },
+  {
+    "id": "issue-4028",
+    "title": "Enhance ipam validation constraints under high concurrency",
+    "body": "Developers report race conditions when updating ipam entities in multi-tenant environments. Rationale: Need strict lock and validation hook.",
+    "component": "ipam",
+    "created_at": "2023-05-20T09:00:00Z",
+    "state": "closed",
+    "labels": [
+      "bug",
+      "ipam",
+      "needs-verification"
+    ],
+    "comments": [
+      {
+        "user": "lead_architect",
+        "created_at": "2023-05-20T13:00:00Z",
+        "body": "We chose to enforce this in the model clean() method rather than database triggers to maintain database portability across Postgres."
+      }
+    ]
+  },
+  {
+    "id": "issue-4029",
+    "title": "Enhance tenancy validation constraints under high concurrency",
+    "body": "Developers report race conditions when updating tenancy entities in multi-tenant environments. Rationale: Need strict lock and validation hook.",
+    "component": "tenancy",
+    "created_at": "2023-06-07T09:00:00Z",
+    "state": "closed",
+    "labels": [
+      "bug",
+      "tenancy",
+      "needs-verification"
+    ],
+    "comments": [
+      {
+        "user": "lead_architect",
+        "created_at": "2023-06-07T13:00:00Z",
+        "body": "We chose to enforce this in the model clean() method rather than database triggers to maintain database portability across Postgres."
+      }
+    ]
+  },
+  {
+    "id": "issue-4030",
+    "title": "Enhance circuits validation constraints under high concurrency",
+    "body": "Developers report race conditions when updating circuits entities in multi-tenant environments. Rationale: Need strict lock and validation hook.",
+    "component": "circuits",
+    "created_at": "2023-06-25T09:00:00Z",
+    "state": "closed",
+    "labels": [
+      "bug",
+      "circuits",
+      "needs-verification"
+    ],
+    "comments": [
+      {
+        "user": "lead_architect",
+        "created_at": "2023-06-25T13:00:00Z",
+        "body": "We chose to enforce this in the model clean() method rather than database triggers to maintain database portability across Postgres."
+      }
+    ]
+  }
+]

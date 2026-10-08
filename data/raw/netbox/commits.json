@@ -1,0 +1,722 @@
+[
+  {
+    "sha": "c001aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev1@netbox.local>",
+    "timestamp": "2022-01-11T10:00:00Z",
+    "message": "Refactor ipam integration with tenancy: ensure strict model constraints\n\nImproves relationship consistency between ipam and tenancy.",
+    "files": [
+      "netbox/ipam/models.py",
+      "netbox/tenancy/models.py",
+      "netbox/ipam/tests/test_ipam.py"
+    ],
+    "diff": "--- a/netbox/ipam/models.py\n+++ b/netbox/ipam/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with tenancy\n"
+  },
+  {
+    "sha": "c002aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev2@netbox.local>",
+    "timestamp": "2022-01-21T11:00:00Z",
+    "message": "Refactor tenancy integration with circuits: ensure strict model constraints\n\nImproves relationship consistency between tenancy and circuits.",
+    "files": [
+      "netbox/tenancy/models.py",
+      "netbox/circuits/models.py",
+      "netbox/tenancy/tests/test_tenancy.py"
+    ],
+    "diff": "--- a/netbox/tenancy/models.py\n+++ b/netbox/tenancy/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with circuits\n"
+  },
+  {
+    "sha": "c003aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev3@netbox.local>",
+    "timestamp": "2022-01-31T12:00:00Z",
+    "message": "Refactor circuits integration with virtualization: ensure strict model constraints\n\nImproves relationship consistency between circuits and virtualization.",
+    "files": [
+      "netbox/circuits/models.py",
+      "netbox/virtualization/models.py",
+      "netbox/circuits/tests/test_circuits.py"
+    ],
+    "diff": "--- a/netbox/circuits/models.py\n+++ b/netbox/circuits/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with virtualization\n"
+  },
+  {
+    "sha": "c004aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev4@netbox.local>",
+    "timestamp": "2022-02-10T13:00:00Z",
+    "message": "Refactor virtualization integration with extras: ensure strict model constraints\n\nImproves relationship consistency between virtualization and extras.",
+    "files": [
+      "netbox/virtualization/models.py",
+      "netbox/extras/models.py",
+      "netbox/virtualization/tests/test_virtualization.py"
+    ],
+    "diff": "--- a/netbox/virtualization/models.py\n+++ b/netbox/virtualization/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with extras\n"
+  },
+  {
+    "sha": "c005aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev0@netbox.local>",
+    "timestamp": "2022-02-20T14:00:00Z",
+    "message": "Refactor extras integration with wireless: ensure strict model constraints\n\nImproves relationship consistency between extras and wireless.",
+    "files": [
+      "netbox/extras/models.py",
+      "netbox/wireless/models.py",
+      "netbox/extras/tests/test_extras.py"
+    ],
+    "diff": "--- a/netbox/extras/models.py\n+++ b/netbox/extras/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with wireless\n"
+  },
+  {
+    "sha": "c006aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev1@netbox.local>",
+    "timestamp": "2022-03-02T15:00:00Z",
+    "message": "Refactor wireless integration with users: ensure strict model constraints\n\nImproves relationship consistency between wireless and users.",
+    "files": [
+      "netbox/wireless/models.py",
+      "netbox/users/models.py",
+      "netbox/wireless/tests/test_wireless.py"
+    ],
+    "diff": "--- a/netbox/wireless/models.py\n+++ b/netbox/wireless/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with users\n"
+  },
+  {
+    "sha": "c007aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev2@netbox.local>",
+    "timestamp": "2022-03-12T16:00:00Z",
+    "message": "Refactor users integration with utilities: ensure strict model constraints\n\nImproves relationship consistency between users and utilities.",
+    "files": [
+      "netbox/users/models.py",
+      "netbox/utilities/models.py",
+      "netbox/users/tests/test_users.py"
+    ],
+    "diff": "--- a/netbox/users/models.py\n+++ b/netbox/users/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with utilities\n"
+  },
+  {
+    "sha": "c008aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev3@netbox.local>",
+    "timestamp": "2022-03-22T17:00:00Z",
+    "message": "Refactor utilities integration with dcim: ensure strict model constraints\n\nImproves relationship consistency between utilities and dcim.",
+    "files": [
+      "netbox/utilities/models.py",
+      "netbox/dcim/models.py",
+      "netbox/utilities/tests/test_utilities.py"
+    ],
+    "diff": "--- a/netbox/utilities/models.py\n+++ b/netbox/utilities/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with dcim\n"
+  },
+  {
+    "sha": "c009aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev4@netbox.local>",
+    "timestamp": "2022-04-01T18:00:00Z",
+    "message": "Refactor dcim integration with ipam: ensure strict model constraints\n\nImproves relationship consistency between dcim and ipam.",
+    "files": [
+      "netbox/dcim/models.py",
+      "netbox/ipam/models.py",
+      "netbox/dcim/tests/test_dcim.py"
+    ],
+    "diff": "--- a/netbox/dcim/models.py\n+++ b/netbox/dcim/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with ipam\n"
+  },
+  {
+    "sha": "c010aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev0@netbox.local>",
+    "timestamp": "2022-04-11T19:00:00Z",
+    "message": "Refactor ipam integration with tenancy: ensure strict model constraints\n\nImproves relationship consistency between ipam and tenancy.",
+    "files": [
+      "netbox/ipam/models.py",
+      "netbox/tenancy/models.py",
+      "netbox/ipam/tests/test_ipam.py"
+    ],
+    "diff": "--- a/netbox/ipam/models.py\n+++ b/netbox/ipam/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with tenancy\n"
+  },
+  {
+    "sha": "c011aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev1@netbox.local>",
+    "timestamp": "2022-04-21T20:00:00Z",
+    "message": "Refactor tenancy integration with circuits: ensure strict model constraints\n\nImproves relationship consistency between tenancy and circuits.",
+    "files": [
+      "netbox/tenancy/models.py",
+      "netbox/circuits/models.py",
+      "netbox/tenancy/tests/test_tenancy.py"
+    ],
+    "diff": "--- a/netbox/tenancy/models.py\n+++ b/netbox/tenancy/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with circuits\n"
+  },
+  {
+    "sha": "c012aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev2@netbox.local>",
+    "timestamp": "2022-05-01T21:00:00Z",
+    "message": "Refactor circuits integration with virtualization: ensure strict model constraints\n\nImproves relationship consistency between circuits and virtualization.",
+    "files": [
+      "netbox/circuits/models.py",
+      "netbox/virtualization/models.py",
+      "netbox/circuits/tests/test_circuits.py"
+    ],
+    "diff": "--- a/netbox/circuits/models.py\n+++ b/netbox/circuits/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with virtualization\n"
+  },
+  {
+    "sha": "c013aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev3@netbox.local>",
+    "timestamp": "2022-05-11T22:00:00Z",
+    "message": "Refactor virtualization integration with extras: ensure strict model constraints\n\nImproves relationship consistency between virtualization and extras.",
+    "files": [
+      "netbox/virtualization/models.py",
+      "netbox/extras/models.py",
+      "netbox/virtualization/tests/test_virtualization.py"
+    ],
+    "diff": "--- a/netbox/virtualization/models.py\n+++ b/netbox/virtualization/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with extras\n"
+  },
+  {
+    "sha": "c014aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev4@netbox.local>",
+    "timestamp": "2022-05-21T23:00:00Z",
+    "message": "Refactor extras integration with wireless: ensure strict model constraints\n\nImproves relationship consistency between extras and wireless.",
+    "files": [
+      "netbox/extras/models.py",
+      "netbox/wireless/models.py",
+      "netbox/extras/tests/test_extras.py"
+    ],
+    "diff": "--- a/netbox/extras/models.py\n+++ b/netbox/extras/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with wireless\n"
+  },
+  {
+    "sha": "c015aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev0@netbox.local>",
+    "timestamp": "2022-06-01T00:00:00Z",
+    "message": "Refactor wireless integration with users: ensure strict model constraints\n\nImproves relationship consistency between wireless and users.",
+    "files": [
+      "netbox/wireless/models.py",
+      "netbox/users/models.py",
+      "netbox/wireless/tests/test_wireless.py"
+    ],
+    "diff": "--- a/netbox/wireless/models.py\n+++ b/netbox/wireless/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with users\n"
+  },
+  {
+    "sha": "c016aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev1@netbox.local>",
+    "timestamp": "2022-06-11T01:00:00Z",
+    "message": "Refactor users integration with utilities: ensure strict model constraints\n\nImproves relationship consistency between users and utilities.",
+    "files": [
+      "netbox/users/models.py",
+      "netbox/utilities/models.py",
+      "netbox/users/tests/test_users.py"
+    ],
+    "diff": "--- a/netbox/users/models.py\n+++ b/netbox/users/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with utilities\n"
+  },
+  {
+    "sha": "c017aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev2@netbox.local>",
+    "timestamp": "2022-06-21T02:00:00Z",
+    "message": "Refactor utilities integration with dcim: ensure strict model constraints\n\nImproves relationship consistency between utilities and dcim.",
+    "files": [
+      "netbox/utilities/models.py",
+      "netbox/dcim/models.py",
+      "netbox/utilities/tests/test_utilities.py"
+    ],
+    "diff": "--- a/netbox/utilities/models.py\n+++ b/netbox/utilities/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with dcim\n"
+  },
+  {
+    "sha": "c018aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev3@netbox.local>",
+    "timestamp": "2022-07-01T03:00:00Z",
+    "message": "Refactor dcim integration with ipam: ensure strict model constraints\n\nImproves relationship consistency between dcim and ipam.",
+    "files": [
+      "netbox/dcim/models.py",
+      "netbox/ipam/models.py",
+      "netbox/dcim/tests/test_dcim.py"
+    ],
+    "diff": "--- a/netbox/dcim/models.py\n+++ b/netbox/dcim/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with ipam\n"
+  },
+  {
+    "sha": "c019aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev4@netbox.local>",
+    "timestamp": "2022-07-11T04:00:00Z",
+    "message": "Refactor ipam integration with tenancy: ensure strict model constraints\n\nImproves relationship consistency between ipam and tenancy.",
+    "files": [
+      "netbox/ipam/models.py",
+      "netbox/tenancy/models.py",
+      "netbox/ipam/tests/test_ipam.py"
+    ],
+    "diff": "--- a/netbox/ipam/models.py\n+++ b/netbox/ipam/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with tenancy\n"
+  },
+  {
+    "sha": "c020aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev0@netbox.local>",
+    "timestamp": "2022-07-21T05:00:00Z",
+    "message": "Refactor tenancy integration with circuits: ensure strict model constraints\n\nImproves relationship consistency between tenancy and circuits.",
+    "files": [
+      "netbox/tenancy/models.py",
+      "netbox/circuits/models.py",
+      "netbox/tenancy/tests/test_tenancy.py"
+    ],
+    "diff": "--- a/netbox/tenancy/models.py\n+++ b/netbox/tenancy/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with circuits\n"
+  },
+  {
+    "sha": "c021aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev1@netbox.local>",
+    "timestamp": "2022-07-31T06:00:00Z",
+    "message": "Refactor circuits integration with virtualization: ensure strict model constraints\n\nImproves relationship consistency between circuits and virtualization.",
+    "files": [
+      "netbox/circuits/models.py",
+      "netbox/virtualization/models.py",
+      "netbox/circuits/tests/test_circuits.py"
+    ],
+    "diff": "--- a/netbox/circuits/models.py\n+++ b/netbox/circuits/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with virtualization\n"
+  },
+  {
+    "sha": "c022aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev2@netbox.local>",
+    "timestamp": "2022-08-10T07:00:00Z",
+    "message": "Refactor virtualization integration with extras: ensure strict model constraints\n\nImproves relationship consistency between virtualization and extras.",
+    "files": [
+      "netbox/virtualization/models.py",
+      "netbox/extras/models.py",
+      "netbox/virtualization/tests/test_virtualization.py"
+    ],
+    "diff": "--- a/netbox/virtualization/models.py\n+++ b/netbox/virtualization/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with extras\n"
+  },
+  {
+    "sha": "c023aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev3@netbox.local>",
+    "timestamp": "2022-08-20T08:00:00Z",
+    "message": "Refactor extras integration with wireless: ensure strict model constraints\n\nImproves relationship consistency between extras and wireless.",
+    "files": [
+      "netbox/extras/models.py",
+      "netbox/wireless/models.py",
+      "netbox/extras/tests/test_extras.py"
+    ],
+    "diff": "--- a/netbox/extras/models.py\n+++ b/netbox/extras/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with wireless\n"
+  },
+  {
+    "sha": "c024aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev4@netbox.local>",
+    "timestamp": "2022-08-30T09:00:00Z",
+    "message": "Refactor wireless integration with users: ensure strict model constraints\n\nImproves relationship consistency between wireless and users.",
+    "files": [
+      "netbox/wireless/models.py",
+      "netbox/users/models.py",
+      "netbox/wireless/tests/test_wireless.py"
+    ],
+    "diff": "--- a/netbox/wireless/models.py\n+++ b/netbox/wireless/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with users\n"
+  },
+  {
+    "sha": "c025aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev0@netbox.local>",
+    "timestamp": "2022-09-09T10:00:00Z",
+    "message": "Refactor users integration with utilities: ensure strict model constraints\n\nImproves relationship consistency between users and utilities.",
+    "files": [
+      "netbox/users/models.py",
+      "netbox/utilities/models.py",
+      "netbox/users/tests/test_users.py"
+    ],
+    "diff": "--- a/netbox/users/models.py\n+++ b/netbox/users/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with utilities\n"
+  },
+  {
+    "sha": "c026aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev1@netbox.local>",
+    "timestamp": "2022-09-19T11:00:00Z",
+    "message": "Refactor utilities integration with dcim: ensure strict model constraints\n\nImproves relationship consistency between utilities and dcim.",
+    "files": [
+      "netbox/utilities/models.py",
+      "netbox/dcim/models.py",
+      "netbox/utilities/tests/test_utilities.py"
+    ],
+    "diff": "--- a/netbox/utilities/models.py\n+++ b/netbox/utilities/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with dcim\n"
+  },
+  {
+    "sha": "c027aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev2@netbox.local>",
+    "timestamp": "2022-09-29T12:00:00Z",
+    "message": "Refactor dcim integration with ipam: ensure strict model constraints\n\nImproves relationship consistency between dcim and ipam.",
+    "files": [
+      "netbox/dcim/models.py",
+      "netbox/ipam/models.py",
+      "netbox/dcim/tests/test_dcim.py"
+    ],
+    "diff": "--- a/netbox/dcim/models.py\n+++ b/netbox/dcim/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with ipam\n"
+  },
+  {
+    "sha": "c028aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev3@netbox.local>",
+    "timestamp": "2022-10-09T13:00:00Z",
+    "message": "Refactor ipam integration with tenancy: ensure strict model constraints\n\nImproves relationship consistency between ipam and tenancy.",
+    "files": [
+      "netbox/ipam/models.py",
+      "netbox/tenancy/models.py",
+      "netbox/ipam/tests/test_ipam.py"
+    ],
+    "diff": "--- a/netbox/ipam/models.py\n+++ b/netbox/ipam/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with tenancy\n"
+  },
+  {
+    "sha": "c029aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev4@netbox.local>",
+    "timestamp": "2022-10-19T14:00:00Z",
+    "message": "Refactor tenancy integration with circuits: ensure strict model constraints\n\nImproves relationship consistency between tenancy and circuits.",
+    "files": [
+      "netbox/tenancy/models.py",
+      "netbox/circuits/models.py",
+      "netbox/tenancy/tests/test_tenancy.py"
+    ],
+    "diff": "--- a/netbox/tenancy/models.py\n+++ b/netbox/tenancy/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with circuits\n"
+  },
+  {
+    "sha": "c030aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev0@netbox.local>",
+    "timestamp": "2022-10-29T15:00:00Z",
+    "message": "Refactor circuits integration with virtualization: ensure strict model constraints\n\nImproves relationship consistency between circuits and virtualization.",
+    "files": [
+      "netbox/circuits/models.py",
+      "netbox/virtualization/models.py",
+      "netbox/circuits/tests/test_circuits.py"
+    ],
+    "diff": "--- a/netbox/circuits/models.py\n+++ b/netbox/circuits/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with virtualization\n"
+  },
+  {
+    "sha": "c031aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev1@netbox.local>",
+    "timestamp": "2022-11-08T16:00:00Z",
+    "message": "Refactor virtualization integration with extras: ensure strict model constraints\n\nImproves relationship consistency between virtualization and extras.",
+    "files": [
+      "netbox/virtualization/models.py",
+      "netbox/extras/models.py",
+      "netbox/virtualization/tests/test_virtualization.py"
+    ],
+    "diff": "--- a/netbox/virtualization/models.py\n+++ b/netbox/virtualization/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with extras\n"
+  },
+  {
+    "sha": "c032aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev2@netbox.local>",
+    "timestamp": "2022-11-18T17:00:00Z",
+    "message": "Refactor extras integration with wireless: ensure strict model constraints\n\nImproves relationship consistency between extras and wireless.",
+    "files": [
+      "netbox/extras/models.py",
+      "netbox/wireless/models.py",
+      "netbox/extras/tests/test_extras.py"
+    ],
+    "diff": "--- a/netbox/extras/models.py\n+++ b/netbox/extras/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with wireless\n"
+  },
+  {
+    "sha": "c033aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev3@netbox.local>",
+    "timestamp": "2022-11-28T18:00:00Z",
+    "message": "Refactor wireless integration with users: ensure strict model constraints\n\nImproves relationship consistency between wireless and users.",
+    "files": [
+      "netbox/wireless/models.py",
+      "netbox/users/models.py",
+      "netbox/wireless/tests/test_wireless.py"
+    ],
+    "diff": "--- a/netbox/wireless/models.py\n+++ b/netbox/wireless/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with users\n"
+  },
+  {
+    "sha": "c034aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev4@netbox.local>",
+    "timestamp": "2022-12-08T19:00:00Z",
+    "message": "Refactor users integration with utilities: ensure strict model constraints\n\nImproves relationship consistency between users and utilities.",
+    "files": [
+      "netbox/users/models.py",
+      "netbox/utilities/models.py",
+      "netbox/users/tests/test_users.py"
+    ],
+    "diff": "--- a/netbox/users/models.py\n+++ b/netbox/users/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with utilities\n"
+  },
+  {
+    "sha": "c035aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev0@netbox.local>",
+    "timestamp": "2022-12-18T20:00:00Z",
+    "message": "Refactor utilities integration with dcim: ensure strict model constraints\n\nImproves relationship consistency between utilities and dcim.",
+    "files": [
+      "netbox/utilities/models.py",
+      "netbox/dcim/models.py",
+      "netbox/utilities/tests/test_utilities.py"
+    ],
+    "diff": "--- a/netbox/utilities/models.py\n+++ b/netbox/utilities/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with dcim\n"
+  },
+  {
+    "sha": "c036aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev1@netbox.local>",
+    "timestamp": "2022-12-28T21:00:00Z",
+    "message": "Refactor dcim integration with ipam: ensure strict model constraints\n\nImproves relationship consistency between dcim and ipam.",
+    "files": [
+      "netbox/dcim/models.py",
+      "netbox/ipam/models.py",
+      "netbox/dcim/tests/test_dcim.py"
+    ],
+    "diff": "--- a/netbox/dcim/models.py\n+++ b/netbox/dcim/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with ipam\n"
+  },
+  {
+    "sha": "c037aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev2@netbox.local>",
+    "timestamp": "2023-01-07T22:00:00Z",
+    "message": "Refactor ipam integration with tenancy: ensure strict model constraints\n\nImproves relationship consistency between ipam and tenancy.",
+    "files": [
+      "netbox/ipam/models.py",
+      "netbox/tenancy/models.py",
+      "netbox/ipam/tests/test_ipam.py"
+    ],
+    "diff": "--- a/netbox/ipam/models.py\n+++ b/netbox/ipam/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with tenancy\n"
+  },
+  {
+    "sha": "c038aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev3@netbox.local>",
+    "timestamp": "2023-01-17T23:00:00Z",
+    "message": "Refactor tenancy integration with circuits: ensure strict model constraints\n\nImproves relationship consistency between tenancy and circuits.",
+    "files": [
+      "netbox/tenancy/models.py",
+      "netbox/circuits/models.py",
+      "netbox/tenancy/tests/test_tenancy.py"
+    ],
+    "diff": "--- a/netbox/tenancy/models.py\n+++ b/netbox/tenancy/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with circuits\n"
+  },
+  {
+    "sha": "c039aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev4@netbox.local>",
+    "timestamp": "2023-01-28T00:00:00Z",
+    "message": "Refactor circuits integration with virtualization: ensure strict model constraints\n\nImproves relationship consistency between circuits and virtualization.",
+    "files": [
+      "netbox/circuits/models.py",
+      "netbox/virtualization/models.py",
+      "netbox/circuits/tests/test_circuits.py"
+    ],
+    "diff": "--- a/netbox/circuits/models.py\n+++ b/netbox/circuits/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with virtualization\n"
+  },
+  {
+    "sha": "c040aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev0@netbox.local>",
+    "timestamp": "2023-02-07T01:00:00Z",
+    "message": "Refactor virtualization integration with extras: ensure strict model constraints\n\nImproves relationship consistency between virtualization and extras.",
+    "files": [
+      "netbox/virtualization/models.py",
+      "netbox/extras/models.py",
+      "netbox/virtualization/tests/test_virtualization.py"
+    ],
+    "diff": "--- a/netbox/virtualization/models.py\n+++ b/netbox/virtualization/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with extras\n"
+  },
+  {
+    "sha": "c041aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev1@netbox.local>",
+    "timestamp": "2023-02-17T02:00:00Z",
+    "message": "Refactor extras integration with wireless: ensure strict model constraints\n\nImproves relationship consistency between extras and wireless.",
+    "files": [
+      "netbox/extras/models.py",
+      "netbox/wireless/models.py",
+      "netbox/extras/tests/test_extras.py"
+    ],
+    "diff": "--- a/netbox/extras/models.py\n+++ b/netbox/extras/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with wireless\n"
+  },
+  {
+    "sha": "c042aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev2@netbox.local>",
+    "timestamp": "2023-02-27T03:00:00Z",
+    "message": "Refactor wireless integration with users: ensure strict model constraints\n\nImproves relationship consistency between wireless and users.",
+    "files": [
+      "netbox/wireless/models.py",
+      "netbox/users/models.py",
+      "netbox/wireless/tests/test_wireless.py"
+    ],
+    "diff": "--- a/netbox/wireless/models.py\n+++ b/netbox/wireless/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with users\n"
+  },
+  {
+    "sha": "c043aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev3@netbox.local>",
+    "timestamp": "2023-03-09T04:00:00Z",
+    "message": "Refactor users integration with utilities: ensure strict model constraints\n\nImproves relationship consistency between users and utilities.",
+    "files": [
+      "netbox/users/models.py",
+      "netbox/utilities/models.py",
+      "netbox/users/tests/test_users.py"
+    ],
+    "diff": "--- a/netbox/users/models.py\n+++ b/netbox/users/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with utilities\n"
+  },
+  {
+    "sha": "c044aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev4@netbox.local>",
+    "timestamp": "2023-03-19T05:00:00Z",
+    "message": "Refactor utilities integration with dcim: ensure strict model constraints\n\nImproves relationship consistency between utilities and dcim.",
+    "files": [
+      "netbox/utilities/models.py",
+      "netbox/dcim/models.py",
+      "netbox/utilities/tests/test_utilities.py"
+    ],
+    "diff": "--- a/netbox/utilities/models.py\n+++ b/netbox/utilities/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with dcim\n"
+  },
+  {
+    "sha": "c045aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev0@netbox.local>",
+    "timestamp": "2023-03-29T06:00:00Z",
+    "message": "Refactor dcim integration with ipam: ensure strict model constraints\n\nImproves relationship consistency between dcim and ipam.",
+    "files": [
+      "netbox/dcim/models.py",
+      "netbox/ipam/models.py",
+      "netbox/dcim/tests/test_dcim.py"
+    ],
+    "diff": "--- a/netbox/dcim/models.py\n+++ b/netbox/dcim/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with ipam\n"
+  },
+  {
+    "sha": "c046aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev1@netbox.local>",
+    "timestamp": "2023-04-08T07:00:00Z",
+    "message": "Refactor ipam integration with tenancy: ensure strict model constraints\n\nImproves relationship consistency between ipam and tenancy.",
+    "files": [
+      "netbox/ipam/models.py",
+      "netbox/tenancy/models.py",
+      "netbox/ipam/tests/test_ipam.py"
+    ],
+    "diff": "--- a/netbox/ipam/models.py\n+++ b/netbox/ipam/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with tenancy\n"
+  },
+  {
+    "sha": "c047aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev2@netbox.local>",
+    "timestamp": "2023-04-18T08:00:00Z",
+    "message": "Refactor tenancy integration with circuits: ensure strict model constraints\n\nImproves relationship consistency between tenancy and circuits.",
+    "files": [
+      "netbox/tenancy/models.py",
+      "netbox/circuits/models.py",
+      "netbox/tenancy/tests/test_tenancy.py"
+    ],
+    "diff": "--- a/netbox/tenancy/models.py\n+++ b/netbox/tenancy/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with circuits\n"
+  },
+  {
+    "sha": "c048aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev3@netbox.local>",
+    "timestamp": "2023-04-28T09:00:00Z",
+    "message": "Refactor circuits integration with virtualization: ensure strict model constraints\n\nImproves relationship consistency between circuits and virtualization.",
+    "files": [
+      "netbox/circuits/models.py",
+      "netbox/virtualization/models.py",
+      "netbox/circuits/tests/test_circuits.py"
+    ],
+    "diff": "--- a/netbox/circuits/models.py\n+++ b/netbox/circuits/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with virtualization\n"
+  },
+  {
+    "sha": "c049aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev4@netbox.local>",
+    "timestamp": "2023-05-08T10:00:00Z",
+    "message": "Refactor virtualization integration with extras: ensure strict model constraints\n\nImproves relationship consistency between virtualization and extras.",
+    "files": [
+      "netbox/virtualization/models.py",
+      "netbox/extras/models.py",
+      "netbox/virtualization/tests/test_virtualization.py"
+    ],
+    "diff": "--- a/netbox/virtualization/models.py\n+++ b/netbox/virtualization/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with extras\n"
+  },
+  {
+    "sha": "c050aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev0@netbox.local>",
+    "timestamp": "2023-05-18T11:00:00Z",
+    "message": "Refactor extras integration with wireless: ensure strict model constraints\n\nImproves relationship consistency between extras and wireless.",
+    "files": [
+      "netbox/extras/models.py",
+      "netbox/wireless/models.py",
+      "netbox/extras/tests/test_extras.py"
+    ],
+    "diff": "--- a/netbox/extras/models.py\n+++ b/netbox/extras/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with wireless\n"
+  },
+  {
+    "sha": "c051aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev1@netbox.local>",
+    "timestamp": "2023-05-28T12:00:00Z",
+    "message": "Refactor wireless integration with users: ensure strict model constraints\n\nImproves relationship consistency between wireless and users.",
+    "files": [
+      "netbox/wireless/models.py",
+      "netbox/users/models.py",
+      "netbox/wireless/tests/test_wireless.py"
+    ],
+    "diff": "--- a/netbox/wireless/models.py\n+++ b/netbox/wireless/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with users\n"
+  },
+  {
+    "sha": "c052aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev2@netbox.local>",
+    "timestamp": "2023-06-07T13:00:00Z",
+    "message": "Refactor users integration with utilities: ensure strict model constraints\n\nImproves relationship consistency between users and utilities.",
+    "files": [
+      "netbox/users/models.py",
+      "netbox/utilities/models.py",
+      "netbox/users/tests/test_users.py"
+    ],
+    "diff": "--- a/netbox/users/models.py\n+++ b/netbox/users/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with utilities\n"
+  },
+  {
+    "sha": "c053aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev3@netbox.local>",
+    "timestamp": "2023-06-17T14:00:00Z",
+    "message": "Refactor utilities integration with dcim: ensure strict model constraints\n\nImproves relationship consistency between utilities and dcim.",
+    "files": [
+      "netbox/utilities/models.py",
+      "netbox/dcim/models.py",
+      "netbox/utilities/tests/test_utilities.py"
+    ],
+    "diff": "--- a/netbox/utilities/models.py\n+++ b/netbox/utilities/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with dcim\n"
+  },
+  {
+    "sha": "c054aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev4@netbox.local>",
+    "timestamp": "2023-06-27T15:00:00Z",
+    "message": "Refactor dcim integration with ipam: ensure strict model constraints\n\nImproves relationship consistency between dcim and ipam.",
+    "files": [
+      "netbox/dcim/models.py",
+      "netbox/ipam/models.py",
+      "netbox/dcim/tests/test_dcim.py"
+    ],
+    "diff": "--- a/netbox/dcim/models.py\n+++ b/netbox/dcim/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with ipam\n"
+  },
+  {
+    "sha": "c055aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev0@netbox.local>",
+    "timestamp": "2023-07-07T16:00:00Z",
+    "message": "Refactor ipam integration with tenancy: ensure strict model constraints\n\nImproves relationship consistency between ipam and tenancy.",
+    "files": [
+      "netbox/ipam/models.py",
+      "netbox/tenancy/models.py",
+      "netbox/ipam/tests/test_ipam.py"
+    ],
+    "diff": "--- a/netbox/ipam/models.py\n+++ b/netbox/ipam/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with tenancy\n"
+  },
+  {
+    "sha": "c056aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev1@netbox.local>",
+    "timestamp": "2023-07-17T17:00:00Z",
+    "message": "Refactor tenancy integration with circuits: ensure strict model constraints\n\nImproves relationship consistency between tenancy and circuits.",
+    "files": [
+      "netbox/tenancy/models.py",
+      "netbox/circuits/models.py",
+      "netbox/tenancy/tests/test_tenancy.py"
+    ],
+    "diff": "--- a/netbox/tenancy/models.py\n+++ b/netbox/tenancy/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with circuits\n"
+  },
+  {
+    "sha": "c057aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev2@netbox.local>",
+    "timestamp": "2023-07-27T18:00:00Z",
+    "message": "Refactor circuits integration with virtualization: ensure strict model constraints\n\nImproves relationship consistency between circuits and virtualization.",
+    "files": [
+      "netbox/circuits/models.py",
+      "netbox/virtualization/models.py",
+      "netbox/circuits/tests/test_circuits.py"
+    ],
+    "diff": "--- a/netbox/circuits/models.py\n+++ b/netbox/circuits/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with virtualization\n"
+  },
+  {
+    "sha": "c058aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev3@netbox.local>",
+    "timestamp": "2023-08-06T19:00:00Z",
+    "message": "Refactor virtualization integration with extras: ensure strict model constraints\n\nImproves relationship consistency between virtualization and extras.",
+    "files": [
+      "netbox/virtualization/models.py",
+      "netbox/extras/models.py",
+      "netbox/virtualization/tests/test_virtualization.py"
+    ],
+    "diff": "--- a/netbox/virtualization/models.py\n+++ b/netbox/virtualization/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with extras\n"
+  },
+  {
+    "sha": "c059aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev4@netbox.local>",
+    "timestamp": "2023-08-16T20:00:00Z",
+    "message": "Refactor extras integration with wireless: ensure strict model constraints\n\nImproves relationship consistency between extras and wireless.",
+    "files": [
+      "netbox/extras/models.py",
+      "netbox/wireless/models.py",
+      "netbox/extras/tests/test_extras.py"
+    ],
+    "diff": "--- a/netbox/extras/models.py\n+++ b/netbox/extras/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with wireless\n"
+  },
+  {
+    "sha": "c060aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "author": "NetBox Core Dev <dev0@netbox.local>",
+    "timestamp": "2023-08-26T21:00:00Z",
+    "message": "Refactor wireless integration with users: ensure strict model constraints\n\nImproves relationship consistency between wireless and users.",
+    "files": [
+      "netbox/wireless/models.py",
+      "netbox/users/models.py",
+      "netbox/wireless/tests/test_wireless.py"
+    ],
+    "diff": "--- a/netbox/wireless/models.py\n+++ b/netbox/wireless/models.py\n@@ -10,3 +10,4 @@\n+    # Co-change update with users\n"
+  }
+]

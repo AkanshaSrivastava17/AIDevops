@@ -1,0 +1,1206 @@
+[
+  {
+    "case_id": 1,
+    "change_description": "Refactor interface IP assignment to validate IP address VRF containment: Ensure that assigning an IP address to a device interface verifies that the IP belongs to a VRF accessible by the device or is global.",
+    "target_commit": "a001f8e91b2c3d4e5f6a7b8c9d0e1f2a3b4c5d01",
+    "parent_commit": "9001e7d80a1b2c3d4e5f6a7b8c9d0e1f2a3b4c01",
+    "target_time": "2023-01-10T10:00:00Z",
+    "actual_changed_files": [
+      "netbox/dcim/models/devices.py",
+      "netbox/ipam/models/ip.py",
+      "netbox/dcim/forms.py"
+    ],
+    "actual_components": [
+      "dcim",
+      "ipam"
+    ],
+    "available_tests": [
+      "netbox/dcim/tests/test_devices.py",
+      "netbox/ipam/tests/test_ipam.py",
+      "netbox/dcim/tests/test_views.py",
+      "netbox/tenancy/tests/test_tenancy.py"
+    ],
+    "relevant_existing_tests": [
+      "netbox/dcim/tests/test_devices.py",
+      "netbox/ipam/tests/test_ipam.py"
+    ],
+    "tests_added_by_change": [
+      "netbox/dcim/tests/test_interface_ip_validation.py"
+    ],
+    "relevant_evidence": [
+      {
+        "type": "issue",
+        "id": "issue-4201",
+        "title": "Interface IP assignment allows cross-VRF leaks without warning",
+        "timestamp": "2023-01-05T10:00:00Z"
+      },
+      {
+        "type": "commit",
+        "id": "c71a82d",
+        "title": "Initial VRF binding logic for interface addresses",
+        "timestamp": "2023-01-05T10:00:00Z"
+      }
+    ]
+  },
+  {
+    "case_id": 2,
+    "change_description": "Add MAC address formatting helper to DCIM interfaces and Wireless interfaces: Standardize MAC address sanitization and validation across standard DCIM interfaces and wireless interfaces.",
+    "target_commit": "a002f8e91b2c3d4e5f6a7b8c9d0e1f2a3b4c5d02",
+    "parent_commit": "9002e7d80a1b2c3d4e5f6a7b8c9d0e1f2a3b4c02",
+    "target_time": "2023-01-24T12:00:00Z",
+    "actual_changed_files": [
+      "netbox/dcim/models/interfaces.py",
+      "netbox/wireless/models.py",
+      "netbox/utilities/mac.py"
+    ],
+    "actual_components": [
+      "dcim",
+      "wireless",
+      "utilities"
+    ],
+    "available_tests": [
+      "netbox/dcim/tests/test_interfaces.py",
+      "netbox/wireless/tests/test_models.py",
+      "netbox/utilities/tests/test_helpers.py"
+    ],
+    "relevant_existing_tests": [
+      "netbox/dcim/tests/test_interfaces.py",
+      "netbox/wireless/tests/test_models.py",
+      "netbox/utilities/tests/test_helpers.py"
+    ],
+    "tests_added_by_change": [
+      "netbox/wireless/tests/test_mac_formatting.py"
+    ],
+    "relevant_evidence": [
+      {
+        "type": "pr",
+        "id": "pr-3890",
+        "title": "Unify MAC address normalization logic across modules",
+        "timestamp": "2023-01-19T10:00:00Z"
+      }
+    ]
+  },
+  {
+    "case_id": 3,
+    "change_description": "Implement custom validation rules hook for Tenancy Tenant assignments: Allow extras custom validator rules to intercept tenant assignment on DCIM sites and IPAM prefixes.",
+    "target_commit": "a003f8e91b2c3d4e5f6a7b8c9d0e1f2a3b4c5d03",
+    "parent_commit": "9003e7d80a1b2c3d4e5f6a7b8c9d0e1f2a3b4c03",
+    "target_time": "2023-02-07T14:00:00Z",
+    "actual_changed_files": [
+      "netbox/tenancy/models.py",
+      "netbox/extras/validators.py",
+      "netbox/dcim/models/sites.py"
+    ],
+    "actual_components": [
+      "tenancy",
+      "extras",
+      "dcim"
+    ],
+    "available_tests": [
+      "netbox/tenancy/tests/test_tenancy.py",
+      "netbox/extras/tests/test_validators.py",
+      "netbox/dcim/tests/test_sites.py"
+    ],
+    "relevant_existing_tests": [
+      "netbox/tenancy/tests/test_tenancy.py",
+      "netbox/extras/tests/test_validators.py"
+    ],
+    "tests_added_by_change": [
+      "netbox/extras/tests/test_tenant_custom_validation.py"
+    ],
+    "relevant_evidence": [
+      {
+        "type": "issue",
+        "id": "issue-4512",
+        "title": "Support custom script validator on tenant assignments",
+        "timestamp": "2023-02-02T10:00:00Z"
+      },
+      {
+        "type": "commit",
+        "id": "a98d331",
+        "title": "Add pre-save validator signals for core models",
+        "timestamp": "2023-02-02T10:00:00Z"
+      }
+    ]
+  },
+  {
+    "case_id": 4,
+    "change_description": "Optimize IPAM Prefix hierarchy tree reconstruction on bulk deletion: Improve database query efficiency when recalculating tree node depths during bulk deletion of nested prefixes.",
+    "target_commit": "a004f8e91b2c3d4e5f6a7b8c9d0e1f2a3b4c5d04",
+    "parent_commit": "9004e7d80a1b2c3d4e5f6a7b8c9d0e1f2a3b4c04",
+    "target_time": "2023-02-21T16:00:00Z",
+    "actual_changed_files": [
+      "netbox/ipam/models/prefixes.py",
+      "netbox/utilities/mptt.py"
+    ],
+    "actual_components": [
+      "ipam",
+      "utilities"
+    ],
+    "available_tests": [
+      "netbox/ipam/tests/test_prefixes.py",
+      "netbox/ipam/tests/test_ipam.py",
+      "netbox/utilities/tests/test_tree.py"
+    ],
+    "relevant_existing_tests": [
+      "netbox/ipam/tests/test_prefixes.py",
+      "netbox/utilities/tests/test_tree.py"
+    ],
+    "tests_added_by_change": [
+      "netbox/ipam/tests/test_bulk_prefix_delete_perf.py"
+    ],
+    "relevant_evidence": [
+      {
+        "type": "issue",
+        "id": "issue-4889",
+        "title": "Slow prefix deletion with deep MPTT nesting",
+        "timestamp": "2023-02-16T10:00:00Z"
+      }
+    ]
+  },
+  {
+    "case_id": 5,
+    "change_description": "Circuit termination relationship check when deleting DCIM site: Prevent accidental orphan circuit terminations when deleting a site that has active circuit provider termination points.",
+    "target_commit": "a005f8e91b2c3d4e5f6a7b8c9d0e1f2a3b4c5d05",
+    "parent_commit": "9005e7d80a1b2c3d4e5f6a7b8c9d0e1f2a3b4c05",
+    "target_time": "2023-03-07T18:00:00Z",
+    "actual_changed_files": [
+      "netbox/circuits/models.py",
+      "netbox/dcim/models/sites.py"
+    ],
+    "actual_components": [
+      "circuits",
+      "dcim"
+    ],
+    "available_tests": [
+      "netbox/circuits/tests/test_circuits.py",
+      "netbox/dcim/tests/test_sites.py",
+      "netbox/circuits/tests/test_terminations.py"
+    ],
+    "relevant_existing_tests": [
+      "netbox/circuits/tests/test_circuits.py",
+      "netbox/dcim/tests/test_sites.py"
+    ],
+    "tests_added_by_change": [
+      "netbox/circuits/tests/test_site_deletion_cascade.py"
+    ],
+    "relevant_evidence": [
+      {
+        "type": "issue",
+        "id": "issue-3310",
+        "title": "Cascade deletion of site breaks circuit termination references",
+        "timestamp": "2023-03-02T10:00:00Z"
+      }
+    ]
+  },
+  {
+    "case_id": 6,
+    "change_description": "Virtualization cluster group permissions enforcement for tenant users: Restrict visibility of VirtualMachine clusters based on tenancy group tags and user permission constraints.",
+    "target_commit": "a006f8e91b2c3d4e5f6a7b8c9d0e1f2a3b4c5d06",
+    "parent_commit": "9006e7d80a1b2c3d4e5f6a7b8c9d0e1f2a3b4c06",
+    "target_time": "2023-03-21T20:00:00Z",
+    "actual_changed_files": [
+      "netbox/virtualization/models.py",
+      "netbox/users/permissions.py"
+    ],
+    "actual_components": [
+      "virtualization",
+      "tenancy",
+      "users"
+    ],
+    "available_tests": [
+      "netbox/virtualization/tests/test_clusters.py",
+      "netbox/users/tests/test_permissions.py"
+    ],
+    "relevant_existing_tests": [
+      "netbox/virtualization/tests/test_clusters.py",
+      "netbox/users/tests/test_permissions.py"
+    ],
+    "tests_added_by_change": [
+      "netbox/virtualization/tests/test_cluster_tenant_permissions.py"
+    ],
+    "relevant_evidence": [
+      {
+        "type": "pr",
+        "id": "pr-5102",
+        "title": "Enforce object-level tenant permissions on virtualization clusters",
+        "timestamp": "2023-03-16T10:00:00Z"
+      }
+    ]
+  },
+  {
+    "case_id": 7,
+    "change_description": "Add Webhook notification triggers for Cable connection status change: Dispatch asynchronous extras webhooks whenever a DCIM Cable status changes between planned and connected.",
+    "target_commit": "a007f8e91b2c3d4e5f6a7b8c9d0e1f2a3b4c5d07",
+    "parent_commit": "9007e7d80a1b2c3d4e5f6a7b8c9d0e1f2a3b4c07",
+    "target_time": "2023-04-04T22:00:00Z",
+    "actual_changed_files": [
+      "netbox/dcim/models/cables.py",
+      "netbox/extras/webhooks.py"
+    ],
+    "actual_components": [
+      "dcim",
+      "extras"
+    ],
+    "available_tests": [
+      "netbox/dcim/tests/test_cables.py",
+      "netbox/extras/tests/test_webhooks.py"
+    ],
+    "relevant_existing_tests": [
+      "netbox/dcim/tests/test_cables.py",
+      "netbox/extras/tests/test_webhooks.py"
+    ],
+    "tests_added_by_change": [
+      "netbox/extras/tests/test_cable_webhook.py"
+    ],
+    "relevant_evidence": [
+      {
+        "type": "issue",
+        "id": "issue-5201",
+        "title": "Cable status transitions do not emit webhook payloads",
+        "timestamp": "2023-03-30T10:00:00Z"
+      }
+    ]
+  },
+  {
+    "case_id": 8,
+    "change_description": "Enforce VLAN translation and VLAN Group uniqueness within DCIM Site: Ensure VLAN IDs within a VLAN group scoped to a specific site or location remain unique upon update.",
+    "target_commit": "a008f8e91b2c3d4e5f6a7b8c9d0e1f2a3b4c5d08",
+    "parent_commit": "9008e7d80a1b2c3d4e5f6a7b8c9d0e1f2a3b4c08",
+    "target_time": "2023-04-19T00:00:00Z",
+    "actual_changed_files": [
+      "netbox/ipam/models/vlans.py",
+      "netbox/dcim/models/locations.py"
+    ],
+    "actual_components": [
+      "ipam",
+      "dcim"
+    ],
+    "available_tests": [
+      "netbox/ipam/tests/test_vlans.py",
+      "netbox/dcim/tests/test_locations.py"
+    ],
+    "relevant_existing_tests": [
+      "netbox/ipam/tests/test_vlans.py",
+      "netbox/dcim/tests/test_locations.py"
+    ],
+    "tests_added_by_change": [
+      "netbox/ipam/tests/test_vlan_group_scope.py"
+    ],
+    "relevant_evidence": [
+      {
+        "type": "issue",
+        "id": "issue-4011",
+        "title": "Duplicate VLAN VID allowed within same site scope",
+        "timestamp": "2023-04-13T10:00:00Z"
+      }
+    ]
+  },
+  {
+    "case_id": 9,
+    "change_description": "Export Custom Fields and Tags in CSV export utilities for Circuits: Include custom field columns and tagged items in the bulk CSV export action for circuit provider models.",
+    "target_commit": "a009f8e91b2c3d4e5f6a7b8c9d0e1f2a3b4c5d09",
+    "parent_commit": "9009e7d80a1b2c3d4e5f6a7b8c9d0e1f2a3b4c09",
+    "target_time": "2023-05-03T02:00:00Z",
+    "actual_changed_files": [
+      "netbox/circuits/views.py",
+      "netbox/extras/models/customfields.py",
+      "netbox/utilities/export.py"
+    ],
+    "actual_components": [
+      "circuits",
+      "extras",
+      "utilities"
+    ],
+    "available_tests": [
+      "netbox/circuits/tests/test_views.py",
+      "netbox/extras/tests/test_customfields.py",
+      "netbox/utilities/tests/test_export.py"
+    ],
+    "relevant_existing_tests": [
+      "netbox/circuits/tests/test_views.py",
+      "netbox/utilities/tests/test_export.py"
+    ],
+    "tests_added_by_change": [
+      "netbox/circuits/tests/test_circuit_csv_export.py"
+    ],
+    "relevant_evidence": [
+      {
+        "type": "pr",
+        "id": "pr-3921",
+        "title": "Standardize custom field inclusion in model CSV exporters",
+        "timestamp": "2023-04-27T10:00:00Z"
+      }
+    ]
+  },
+  {
+    "case_id": 10,
+    "change_description": "Refactor User token authentication to record last used timestamp in Redis: Track API token last_used timestamps using Redis cache to prevent high write load on PostgreSQL user tables.",
+    "target_commit": "a010f8e91b2c3d4e5f6a7b8c9d0e1f2a3b4c5d10",
+    "parent_commit": "9010e7d80a1b2c3d4e5f6a7b8c9d0e1f2a3b4c10",
+    "target_time": "2023-05-17T04:00:00Z",
+    "actual_changed_files": [
+      "netbox/users/authentication.py",
+      "netbox/utilities/caching.py"
+    ],
+    "actual_components": [
+      "users",
+      "utilities"
+    ],
+    "available_tests": [
+      "netbox/users/tests/test_auth.py",
+      "netbox/utilities/tests/test_caching.py"
+    ],
+    "relevant_existing_tests": [
+      "netbox/users/tests/test_auth.py"
+    ],
+    "tests_added_by_change": [
+      "netbox/users/tests/test_token_activity_caching.py"
+    ],
+    "relevant_evidence": [
+      {
+        "type": "issue",
+        "id": "issue-4602",
+        "title": "High DB contention on users_token table during bulk API calls",
+        "timestamp": "2023-05-11T10:00:00Z"
+      }
+    ]
+  },
+  {
+    "case_id": 11,
+    "change_description": "Wireless WirelessLAN assignment to DCIM Device interface: Allow binding wireless LAN profiles to device Wi-Fi interfaces with appropriate SSID validation.",
+    "target_commit": "a011f8e91b2c3d4e5f6a7b8c9d0e1f2a3b4c5d11",
+    "parent_commit": "9011e7d80a1b2c3d4e5f6a7b8c9d0e1f2a3b4c11",
+    "target_time": "2023-05-31T06:00:00Z",
+    "actual_changed_files": [
+      "netbox/wireless/models.py",
+      "netbox/dcim/models/devices.py"
+    ],
+    "actual_components": [
+      "wireless",
+      "dcim"
+    ],
+    "available_tests": [
+      "netbox/wireless/tests/test_wirelesslan.py",
+      "netbox/dcim/tests/test_devices.py"
+    ],
+    "relevant_existing_tests": [
+      "netbox/wireless/tests/test_wirelesslan.py",
+      "netbox/dcim/tests/test_devices.py"
+    ],
+    "tests_added_by_change": [
+      "netbox/wireless/tests/test_device_wlan_binding.py"
+    ],
+    "relevant_evidence": [
+      {
+        "type": "issue",
+        "id": "issue-5340",
+        "title": "Enable wireless LAN mapping on hardware interfaces",
+        "timestamp": "2023-05-25T10:00:00Z"
+      }
+    ]
+  },
+  {
+    "case_id": 12,
+    "change_description": "Virtualization VM disk size calculation aggregation in Tenancy reports: Aggregate total virtual disk allocations per tenant across all assigned virtual machine instances.",
+    "target_commit": "a012f8e91b2c3d4e5f6a7b8c9d0e1f2a3b4c5d12",
+    "parent_commit": "9012e7d80a1b2c3d4e5f6a7b8c9d0e1f2a3b4c12",
+    "target_time": "2023-06-14T08:00:00Z",
+    "actual_changed_files": [
+      "netbox/virtualization/models.py",
+      "netbox/tenancy/reports.py"
+    ],
+    "actual_components": [
+      "virtualization",
+      "tenancy"
+    ],
+    "available_tests": [
+      "netbox/virtualization/tests/test_vms.py",
+      "netbox/tenancy/tests/test_reports.py"
+    ],
+    "relevant_existing_tests": [
+      "netbox/virtualization/tests/test_vms.py",
+      "netbox/tenancy/tests/test_reports.py"
+    ],
+    "tests_added_by_change": [
+      "netbox/virtualization/tests/test_vm_resource_aggregation.py"
+    ],
+    "relevant_evidence": [
+      {
+        "type": "pr",
+        "id": "pr-4780",
+        "title": "Compute tenant aggregate storage metrics across VMs",
+        "timestamp": "2023-06-08T10:00:00Z"
+      }
+    ]
+  },
+  {
+    "case_id": 13,
+    "change_description": "Add Changelog tracking for DCIM Device Bay populating and unseating events: Ensure that installing or removing a blade/module into a device bay records detailed changelog entries in extras.",
+    "target_commit": "a013f8e91b2c3d4e5f6a7b8c9d0e1f2a3b4c5d13",
+    "parent_commit": "9013e7d80a1b2c3d4e5f6a7b8c9d0e1f2a3b4c13",
+    "target_time": "2023-06-28T10:00:00Z",
+    "actual_changed_files": [
+      "netbox/dcim/models/devices.py",
+      "netbox/extras/changelog.py"
+    ],
+    "actual_components": [
+      "dcim",
+      "extras"
+    ],
+    "available_tests": [
+      "netbox/dcim/tests/test_device_bays.py",
+      "netbox/extras/tests/test_changelog.py"
+    ],
+    "relevant_existing_tests": [
+      "netbox/dcim/tests/test_device_bays.py",
+      "netbox/extras/tests/test_changelog.py"
+    ],
+    "tests_added_by_change": [
+      "netbox/dcim/tests/test_device_bay_changelog.py"
+    ],
+    "relevant_evidence": [
+      {
+        "type": "issue",
+        "id": "issue-4411",
+        "title": "Object changelog does not record device bay seating changes",
+        "timestamp": "2023-06-22T10:00:00Z"
+      }
+    ]
+  },
+  {
+    "case_id": 14,
+    "change_description": "Validate IPAM Service port ranges and protocol consistency: Check that service port definitions on IP addresses or devices contain valid TCP/UDP port ranges (1-65535).",
+    "target_commit": "a014f8e91b2c3d4e5f6a7b8c9d0e1f2a3b4c5d14",
+    "parent_commit": "9014e7d80a1b2c3d4e5f6a7b8c9d0e1f2a3b4c14",
+    "target_time": "2023-07-12T12:00:00Z",
+    "actual_changed_files": [
+      "netbox/ipam/models/services.py",
+      "netbox/dcim/models/devices.py"
+    ],
+    "actual_components": [
+      "ipam",
+      "dcim"
+    ],
+    "available_tests": [
+      "netbox/ipam/tests/test_services.py",
+      "netbox/dcim/tests/test_devices.py"
+    ],
+    "relevant_existing_tests": [
+      "netbox/ipam/tests/test_services.py"
+    ],
+    "tests_added_by_change": [
+      "netbox/ipam/tests/test_service_port_bounds.py"
+    ],
+    "relevant_evidence": [
+      {
+        "type": "issue",
+        "id": "issue-4389",
+        "title": "Allow port range specifications in IPAM Service model",
+        "timestamp": "2023-07-06T10:00:00Z"
+      }
+    ]
+  },
+  {
+    "case_id": 15,
+    "change_description": "Circuit Provider account multi-tenancy assignment and billing reference: Associate provider accounts with Tenancy tenants and enforce tenant scoping on circuits list views.",
+    "target_commit": "a015f8e91b2c3d4e5f6a7b8c9d0e1f2a3b4c5d15",
+    "parent_commit": "9015e7d80a1b2c3d4e5f6a7b8c9d0e1f2a3b4c15",
+    "target_time": "2023-07-26T14:00:00Z",
+    "actual_changed_files": [
+      "netbox/circuits/models.py",
+      "netbox/tenancy/models.py"
+    ],
+    "actual_components": [
+      "circuits",
+      "tenancy"
+    ],
+    "available_tests": [
+      "netbox/circuits/tests/test_providers.py",
+      "netbox/tenancy/tests/test_tenancy.py"
+    ],
+    "relevant_existing_tests": [
+      "netbox/circuits/tests/test_providers.py",
+      "netbox/tenancy/tests/test_tenancy.py"
+    ],
+    "tests_added_by_change": [
+      "netbox/circuits/tests/test_provider_tenant_scoping.py"
+    ],
+    "relevant_evidence": [
+      {
+        "type": "pr",
+        "id": "pr-4215",
+        "title": "Add tenant foreign keys to CircuitProviderAccount",
+        "timestamp": "2023-07-20T10:00:00Z"
+      }
+    ]
+  },
+  {
+    "case_id": 16,
+    "change_description": "Implement REST API filtering for VirtualMachine interface MAC addresses: Expose case-insensitive MAC address lookup on the virtualization VM interface REST API endpoint.",
+    "target_commit": "a016f8e91b2c3d4e5f6a7b8c9d0e1f2a3b4c5d16",
+    "parent_commit": "9016e7d80a1b2c3d4e5f6a7b8c9d0e1f2a3b4c16",
+    "target_time": "2023-08-09T16:00:00Z",
+    "actual_changed_files": [
+      "netbox/virtualization/api/serializers.py",
+      "netbox/virtualization/api/views.py",
+      "netbox/utilities/filters.py"
+    ],
+    "actual_components": [
+      "virtualization",
+      "utilities"
+    ],
+    "available_tests": [
+      "netbox/virtualization/tests/test_api.py",
+      "netbox/utilities/tests/test_filters.py"
+    ],
+    "relevant_existing_tests": [
+      "netbox/virtualization/tests/test_api.py"
+    ],
+    "tests_added_by_change": [
+      "netbox/virtualization/tests/test_vm_interface_api_mac_filter.py"
+    ],
+    "relevant_evidence": [
+      {
+        "type": "issue",
+        "id": "issue-4950",
+        "title": "API filter mac_address not functioning on VM interfaces",
+        "timestamp": "2023-08-03T10:00:00Z"
+      }
+    ]
+  },
+  {
+    "case_id": 17,
+    "change_description": "Wireless WirelessLink distance calculation between DCIM Sites and Locations: Calculate outdoor wireless link distance based on GPS coordinates of connected device sites and locations.",
+    "target_commit": "a017f8e91b2c3d4e5f6a7b8c9d0e1f2a3b4c5d17",
+    "parent_commit": "9017e7d80a1b2c3d4e5f6a7b8c9d0e1f2a3b4c17",
+    "target_time": "2023-08-23T18:00:00Z",
+    "actual_changed_files": [
+      "netbox/wireless/models.py",
+      "netbox/dcim/models/sites.py",
+      "netbox/utilities/geo.py"
+    ],
+    "actual_components": [
+      "wireless",
+      "dcim",
+      "utilities"
+    ],
+    "available_tests": [
+      "netbox/wireless/tests/test_links.py",
+      "netbox/dcim/tests/test_sites.py",
+      "netbox/utilities/tests/test_geo.py"
+    ],
+    "relevant_existing_tests": [
+      "netbox/wireless/tests/test_links.py",
+      "netbox/utilities/tests/test_geo.py"
+    ],
+    "tests_added_by_change": [
+      "netbox/wireless/tests/test_link_geo_distance.py"
+    ],
+    "relevant_evidence": [
+      {
+        "type": "issue",
+        "id": "issue-5520",
+        "title": "Add automatic distance computation to wireless links",
+        "timestamp": "2023-08-17T10:00:00Z"
+      }
+    ]
+  },
+  {
+    "case_id": 18,
+    "change_description": "Add User group object permission filtering in Django admin: Ensure admin dashboards honor custom object permissions defined in users app for non-superuser staff.",
+    "target_commit": "a018f8e91b2c3d4e5f6a7b8c9d0e1f2a3b4c5d18",
+    "parent_commit": "9018e7d80a1b2c3d4e5f6a7b8c9d0e1f2a3b4c18",
+    "target_time": "2023-09-06T20:00:00Z",
+    "actual_changed_files": [
+      "netbox/users/admin.py",
+      "netbox/users/permissions.py"
+    ],
+    "actual_components": [
+      "users",
+      "utilities"
+    ],
+    "available_tests": [
+      "netbox/users/tests/test_admin.py",
+      "netbox/users/tests/test_permissions.py"
+    ],
+    "relevant_existing_tests": [
+      "netbox/users/tests/test_admin.py",
+      "netbox/users/tests/test_permissions.py"
+    ],
+    "tests_added_by_change": [
+      "netbox/users/tests/test_admin_permission_scoping.py"
+    ],
+    "relevant_evidence": [
+      {
+        "type": "issue",
+        "id": "issue-3770",
+        "title": "Staff users bypass object permissions in Django admin views",
+        "timestamp": "2023-08-31T10:00:00Z"
+      }
+    ]
+  },
+  {
+    "case_id": 19,
+    "change_description": "DCIM Rack unit reservations conflict detection on device placement: Validate that installing a device into a rack does not collide with existing active rack reservations.",
+    "target_commit": "a019f8e91b2c3d4e5f6a7b8c9d0e1f2a3b4c5d19",
+    "parent_commit": "9019e7d80a1b2c3d4e5f6a7b8c9d0e1f2a3b4c19",
+    "target_time": "2023-09-20T22:00:00Z",
+    "actual_changed_files": [
+      "netbox/dcim/models/racks.py",
+      "netbox/dcim/validation.py"
+    ],
+    "actual_components": [
+      "dcim",
+      "utilities"
+    ],
+    "available_tests": [
+      "netbox/dcim/tests/test_racks.py",
+      "netbox/dcim/tests/test_devices.py"
+    ],
+    "relevant_existing_tests": [
+      "netbox/dcim/tests/test_racks.py"
+    ],
+    "tests_added_by_change": [
+      "netbox/dcim/tests/test_rack_reservation_collision.py"
+    ],
+    "relevant_evidence": [
+      {
+        "type": "issue",
+        "id": "issue-4180",
+        "title": "Device insertion ignores existing rack reservations",
+        "timestamp": "2023-09-14T10:00:00Z"
+      }
+    ]
+  },
+  {
+    "case_id": 20,
+    "change_description": "IPAM ASN model migration to 32-bit AS numbers and BGP association: Support 4-byte ASN integers and update validation rules for Autonomous System numbers in IPAM and routing.",
+    "target_commit": "a020f8e91b2c3d4e5f6a7b8c9d0e1f2a3b4c5d20",
+    "parent_commit": "9020e7d80a1b2c3d4e5f6a7b8c9d0e1f2a3b4c20",
+    "target_time": "2023-10-05T00:00:00Z",
+    "actual_changed_files": [
+      "netbox/ipam/models/asns.py",
+      "netbox/circuits/models.py"
+    ],
+    "actual_components": [
+      "ipam",
+      "circuits"
+    ],
+    "available_tests": [
+      "netbox/ipam/tests/test_asns.py",
+      "netbox/circuits/tests/test_circuits.py"
+    ],
+    "relevant_existing_tests": [
+      "netbox/ipam/tests/test_asns.py"
+    ],
+    "tests_added_by_change": [
+      "netbox/ipam/tests/test_asn_32bit_ranges.py"
+    ],
+    "relevant_evidence": [
+      {
+        "type": "pr",
+        "id": "pr-3950",
+        "title": "Migrate ASN field to BigIntegerField for 32-bit numbers",
+        "timestamp": "2023-09-28T10:00:00Z"
+      }
+    ]
+  },
+  {
+    "case_id": 21,
+    "change_description": "Extras Config Context dynamic rendering for VirtualMachine instances: Merge configuration contexts dynamically for VMs based on cluster, site, role, and tenant tags.",
+    "target_commit": "a021f8e91b2c3d4e5f6a7b8c9d0e1f2a3b4c5d21",
+    "parent_commit": "9021e7d80a1b2c3d4e5f6a7b8c9d0e1f2a3b4c21",
+    "target_time": "2023-10-19T02:00:00Z",
+    "actual_changed_files": [
+      "netbox/extras/models/configcontexts.py",
+      "netbox/virtualization/models.py"
+    ],
+    "actual_components": [
+      "extras",
+      "virtualization",
+      "tenancy"
+    ],
+    "available_tests": [
+      "netbox/extras/tests/test_configcontexts.py",
+      "netbox/virtualization/tests/test_vms.py"
+    ],
+    "relevant_existing_tests": [
+      "netbox/extras/tests/test_configcontexts.py",
+      "netbox/virtualization/tests/test_vms.py"
+    ],
+    "tests_added_by_change": [
+      "netbox/extras/tests/test_vm_config_context_render.py"
+    ],
+    "relevant_evidence": [
+      {
+        "type": "issue",
+        "id": "issue-4310",
+        "title": "Config context inheritance failing for clustered VMs",
+        "timestamp": "2023-10-12T10:00:00Z"
+      }
+    ]
+  },
+  {
+    "case_id": 22,
+    "change_description": "DCIM Cable length conversion helper between meters and feet: Add unit conversion methods on Cable model to correctly translate lengths and maintain unit precision.",
+    "target_commit": "a022f8e91b2c3d4e5f6a7b8c9d0e1f2a3b4c5d22",
+    "parent_commit": "9022e7d80a1b2c3d4e5f6a7b8c9d0e1f2a3b4c22",
+    "target_time": "2023-11-02T04:00:00Z",
+    "actual_changed_files": [
+      "netbox/dcim/models/cables.py",
+      "netbox/utilities/conversion.py"
+    ],
+    "actual_components": [
+      "dcim",
+      "utilities"
+    ],
+    "available_tests": [
+      "netbox/dcim/tests/test_cables.py",
+      "netbox/utilities/tests/test_conversion.py"
+    ],
+    "relevant_existing_tests": [
+      "netbox/dcim/tests/test_cables.py",
+      "netbox/utilities/tests/test_conversion.py"
+    ],
+    "tests_added_by_change": [
+      "netbox/dcim/tests/test_cable_length_units.py"
+    ],
+    "relevant_evidence": [
+      {
+        "type": "pr",
+        "id": "pr-3640",
+        "title": "Add imperial/metric conversion for cable lengths",
+        "timestamp": "2023-10-26T10:00:00Z"
+      }
+    ]
+  },
+  {
+    "case_id": 23,
+    "change_description": "IPAM FHRP Group authentication key encryption and hashing: Secure First Hop Redundancy Protocol (FHRP) authentication tokens using Django cryptographic signing utilities.",
+    "target_commit": "a023f8e91b2c3d4e5f6a7b8c9d0e1f2a3b4c5d23",
+    "parent_commit": "9023e7d80a1b2c3d4e5f6a7b8c9d0e1f2a3b4c23",
+    "target_time": "2023-11-16T06:00:00Z",
+    "actual_changed_files": [
+      "netbox/ipam/models/fhrp.py",
+      "netbox/utilities/crypto.py"
+    ],
+    "actual_components": [
+      "ipam",
+      "utilities"
+    ],
+    "available_tests": [
+      "netbox/ipam/tests/test_fhrp.py",
+      "netbox/utilities/tests/test_crypto.py"
+    ],
+    "relevant_existing_tests": [
+      "netbox/ipam/tests/test_fhrp.py"
+    ],
+    "tests_added_by_change": [
+      "netbox/ipam/tests/test_fhrp_auth_encryption.py"
+    ],
+    "relevant_evidence": [
+      {
+        "type": "issue",
+        "id": "issue-5110",
+        "title": "Plaintext auth passwords in VRRP/HSRP configuration",
+        "timestamp": "2023-11-09T10:00:00Z"
+      }
+    ]
+  },
+  {
+    "case_id": 24,
+    "change_description": "Tenancy Contact assignment to Circuit Providers and Circuits: Link contacts and contact roles to telecom circuit providers for escalation tracking.",
+    "target_commit": "a024f8e91b2c3d4e5f6a7b8c9d0e1f2a3b4c5d24",
+    "parent_commit": "9024e7d80a1b2c3d4e5f6a7b8c9d0e1f2a3b4c24",
+    "target_time": "2023-11-30T08:00:00Z",
+    "actual_changed_files": [
+      "netbox/tenancy/models/contacts.py",
+      "netbox/circuits/models.py"
+    ],
+    "actual_components": [
+      "tenancy",
+      "circuits"
+    ],
+    "available_tests": [
+      "netbox/tenancy/tests/test_contacts.py",
+      "netbox/circuits/tests/test_providers.py"
+    ],
+    "relevant_existing_tests": [
+      "netbox/tenancy/tests/test_contacts.py",
+      "netbox/circuits/tests/test_providers.py"
+    ],
+    "tests_added_by_change": [
+      "netbox/circuits/tests/test_circuit_contact_assignment.py"
+    ],
+    "relevant_evidence": [
+      {
+        "type": "pr",
+        "id": "pr-4820",
+        "title": "Associate contacts with telecom circuits",
+        "timestamp": "2023-11-23T10:00:00Z"
+      }
+    ]
+  },
+  {
+    "case_id": 25,
+    "change_description": "Wireless WirelessLAN SSID duplicate detection within same WirelessLANGroup: Add model clean check rejecting identical SSIDs within the same operational WirelessLAN group.",
+    "target_commit": "a025f8e91b2c3d4e5f6a7b8c9d0e1f2a3b4c5d25",
+    "parent_commit": "9025e7d80a1b2c3d4e5f6a7b8c9d0e1f2a3b4c25",
+    "target_time": "2023-12-14T10:00:00Z",
+    "actual_changed_files": [
+      "netbox/wireless/models.py",
+      "netbox/wireless/forms.py"
+    ],
+    "actual_components": [
+      "wireless"
+    ],
+    "available_tests": [
+      "netbox/wireless/tests/test_models.py",
+      "netbox/wireless/tests/test_forms.py"
+    ],
+    "relevant_existing_tests": [
+      "netbox/wireless/tests/test_models.py"
+    ],
+    "tests_added_by_change": [
+      "netbox/wireless/tests/test_wlan_group_ssid_uniqueness.py"
+    ],
+    "relevant_evidence": [
+      {
+        "type": "issue",
+        "id": "issue-5490",
+        "title": "Duplicate SSID names in same wireless group cause ambiguity",
+        "timestamp": "2023-12-07T10:00:00Z"
+      }
+    ]
+  },
+  {
+    "case_id": 26,
+    "change_description": "Virtualization VM Clone action preserving custom fields and tags: Ensure cloning a virtual machine duplicates assigned custom field values and tags from extras.",
+    "target_commit": "a026f8e91b2c3d4e5f6a7b8c9d0e1f2a3b4c5d26",
+    "parent_commit": "9026e7d80a1b2c3d4e5f6a7b8c9d0e1f2a3b4c26",
+    "target_time": "2023-12-28T12:00:00Z",
+    "actual_changed_files": [
+      "netbox/virtualization/views.py",
+      "netbox/extras/models/tags.py"
+    ],
+    "actual_components": [
+      "virtualization",
+      "extras"
+    ],
+    "available_tests": [
+      "netbox/virtualization/tests/test_views.py",
+      "netbox/extras/tests/test_tags.py"
+    ],
+    "relevant_existing_tests": [
+      "netbox/virtualization/tests/test_views.py"
+    ],
+    "tests_added_by_change": [
+      "netbox/virtualization/tests/test_vm_clone_custom_fields.py"
+    ],
+    "relevant_evidence": [
+      {
+        "type": "issue",
+        "id": "issue-4670",
+        "title": "VM clone drops custom field assignments",
+        "timestamp": "2023-12-21T10:00:00Z"
+      }
+    ]
+  },
+  {
+    "case_id": 27,
+    "change_description": "Users API Token expiration date enforcement in authentication middleware: Check token expiration timestamp on each incoming REST request and return HTTP 403 when expired.",
+    "target_commit": "a027f8e91b2c3d4e5f6a7b8c9d0e1f2a3b4c5d27",
+    "parent_commit": "9027e7d80a1b2c3d4e5f6a7b8c9d0e1f2a3b4c27",
+    "target_time": "2024-01-11T14:00:00Z",
+    "actual_changed_files": [
+      "netbox/users/authentication.py",
+      "netbox/users/models.py"
+    ],
+    "actual_components": [
+      "users"
+    ],
+    "available_tests": [
+      "netbox/users/tests/test_auth.py",
+      "netbox/users/tests/test_tokens.py"
+    ],
+    "relevant_existing_tests": [
+      "netbox/users/tests/test_auth.py",
+      "netbox/users/tests/test_tokens.py"
+    ],
+    "tests_added_by_change": [
+      "netbox/users/tests/test_token_expiry_validation.py"
+    ],
+    "relevant_evidence": [
+      {
+        "type": "pr",
+        "id": "pr-4050",
+        "title": "Enforce token expiration dates in DRF authenticator",
+        "timestamp": "2024-01-04T10:00:00Z"
+      }
+    ]
+  },
+  {
+    "case_id": 28,
+    "change_description": "Extras Journal Entry creation on IPAM IP address status change: Automatically record an audit journal entry whenever an IP address status changes from Active to Reserved.",
+    "target_commit": "a028f8e91b2c3d4e5f6a7b8c9d0e1f2a3b4c5d28",
+    "parent_commit": "9028e7d80a1b2c3d4e5f6a7b8c9d0e1f2a3b4c28",
+    "target_time": "2024-01-25T16:00:00Z",
+    "actual_changed_files": [
+      "netbox/extras/models/journal.py",
+      "netbox/ipam/models/ip.py"
+    ],
+    "actual_components": [
+      "extras",
+      "ipam"
+    ],
+    "available_tests": [
+      "netbox/extras/tests/test_journal.py",
+      "netbox/ipam/tests/test_ipam.py"
+    ],
+    "relevant_existing_tests": [
+      "netbox/extras/tests/test_journal.py",
+      "netbox/ipam/tests/test_ipam.py"
+    ],
+    "tests_added_by_change": [
+      "netbox/extras/tests/test_ip_journal_signal.py"
+    ],
+    "relevant_evidence": [
+      {
+        "type": "issue",
+        "id": "issue-4810",
+        "title": "Record automatic journal notes on IP state changes",
+        "timestamp": "2024-01-18T10:00:00Z"
+      }
+    ]
+  },
+  {
+    "case_id": 29,
+    "change_description": "DCIM Power Outlet and Power Port connection loop prevention: Prevent recursive feed loops when connecting power cables across multiple distribution units.",
+    "target_commit": "a029f8e91b2c3d4e5f6a7b8c9d0e1f2a3b4c5d29",
+    "parent_commit": "9029e7d80a1b2c3d4e5f6a7b8c9d0e1f2a3b4c29",
+    "target_time": "2024-02-08T18:00:00Z",
+    "actual_changed_files": [
+      "netbox/dcim/models/power.py",
+      "netbox/dcim/models/cables.py"
+    ],
+    "actual_components": [
+      "dcim"
+    ],
+    "available_tests": [
+      "netbox/dcim/tests/test_power.py",
+      "netbox/dcim/tests/test_cables.py"
+    ],
+    "relevant_existing_tests": [
+      "netbox/dcim/tests/test_power.py"
+    ],
+    "tests_added_by_change": [
+      "netbox/dcim/tests/test_power_loop_detection.py"
+    ],
+    "relevant_evidence": [
+      {
+        "type": "issue",
+        "id": "issue-3980",
+        "title": "Power cable connection loop crashes graph traversal",
+        "timestamp": "2024-02-01T10:00:00Z"
+      }
+    ]
+  },
+  {
+    "case_id": 30,
+    "change_description": "Utilities QuerySet filter optimization for nested MPTT and TreeQuery models: Enhance tree query caching helper to avoid repeated database lookups for ancestor chains.",
+    "target_commit": "a030f8e91b2c3d4e5f6a7b8c9d0e1f2a3b4c5d30",
+    "parent_commit": "9030e7d80a1b2c3d4e5f6a7b8c9d0e1f2a3b4c30",
+    "target_time": "2024-02-22T20:00:00Z",
+    "actual_changed_files": [
+      "netbox/utilities/querysets.py",
+      "netbox/utilities/mptt.py"
+    ],
+    "actual_components": [
+      "utilities"
+    ],
+    "available_tests": [
+      "netbox/utilities/tests/test_querysets.py",
+      "netbox/utilities/tests/test_tree.py"
+    ],
+    "relevant_existing_tests": [
+      "netbox/utilities/tests/test_querysets.py",
+      "netbox/utilities/tests/test_tree.py"
+    ],
+    "tests_added_by_change": [
+      "netbox/utilities/tests/test_tree_ancestor_cache.py"
+    ],
+    "relevant_evidence": [
+      {
+        "type": "pr",
+        "id": "pr-3490",
+        "title": "Optimize recursive tree query evaluations",
+        "timestamp": "2024-02-15T10:00:00Z"
+      }
+    ]
+  },
+  {
+    "case_id": 31,
+    "change_description": "IPAM Aggregate RIR assignment validation on CIDR expansion: Validate Regional Internet Registry (RIR) rules when modifying an IP prefix aggregate boundary.",
+    "target_commit": "a031f8e91b2c3d4e5f6a7b8c9d0e1f2a3b4c5d31",
+    "parent_commit": "9031e7d80a1b2c3d4e5f6a7b8c9d0e1f2a3b4c31",
+    "target_time": "2024-03-07T22:00:00Z",
+    "actual_changed_files": [
+      "netbox/ipam/models/aggregates.py",
+      "netbox/ipam/forms.py"
+    ],
+    "actual_components": [
+      "ipam"
+    ],
+    "available_tests": [
+      "netbox/ipam/tests/test_aggregates.py",
+      "netbox/ipam/tests/test_prefixes.py"
+    ],
+    "relevant_existing_tests": [
+      "netbox/ipam/tests/test_aggregates.py"
+    ],
+    "tests_added_by_change": [
+      "netbox/ipam/tests/test_aggregate_rir_expansion.py"
+    ],
+    "relevant_evidence": [
+      {
+        "type": "issue",
+        "id": "issue-4155",
+        "title": "Aggregate CIDR expansion bypasses RIR checks",
+        "timestamp": "2024-02-29T10:00:00Z"
+      }
+    ]
+  },
+  {
+    "case_id": 32,
+    "change_description": "DCIM Module Bay and Module Type hardware compatibility constraint: Validate that inserting a hardware module into a device module bay matches allowable module type architectures.",
+    "target_commit": "a032f8e91b2c3d4e5f6a7b8c9d0e1f2a3b4c5d32",
+    "parent_commit": "9032e7d80a1b2c3d4e5f6a7b8c9d0e1f2a3b4c32",
+    "target_time": "2024-03-22T00:00:00Z",
+    "actual_changed_files": [
+      "netbox/dcim/models/devices.py",
+      "netbox/dcim/models/modules.py"
+    ],
+    "actual_components": [
+      "dcim"
+    ],
+    "available_tests": [
+      "netbox/dcim/tests/test_devices.py",
+      "netbox/dcim/tests/test_modules.py"
+    ],
+    "relevant_existing_tests": [
+      "netbox/dcim/tests/test_modules.py"
+    ],
+    "tests_added_by_change": [
+      "netbox/dcim/tests/test_module_compatibility_rules.py"
+    ],
+    "relevant_evidence": [
+      {
+        "type": "issue",
+        "id": "issue-5290",
+        "title": "Incompatible module types allowed in chassis bays",
+        "timestamp": "2024-03-14T10:00:00Z"
+      }
+    ]
+  },
+  {
+    "case_id": 33,
+    "change_description": "Circuits Termination cross-connect cable trace through DCIM front and rear ports: Follow circuit terminations through DCIM patch panels and rear ports to determine end-to-end cable paths.",
+    "target_commit": "a033f8e91b2c3d4e5f6a7b8c9d0e1f2a3b4c5d33",
+    "parent_commit": "9033e7d80a1b2c3d4e5f6a7b8c9d0e1f2a3b4c33",
+    "target_time": "2024-04-05T02:00:00Z",
+    "actual_changed_files": [
+      "netbox/circuits/models.py",
+      "netbox/dcim/models/cables.py",
+      "netbox/dcim/cable_tracing.py"
+    ],
+    "actual_components": [
+      "circuits",
+      "dcim"
+    ],
+    "available_tests": [
+      "netbox/circuits/tests/test_circuits.py",
+      "netbox/dcim/tests/test_cables.py"
+    ],
+    "relevant_existing_tests": [
+      "netbox/circuits/tests/test_circuits.py",
+      "netbox/dcim/tests/test_cables.py"
+    ],
+    "tests_added_by_change": [
+      "netbox/circuits/tests/test_circuit_cable_tracing.py"
+    ],
+    "relevant_evidence": [
+      {
+        "type": "issue",
+        "id": "issue-4710",
+        "title": "Cable trace terminates prematurely at circuit boundary",
+        "timestamp": "2024-03-28T10:00:00Z"
+      }
+    ]
+  },
+  {
+    "case_id": 34,
+    "change_description": "Tenancy Tenant group hierarchical tagging and color inheritance: Allow child tenant groups to inherit color and visual badge metadata from parent tenant groups in the UI.",
+    "target_commit": "a034f8e91b2c3d4e5f6a7b8c9d0e1f2a3b4c5d34",
+    "parent_commit": "9034e7d80a1b2c3d4e5f6a7b8c9d0e1f2a3b4c34",
+    "target_time": "2024-04-19T04:00:00Z",
+    "actual_changed_files": [
+      "netbox/tenancy/models.py",
+      "netbox/utilities/colors.py"
+    ],
+    "actual_components": [
+      "tenancy",
+      "utilities"
+    ],
+    "available_tests": [
+      "netbox/tenancy/tests/test_tenancy.py",
+      "netbox/utilities/tests/test_helpers.py"
+    ],
+    "relevant_existing_tests": [
+      "netbox/tenancy/tests/test_tenancy.py"
+    ],
+    "tests_added_by_change": [
+      "netbox/tenancy/tests/test_tenant_group_color_inheritance.py"
+    ],
+    "relevant_evidence": [
+      {
+        "type": "pr",
+        "id": "pr-3760",
+        "title": "Support badge color inheritance on nested tenant groups",
+        "timestamp": "2024-04-11T10:00:00Z"
+      }
+    ]
+  },
+  {
+    "case_id": 35,
+    "change_description": "Virtualization Cluster type minimum host count validation: Enforce cluster type constraints so that clustered environments require at least minimum active VM hosts.",
+    "target_commit": "a035f8e91b2c3d4e5f6a7b8c9d0e1f2a3b4c5d35",
+    "parent_commit": "9035e7d80a1b2c3d4e5f6a7b8c9d0e1f2a3b4c35",
+    "target_time": "2024-05-03T06:00:00Z",
+    "actual_changed_files": [
+      "netbox/virtualization/models.py",
+      "netbox/virtualization/forms.py"
+    ],
+    "actual_components": [
+      "virtualization"
+    ],
+    "available_tests": [
+      "netbox/virtualization/tests/test_clusters.py",
+      "netbox/virtualization/tests/test_vms.py"
+    ],
+    "relevant_existing_tests": [
+      "netbox/virtualization/tests/test_clusters.py"
+    ],
+    "tests_added_by_change": [
+      "netbox/virtualization/tests/test_cluster_min_host_count.py"
+    ],
+    "relevant_evidence": [
+      {
+        "type": "issue",
+        "id": "issue-4480",
+        "title": "Validate minimum node quorum requirements on clusters",
+        "timestamp": "2024-04-25T10:00:00Z"
+      }
+    ]
+  }
+]

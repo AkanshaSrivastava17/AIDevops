@@ -1,0 +1,142 @@
+[
+  {
+    "id": "pr-201",
+    "title": "FastAPI PR #1: Add async yield dependencies",
+    "body": "Implements clean teardown for async dependency injectors.",
+    "component": "routing",
+    "created_at": "2023-02-15T00:00:00Z",
+    "files_changed": [
+      "fastapi/routing/router.py"
+    ]
+  },
+  {
+    "id": "pr-202",
+    "title": "FastAPI PR #2: Add async yield dependencies",
+    "body": "Implements clean teardown for async dependency injectors.",
+    "component": "routing",
+    "created_at": "2023-02-25T00:00:00Z",
+    "files_changed": [
+      "fastapi/routing/router.py"
+    ]
+  },
+  {
+    "id": "pr-203",
+    "title": "FastAPI PR #3: Add async yield dependencies",
+    "body": "Implements clean teardown for async dependency injectors.",
+    "component": "routing",
+    "created_at": "2023-03-07T00:00:00Z",
+    "files_changed": [
+      "fastapi/routing/router.py"
+    ]
+  },
+  {
+    "id": "pr-204",
+    "title": "FastAPI PR #4: Add async yield dependencies",
+    "body": "Implements clean teardown for async dependency injectors.",
+    "component": "routing",
+    "created_at": "2023-03-17T00:00:00Z",
+    "files_changed": [
+      "fastapi/routing/router.py"
+    ]
+  },
+  {
+    "id": "pr-205",
+    "title": "FastAPI PR #5: Add async yield dependencies",
+    "body": "Implements clean teardown for async dependency injectors.",
+    "component": "routing",
+    "created_at": "2023-03-27T00:00:00Z",
+    "files_changed": [
+      "fastapi/routing/router.py"
+    ]
+  },
+  {
+    "id": "pr-206",
+    "title": "FastAPI PR #6: Add async yield dependencies",
+    "body": "Implements clean teardown for async dependency injectors.",
+    "component": "routing",
+    "created_at": "2023-04-06T00:00:00Z",
+    "files_changed": [
+      "fastapi/routing/router.py"
+    ]
+  },
+  {
+    "id": "pr-207",
+    "title": "FastAPI PR #7: Add async yield dependencies",
+    "body": "Implements clean teardown for async dependency injectors.",
+    "component": "routing",
+    "created_at": "2023-04-16T00:00:00Z",
+    "files_changed": [
+      "fastapi/routing/router.py"
+    ]
+  },
+  {
+    "id": "pr-208",
+    "title": "FastAPI PR #8: Add async yield dependencies",
+    "body": "Implements clean teardown for async dependency injectors.",
+    "component": "routing",
+    "created_at": "2023-04-26T00:00:00Z",
+    "files_changed": [
+      "fastapi/routing/router.py"
+    ]
+  },
+  {
+    "id": "pr-209",
+    "title": "FastAPI PR #9: Add async yield dependencies",
+    "body": "Implements clean teardown for async dependency injectors.",
+    "component": "routing",
+    "created_at": "2023-05-06T00:00:00Z",
+    "files_changed": [
+      "fastapi/routing/router.py"
+    ]
+  },
+  {
+    "id": "pr-210",
+    "title": "FastAPI PR #10: Add async yield dependencies",
+    "body": "Implements clean teardown for async dependency injectors.",
+    "component": "routing",
+    "created_at": "2023-05-16T00:00:00Z",
+    "files_changed": [
+      "fastapi/routing/router.py"
+    ]
+  },
+  {
+    "id": "pr-211",
+    "title": "FastAPI PR #11: Add async yield dependencies",
+    "body": "Implements clean teardown for async dependency injectors.",
+    "component": "routing",
+    "created_at": "2023-05-26T00:00:00Z",
+    "files_changed": [
+      "fastapi/routing/router.py"
+    ]
+  },
+  {
+    "id": "pr-212",
+    "title": "FastAPI PR #12: Add async yield dependencies",
+    "body": "Implements clean teardown for async dependency injectors.",
+    "component": "routing",
+    "created_at": "2023-06-05T00:00:00Z",
+    "files_changed": [
+      "fastapi/routing/router.py"
+    ]
+  },
+  {
+    "id": "pr-213",
+    "title": "FastAPI PR #13: Add async yield dependencies",
+    "body": "Implements clean teardown for async dependency injectors.",
+    "component": "routing",
+    "created_at": "2023-06-15T00:00:00Z",
+    "files_changed": [
+      "fastapi/routing/router.py"
+    ]
+  },
+  {
+    "id": "pr-214",
+    "title": "FastAPI PR #14: Add async yield dependencies",
+    "body": "Implements clean teardown for async dependency injectors.",
+    "component": "routing",
+    "created_at": "2023-06-25T00:00:00Z",
+    "files_changed": [
+      "fastapi/routing/router.py"
+    ]
+  }
+]

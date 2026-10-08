@@ -1,0 +1,16 @@
+# Generalization demonstration repository 1
+repository_id: "fastapi_demo"
+name: "FastAPI Demo"
+repository_url: "https://github.com/fastapi/fastapi"
+pinned_commit: "9b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c"
+default_branch: "master"
+language: "Python"
+test_framework: "pytest"
+test_directories:
+  - "tests"
+minimum_history_thresholds:
+  min_commits: 30
+  min_issues: 10
+  min_prs: 10
+evaluation_flag: false
+description: "FastAPI framework, high performance, easy to learn, fast to code, ready for production."

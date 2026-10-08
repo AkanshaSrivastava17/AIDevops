@@ -1,0 +1,392 @@
+[
+  {
+    "id": "pr-5001",
+    "title": "Fix ipam relationship lifecycle and signal dispatch",
+    "body": "Closes #issue-4001. Refactors post-save signal handling for ipam to avoid duplicate event emissions.",
+    "component": "ipam",
+    "created_at": "2022-01-20T09:00:00Z",
+    "merged": true,
+    "merge_commit_sha": "c001aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "files_changed": [
+      "netbox/ipam/models.py",
+      "netbox/ipam/tests/test_ipam.py"
+    ]
+  },
+  {
+    "id": "pr-5002",
+    "title": "Fix tenancy relationship lifecycle and signal dispatch",
+    "body": "Closes #issue-4002. Refactors post-save signal handling for tenancy to avoid duplicate event emissions.",
+    "component": "tenancy",
+    "created_at": "2022-02-08T09:00:00Z",
+    "merged": true,
+    "merge_commit_sha": "c002aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "files_changed": [
+      "netbox/tenancy/models.py",
+      "netbox/tenancy/tests/test_tenancy.py"
+    ]
+  },
+  {
+    "id": "pr-5003",
+    "title": "Fix circuits relationship lifecycle and signal dispatch",
+    "body": "Closes #issue-4003. Refactors post-save signal handling for circuits to avoid duplicate event emissions.",
+    "component": "circuits",
+    "created_at": "2022-02-27T09:00:00Z",
+    "merged": true,
+    "merge_commit_sha": "c003aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "files_changed": [
+      "netbox/circuits/models.py",
+      "netbox/circuits/tests/test_circuits.py"
+    ]
+  },
+  {
+    "id": "pr-5004",
+    "title": "Fix virtualization relationship lifecycle and signal dispatch",
+    "body": "Closes #issue-4004. Refactors post-save signal handling for virtualization to avoid duplicate event emissions.",
+    "component": "virtualization",
+    "created_at": "2022-03-18T09:00:00Z",
+    "merged": true,
+    "merge_commit_sha": "c004aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "files_changed": [
+      "netbox/virtualization/models.py",
+      "netbox/virtualization/tests/test_virtualization.py"
+    ]
+  },
+  {
+    "id": "pr-5005",
+    "title": "Fix extras relationship lifecycle and signal dispatch",
+    "body": "Closes #issue-4005. Refactors post-save signal handling for extras to avoid duplicate event emissions.",
+    "component": "extras",
+    "created_at": "2022-04-06T09:00:00Z",
+    "merged": true,
+    "merge_commit_sha": "c005aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "files_changed": [
+      "netbox/extras/models.py",
+      "netbox/extras/tests/test_extras.py"
+    ]
+  },
+  {
+    "id": "pr-5006",
+    "title": "Fix wireless relationship lifecycle and signal dispatch",
+    "body": "Closes #issue-4006. Refactors post-save signal handling for wireless to avoid duplicate event emissions.",
+    "component": "wireless",
+    "created_at": "2022-04-25T09:00:00Z",
+    "merged": true,
+    "merge_commit_sha": "c006aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "files_changed": [
+      "netbox/wireless/models.py",
+      "netbox/wireless/tests/test_wireless.py"
+    ]
+  },
+  {
+    "id": "pr-5007",
+    "title": "Fix users relationship lifecycle and signal dispatch",
+    "body": "Closes #issue-4007. Refactors post-save signal handling for users to avoid duplicate event emissions.",
+    "component": "users",
+    "created_at": "2022-05-14T09:00:00Z",
+    "merged": true,
+    "merge_commit_sha": "c007aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "files_changed": [
+      "netbox/users/models.py",
+      "netbox/users/tests/test_users.py"
+    ]
+  },
+  {
+    "id": "pr-5008",
+    "title": "Fix utilities relationship lifecycle and signal dispatch",
+    "body": "Closes #issue-4008. Refactors post-save signal handling for utilities to avoid duplicate event emissions.",
+    "component": "utilities",
+    "created_at": "2022-06-02T09:00:00Z",
+    "merged": true,
+    "merge_commit_sha": "c008aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "files_changed": [
+      "netbox/utilities/models.py",
+      "netbox/utilities/tests/test_utilities.py"
+    ]
+  },
+  {
+    "id": "pr-5009",
+    "title": "Fix dcim relationship lifecycle and signal dispatch",
+    "body": "Closes #issue-4009. Refactors post-save signal handling for dcim to avoid duplicate event emissions.",
+    "component": "dcim",
+    "created_at": "2022-06-21T09:00:00Z",
+    "merged": true,
+    "merge_commit_sha": "c009aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "files_changed": [
+      "netbox/dcim/models.py",
+      "netbox/dcim/tests/test_dcim.py"
+    ]
+  },
+  {
+    "id": "pr-5010",
+    "title": "Fix ipam relationship lifecycle and signal dispatch",
+    "body": "Closes #issue-4010. Refactors post-save signal handling for ipam to avoid duplicate event emissions.",
+    "component": "ipam",
+    "created_at": "2022-07-10T09:00:00Z",
+    "merged": true,
+    "merge_commit_sha": "c010aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "files_changed": [
+      "netbox/ipam/models.py",
+      "netbox/ipam/tests/test_ipam.py"
+    ]
+  },
+  {
+    "id": "pr-5011",
+    "title": "Fix tenancy relationship lifecycle and signal dispatch",
+    "body": "Closes #issue-4011. Refactors post-save signal handling for tenancy to avoid duplicate event emissions.",
+    "component": "tenancy",
+    "created_at": "2022-07-29T09:00:00Z",
+    "merged": true,
+    "merge_commit_sha": "c011aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "files_changed": [
+      "netbox/tenancy/models.py",
+      "netbox/tenancy/tests/test_tenancy.py"
+    ]
+  },
+  {
+    "id": "pr-5012",
+    "title": "Fix circuits relationship lifecycle and signal dispatch",
+    "body": "Closes #issue-4012. Refactors post-save signal handling for circuits to avoid duplicate event emissions.",
+    "component": "circuits",
+    "created_at": "2022-08-17T09:00:00Z",
+    "merged": true,
+    "merge_commit_sha": "c012aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "files_changed": [
+      "netbox/circuits/models.py",
+      "netbox/circuits/tests/test_circuits.py"
+    ]
+  },
+  {
+    "id": "pr-5013",
+    "title": "Fix virtualization relationship lifecycle and signal dispatch",
+    "body": "Closes #issue-4013. Refactors post-save signal handling for virtualization to avoid duplicate event emissions.",
+    "component": "virtualization",
+    "created_at": "2022-09-05T09:00:00Z",
+    "merged": true,
+    "merge_commit_sha": "c013aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "files_changed": [
+      "netbox/virtualization/models.py",
+      "netbox/virtualization/tests/test_virtualization.py"
+    ]
+  },
+  {
+    "id": "pr-5014",
+    "title": "Fix extras relationship lifecycle and signal dispatch",
+    "body": "Closes #issue-4014. Refactors post-save signal handling for extras to avoid duplicate event emissions.",
+    "component": "extras",
+    "created_at": "2022-09-24T09:00:00Z",
+    "merged": true,
+    "merge_commit_sha": "c014aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "files_changed": [
+      "netbox/extras/models.py",
+      "netbox/extras/tests/test_extras.py"
+    ]
+  },
+  {
+    "id": "pr-5015",
+    "title": "Fix wireless relationship lifecycle and signal dispatch",
+    "body": "Closes #issue-4015. Refactors post-save signal handling for wireless to avoid duplicate event emissions.",
+    "component": "wireless",
+    "created_at": "2022-10-13T09:00:00Z",
+    "merged": true,
+    "merge_commit_sha": "c015aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "files_changed": [
+      "netbox/wireless/models.py",
+      "netbox/wireless/tests/test_wireless.py"
+    ]
+  },
+  {
+    "id": "pr-5016",
+    "title": "Fix users relationship lifecycle and signal dispatch",
+    "body": "Closes #issue-4016. Refactors post-save signal handling for users to avoid duplicate event emissions.",
+    "component": "users",
+    "created_at": "2022-11-01T09:00:00Z",
+    "merged": true,
+    "merge_commit_sha": "c016aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "files_changed": [
+      "netbox/users/models.py",
+      "netbox/users/tests/test_users.py"
+    ]
+  },
+  {
+    "id": "pr-5017",
+    "title": "Fix utilities relationship lifecycle and signal dispatch",
+    "body": "Closes #issue-4017. Refactors post-save signal handling for utilities to avoid duplicate event emissions.",
+    "component": "utilities",
+    "created_at": "2022-11-20T09:00:00Z",
+    "merged": true,
+    "merge_commit_sha": "c017aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "files_changed": [
+      "netbox/utilities/models.py",
+      "netbox/utilities/tests/test_utilities.py"
+    ]
+  },
+  {
+    "id": "pr-5018",
+    "title": "Fix dcim relationship lifecycle and signal dispatch",
+    "body": "Closes #issue-4018. Refactors post-save signal handling for dcim to avoid duplicate event emissions.",
+    "component": "dcim",
+    "created_at": "2022-12-09T09:00:00Z",
+    "merged": true,
+    "merge_commit_sha": "c018aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "files_changed": [
+      "netbox/dcim/models.py",
+      "netbox/dcim/tests/test_dcim.py"
+    ]
+  },
+  {
+    "id": "pr-5019",
+    "title": "Fix ipam relationship lifecycle and signal dispatch",
+    "body": "Closes #issue-4019. Refactors post-save signal handling for ipam to avoid duplicate event emissions.",
+    "component": "ipam",
+    "created_at": "2022-12-28T09:00:00Z",
+    "merged": true,
+    "merge_commit_sha": "c019aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "files_changed": [
+      "netbox/ipam/models.py",
+      "netbox/ipam/tests/test_ipam.py"
+    ]
+  },
+  {
+    "id": "pr-5020",
+    "title": "Fix tenancy relationship lifecycle and signal dispatch",
+    "body": "Closes #issue-4020. Refactors post-save signal handling for tenancy to avoid duplicate event emissions.",
+    "component": "tenancy",
+    "created_at": "2023-01-16T09:00:00Z",
+    "merged": true,
+    "merge_commit_sha": "c020aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "files_changed": [
+      "netbox/tenancy/models.py",
+      "netbox/tenancy/tests/test_tenancy.py"
+    ]
+  },
+  {
+    "id": "pr-5021",
+    "title": "Fix circuits relationship lifecycle and signal dispatch",
+    "body": "Closes #issue-4021. Refactors post-save signal handling for circuits to avoid duplicate event emissions.",
+    "component": "circuits",
+    "created_at": "2023-02-04T09:00:00Z",
+    "merged": true,
+    "merge_commit_sha": "c021aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "files_changed": [
+      "netbox/circuits/models.py",
+      "netbox/circuits/tests/test_circuits.py"
+    ]
+  },
+  {
+    "id": "pr-5022",
+    "title": "Fix virtualization relationship lifecycle and signal dispatch",
+    "body": "Closes #issue-4022. Refactors post-save signal handling for virtualization to avoid duplicate event emissions.",
+    "component": "virtualization",
+    "created_at": "2023-02-23T09:00:00Z",
+    "merged": true,
+    "merge_commit_sha": "c022aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "files_changed": [
+      "netbox/virtualization/models.py",
+      "netbox/virtualization/tests/test_virtualization.py"
+    ]
+  },
+  {
+    "id": "pr-5023",
+    "title": "Fix extras relationship lifecycle and signal dispatch",
+    "body": "Closes #issue-4023. Refactors post-save signal handling for extras to avoid duplicate event emissions.",
+    "component": "extras",
+    "created_at": "2023-03-14T09:00:00Z",
+    "merged": true,
+    "merge_commit_sha": "c023aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "files_changed": [
+      "netbox/extras/models.py",
+      "netbox/extras/tests/test_extras.py"
+    ]
+  },
+  {
+    "id": "pr-5024",
+    "title": "Fix wireless relationship lifecycle and signal dispatch",
+    "body": "Closes #issue-4024. Refactors post-save signal handling for wireless to avoid duplicate event emissions.",
+    "component": "wireless",
+    "created_at": "2023-04-02T09:00:00Z",
+    "merged": true,
+    "merge_commit_sha": "c024aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "files_changed": [
+      "netbox/wireless/models.py",
+      "netbox/wireless/tests/test_wireless.py"
+    ]
+  },
+  {
+    "id": "pr-5025",
+    "title": "Fix users relationship lifecycle and signal dispatch",
+    "body": "Closes #issue-4025. Refactors post-save signal handling for users to avoid duplicate event emissions.",
+    "component": "users",
+    "created_at": "2023-04-21T09:00:00Z",
+    "merged": true,
+    "merge_commit_sha": "c025aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "files_changed": [
+      "netbox/users/models.py",
+      "netbox/users/tests/test_users.py"
+    ]
+  },
+  {
+    "id": "pr-5026",
+    "title": "Fix utilities relationship lifecycle and signal dispatch",
+    "body": "Closes #issue-4026. Refactors post-save signal handling for utilities to avoid duplicate event emissions.",
+    "component": "utilities",
+    "created_at": "2023-05-10T09:00:00Z",
+    "merged": true,
+    "merge_commit_sha": "c026aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "files_changed": [
+      "netbox/utilities/models.py",
+      "netbox/utilities/tests/test_utilities.py"
+    ]
+  },
+  {
+    "id": "pr-5027",
+    "title": "Fix dcim relationship lifecycle and signal dispatch",
+    "body": "Closes #issue-4027. Refactors post-save signal handling for dcim to avoid duplicate event emissions.",
+    "component": "dcim",
+    "created_at": "2023-05-29T09:00:00Z",
+    "merged": true,
+    "merge_commit_sha": "c027aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "files_changed": [
+      "netbox/dcim/models.py",
+      "netbox/dcim/tests/test_dcim.py"
+    ]
+  },
+  {
+    "id": "pr-5028",
+    "title": "Fix ipam relationship lifecycle and signal dispatch",
+    "body": "Closes #issue-4028. Refactors post-save signal handling for ipam to avoid duplicate event emissions.",
+    "component": "ipam",
+    "created_at": "2023-06-17T09:00:00Z",
+    "merged": true,
+    "merge_commit_sha": "c028aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "files_changed": [
+      "netbox/ipam/models.py",
+      "netbox/ipam/tests/test_ipam.py"
+    ]
+  },
+  {
+    "id": "pr-5029",
+    "title": "Fix tenancy relationship lifecycle and signal dispatch",
+    "body": "Closes #issue-4029. Refactors post-save signal handling for tenancy to avoid duplicate event emissions.",
+    "component": "tenancy",
+    "created_at": "2023-07-06T09:00:00Z",
+    "merged": true,
+    "merge_commit_sha": "c029aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "files_changed": [
+      "netbox/tenancy/models.py",
+      "netbox/tenancy/tests/test_tenancy.py"
+    ]
+  },
+  {
+    "id": "pr-5030",
+    "title": "Fix circuits relationship lifecycle and signal dispatch",
+    "body": "Closes #issue-4030. Refactors post-save signal handling for circuits to avoid duplicate event emissions.",
+    "component": "circuits",
+    "created_at": "2023-07-25T09:00:00Z",
+    "merged": true,
+    "merge_commit_sha": "c030aa8f9e01b2c3d4e5f6a7b8c9d0e1f2a3b4c5",
+    "files_changed": [
+      "netbox/circuits/models.py",
+      "netbox/circuits/tests/test_circuits.py"
+    ]
+  }
+]

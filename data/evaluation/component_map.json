@@ -1,0 +1,37 @@
+{
+  "repository_id": "netbox",
+  "version": "1.0.0-frozen",
+  "frozen_at": "2026-10-08T00:00:00Z",
+  "rules": {
+    "netbox/dcim/": "dcim",
+    "netbox/ipam/": "ipam",
+    "netbox/tenancy/": "tenancy",
+    "netbox/users/": "users",
+    "netbox/utilities/": "utilities",
+    "netbox/circuits/": "circuits",
+    "netbox/virtualization/": "virtualization",
+    "netbox/extras/": "extras",
+    "netbox/wireless/": "wireless"
+  },
+  "candidate_components": [
+    "dcim",
+    "ipam",
+    "tenancy",
+    "users",
+    "utilities",
+    "circuits",
+    "virtualization",
+    "extras",
+    "wireless"
+  ],
+  "excluded_patterns": [
+    "^docs/",
+    "^static/",
+    "^scripts/",
+    "README",
+    "\\.md$",
+    "\\.rst$",
+    "^\\.github/",
+    "^configuration/"
+  ]
+}
