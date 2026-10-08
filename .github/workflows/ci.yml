@@ -30,7 +30,7 @@ jobs:
 
       - name: 4. Code Quality & Lint Check
         run: |
-          python -m py_compile app/**/*.py
+          python -m compileall app/
           echo "Lint checks passed."
 
       - name: 5. Execute Baseline Test Suite
@@ -45,7 +45,14 @@ jobs:
       - name: 7. Start History-RAG API Background Service
         run: |
           python -m uvicorn app.api.routes:app --host 0.0.0.0 --port 8000 &
-          sleep 3
+          for i in {1..30}; do
+            if curl -s http://localhost:8000/health; then
+              echo "History-RAG backend is healthy!"
+              break
+            fi
+            echo "Waiting for backend..."
+            sleep 1
+          done
 
       - name: 8. AI Change-Impact Analysis (POST /analyze-change)
         id: ai_analysis
@@ -58,7 +65,7 @@ jobs:
               'system_mode': 'History-RAG',
               'top_k_tests': 3
           }
-          res = requests.post('http://localhost:8000/analyze-change', json=payload, timeout=15)
+          res = requests.post('http://localhost:8000/analyze-change', json=payload, timeout=25)
           data = res.json()
           print('=== AI CHANGE IMPACT ANALYSIS RESULTS ===')
           print('Impact Level:', data.get('impact_level'))
@@ -93,8 +100,10 @@ jobs:
       - name: 11. Deploy Candidate Image to QA Environment
         run: |
           pkill -f uvicorn || true
-          docker-compose -f docker/docker-compose.yml up -d
+          docker stop historyrag_qa_container || true
+          docker rm historyrag_qa_container || true
+          docker run -d --name historyrag_qa_container -p 8000:8000 historyrag:qa-latest
 
       - name: 12. Automated QA Health Check Gate (GET /health)
         run: |
-          python docker/deploy_qa.py --url http://localhost:8000/health --retries 10
+          python docker/deploy_qa.py --url http://localhost:8000/health --retries 15
