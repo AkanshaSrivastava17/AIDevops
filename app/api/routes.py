@@ -62,23 +62,50 @@ class AnalyzeChangeResponse(BaseModel):
 
 
 class IndexRequest(BaseModel):
-    repository_id: str
+    repository_id: Optional[str] = None
     repository_url: Optional[str] = None
     force_refresh: bool = False
 
 
-def _get_repo_config(repo_id: str) -> RepositoryConfig:
+def _get_or_create_repo_config(repo_id: Optional[str] = None, repo_url: Optional[str] = None) -> RepositoryConfig:
+    from app.repository.adapter import parse_github_url
+    if not repo_id and repo_url:
+        _, _, parsed_id = parse_github_url(repo_url)
+        repo_id = parsed_id
+    elif not repo_id:
+        repo_id = "netbox"
+
     config_file = os.path.join("configs", f"{repo_id}.yaml")
     if os.path.exists(config_file):
         with open(config_file, "r", encoding="utf-8") as f:
             data = yaml.safe_load(f)
-            return RepositoryConfig(**data)
-    # Default fallback config
-    return RepositoryConfig(
+            cfg = RepositoryConfig(**data)
+            if repo_url and cfg.repository_url != repo_url:
+                cfg.repository_url = repo_url
+            return cfg
+
+    # Check if raw directory exists
+    raw_dir = os.path.join("data", "raw", repo_id)
+    default_url = repo_url or f"https://github.com/mock/{repo_id}"
+    cfg = RepositoryConfig(
         repository_id=repo_id,
-        repository_url=f"https://github.com/mock/{repo_id}",
+        name=repo_id.replace("_", " ").title(),
+        repository_url=default_url,
         component_rules_file="data/evaluation/component_map.json" if repo_id == "netbox" else None
     )
+    
+    # Save new config
+    os.makedirs("configs", exist_ok=True)
+    try:
+        with open(config_file, "w", encoding="utf-8") as f:
+            yaml.safe_dump(cfg.model_dump(), f)
+    except Exception:
+        pass
+    return cfg
+
+
+def _get_repo_config(repo_id: str) -> RepositoryConfig:
+    return _get_or_create_repo_config(repo_id=repo_id)
 
 
 @app.get("/health")
@@ -199,8 +226,8 @@ def analyze_change(req: AnalyzeChangeRequest):
 
 @app.post("/index")
 def index_repository(req: IndexRequest):
-    """Index a repository from a GitHub URL or refresh an existing index."""
-    config = _get_repo_config(req.repository_id)
+    """Index a repository from any Git or GitHub URL, or refresh an existing index."""
+    config = _get_or_create_repo_config(req.repository_id, req.repository_url)
     if req.repository_url:
         config.repository_url = req.repository_url
 
@@ -211,6 +238,31 @@ def index_repository(req: IndexRequest):
     )
     result = pipeline.run()
     return result
+
+
+@app.get("/repositories")
+def list_repositories():
+    """Returns a list of all configured and indexed repositories."""
+    repos = []
+    seen = set()
+    if os.path.exists("configs"):
+        for f in os.listdir("configs"):
+            if f.endswith(".yaml") or f.endswith(".yml"):
+                rid = os.path.splitext(f)[0]
+                seen.add(rid)
+                try:
+                    with open(os.path.join("configs", f), "r", encoding="utf-8") as fp:
+                        data = yaml.safe_load(fp)
+                        repos.append({
+                            "repository_id": rid,
+                            "name": data.get("name") or rid.replace("_", " ").title(),
+                            "repository_url": data.get("repository_url", ""),
+                            "language": data.get("language", "Python"),
+                            "description": data.get("description", "")
+                        })
+                except Exception:
+                    repos.append({"repository_id": rid, "name": rid.title(), "repository_url": ""})
+    return repos
 
 
 @app.get("/repository-status")

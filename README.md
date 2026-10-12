@@ -185,9 +185,13 @@ cd project
 pip install -r requirements.txt
 ```
 
-### 2. Pre-index Repositories
+### 2. Index Any Git / GitHub Repository Link
+You can index any remote Git / GitHub repository or pre-index the benchmark repositories:
 ```bash
-# Ingest and index NetBox, FastAPI demo, and Requests demo
+# Option A: Ingest and index ANY remote repository by URL
+python scripts/ingest_repo.py --url https://github.com/psf/requests
+
+# Option B: Pre-index all built-in repositories (NetBox, FastAPI demo, Requests demo)
 python scripts/build_index.py
 ```
 
@@ -198,15 +202,22 @@ pytest tests/ -v
 
 ### 4. Run Research Benchmark Evaluation
 ```bash
-python scripts/run_evaluation.py --split test
+python scripts/run_evaluation.py --repo netbox --split test
 ```
 
-### 5. Launch FastAPI Backend
+### 5. Simulate AI-Enhanced CI/CD Pipeline
+```bash
+# Run automated CI pipeline simulation for any repository
+python scripts/simulate_ci_pipeline.py --repo netbox
+python scripts/simulate_ci_pipeline.py --repo fastapi_demo
+```
+
+### 6. Launch FastAPI Backend
 ```bash
 uvicorn app.api.routes:app --host 0.0.0.0 --port 8000 --reload
 ```
 
-### 6. Launch Streamlit Developer UI
+### 7. Launch Streamlit Developer UI
 ```bash
 streamlit run ui/app.py
 ```
@@ -218,10 +229,20 @@ streamlit run ui/app.py
 | Endpoint | Method | Description |
 |---|---|---|
 | `/health` | `GET` | Health check endpoint (used by QA deployment gate). |
+| `/repositories` | `GET` | List all discovered and indexed repositories. |
 | `/ask` | `POST` | Repository historical Q&A with evidence citations. |
 | `/analyze-change` | `POST` | Change-impact analysis and test recommendations. |
-| `/index` | `POST` | Run ingestion and indexing for a repository URL. |
+| `/index` | `POST` | Clone (shallow/fast) and index any repository by Git/GitHub URL. |
 | `/repository-status` | `GET` | Return capability profile card, capabilities, and index statistics. |
+
+### Example cURL: Index Any Remote Repository Link
+```bash
+curl -X POST "http://localhost:8000/index" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "repository_url": "https://github.com/pallets/flask"
+  }'
+```
 
 ### Example cURL: Analyze Proposed Change
 ```bash

@@ -57,3 +57,26 @@ def test_api_ask():
     assert "answer" in data
     assert "confidence" in data
     assert "citations" in data
+
+
+def test_api_list_repositories():
+    resp = client.get("/repositories")
+    assert resp.status_code == 200
+    data = resp.json()
+    assert isinstance(data, list)
+    repo_ids = [r["repository_id"] for r in data]
+    assert "netbox" in repo_ids
+
+
+def test_api_index_custom_repo():
+    payload = {
+        "repository_url": "https://github.com/mock/sample_microservice",
+        "repository_id": "sample_microservice"
+    }
+    resp = client.post("/index", json=payload)
+    assert resp.status_code == 200
+    data = resp.json()
+    assert data["repository_id"] == "sample_microservice"
+    assert data["status"] == "success"
+    assert "profile" in data
+

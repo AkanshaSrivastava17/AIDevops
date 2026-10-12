@@ -33,10 +33,17 @@ class IngestionPipeline:
     def run(self) -> Dict[str, Any]:
         logger.info(f"Starting ingestion for repository: {self.config.repository_id}")
         
-        # 1. Profile repository
+        # 1. Ensure repository is cloned and history is ready
+        self.adapter.ensure_repository_ready()
+
+        # 2. Profile repository
         profile = self.adapter.get_profile()
+        self.python_ast = PythonASTAdapter(
+            self.adapter.map_file_to_component,
+            candidate_components=profile.discovered_components
+        )
         
-        # 2. Extract base documents (commits, issues, PRs, files)
+        # 3. Extract base documents (commits, issues, PRs, files)
         base_documents = self.adapter.extract_normalized_documents()
         
         # 3. Process code files: enhanced Python AST or generic fallback

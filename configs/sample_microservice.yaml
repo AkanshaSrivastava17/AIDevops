@@ -1,0 +1,16 @@
+component_rules_file: null
+default_branch: master
+description: ''
+evaluation_flag: false
+language: Python
+minimum_history_thresholds:
+  min_commits: 30
+  min_issues: 10
+  min_prs: 10
+name: Sample Microservice
+pinned_commit: null
+repository_id: sample_microservice
+repository_url: https://github.com/mock/sample_microservice
+test_directories:
+- tests
+test_framework: pytest

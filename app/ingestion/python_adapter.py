@@ -11,8 +11,9 @@ logger = logging.getLogger(__name__)
 
 
 class PythonASTAdapter:
-    def __init__(self, component_mapping_fn=None):
+    def __init__(self, component_mapping_fn=None, candidate_components: Optional[List[str]] = None):
         self.component_mapping_fn = component_mapping_fn or (lambda path: "core")
+        self.candidate_components = set(candidate_components or [])
 
     def parse_file(self, file_path: str, code: str, repo_id: str, timestamp: str) -> Tuple[List[NormalizedDocument], List[DependencyLink]]:
         chunks: List[NormalizedDocument] = []
@@ -85,10 +86,32 @@ class PythonASTAdapter:
 
     def _map_import_to_component(self, module_name: str) -> Optional[str]:
         parts = module_name.split(".")
+        # 1. Match against known candidate components
+        for p in parts:
+            if p in self.candidate_components:
+                return p
+
+        # 2. Known fallback for NetBox / standard apps
         if len(parts) > 1 and parts[0] == "netbox":
             return parts[1]
         elif len(parts) > 0 and parts[0] in (
             "dcim", "ipam", "tenancy", "circuits", "virtualization", "extras", "wireless", "users", "utilities"
         ):
             return parts[0]
+
+        # 3. Check if component_mapping_fn can map the pseudo module path
+        if self.component_mapping_fn:
+            try:
+                mapped = self.component_mapping_fn(f"{module_name.replace('.', '/')}.py")
+                if mapped and mapped not in ("core", "default"):
+                    return mapped
+            except Exception:
+                pass
+
+        # 4. If multipart import, check if subpackage matches
+        if len(parts) > 1 and parts[1] in self.candidate_components:
+            return parts[1]
+        elif len(parts) > 0 and parts[0] in self.candidate_components:
+            return parts[0]
+
         return None

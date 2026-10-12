@@ -161,6 +161,9 @@ class RepositoryProfiler:
         import_ok = imported > 0
         return ast_ok, import_ok
 
+    def discover_components(self, repo_path: str) -> List[str]:
+        return self._discover_components(repo_path)
+
     def _discover_components(self, repo_path: str) -> List[str]:
         # If frozen rules exist in config, use those
         if self.config and self.config.component_rules_file and os.path.exists(self.config.component_rules_file):
@@ -176,24 +179,44 @@ class RepositoryProfiler:
             return ["core", "utils", "api"]
 
         ignored = {
-            ".git", ".github", "tests", "docs", "static", "scripts", "docker",
-            "venv", ".venv", "__pycache__", "build", "dist", "data", "configs"
+            ".git", ".github", "tests", "test", "docs", "static", "scripts", "docker",
+            "venv", ".venv", "__pycache__", "build", "dist", "data", "configs", ".pytest_cache",
+            "egg-info", ".tox", "site-packages"
         }
         components = set()
-        
-        # Check subdirectories of repo root
-        for entry in os.listdir(repo_path):
-            full_path = os.path.join(repo_path, entry)
+
+        # 1. Check if there's a 'src' directory containing the main package
+        src_path = os.path.join(repo_path, "src")
+        target_root = src_path if (os.path.exists(src_path) and os.path.isdir(src_path)) else repo_path
+
+        # 2. Check top-level package directories or submodules
+        for entry in os.listdir(target_root):
+            full_path = os.path.join(target_root, entry)
             if os.path.isdir(full_path) and entry not in ignored:
-                # If entry contains submodules (e.g. netbox/dcim), check subdirectories
                 subdirs = [
                     d for d in os.listdir(full_path)
                     if os.path.isdir(os.path.join(full_path, d)) and d not in ignored
                 ]
-                if len(subdirs) >= 3:
+                if len(subdirs) >= 2:
                     for s in subdirs:
                         components.add(s)
                 else:
-                    components.add(entry)
-                    
-        return sorted(list(components)) if components else ["core", "default"]
+                    # Also check python files inside this module (e.g. models, views, routing)
+                    py_files = [
+                        f[:-3] for f in os.listdir(full_path)
+                        if f.endswith(".py") and f not in ("__init__.py", "conftest.py", "__main__.py")
+                    ]
+                    if len(py_files) >= 2:
+                        for pf in py_files:
+                            components.add(pf)
+                    else:
+                        components.add(entry)
+
+        # 3. If still empty, inspect root .py files (e.g. app.py, models.py, views.py)
+        if not components and os.path.exists(repo_path):
+            for f in os.listdir(repo_path):
+                if f.endswith(".py") and f not in ("setup.py", "conftest.py", "__init__.py"):
+                    components.add(f[:-3])
+
+        clean_comps = [c for c in sorted(list(components)) if c and not c.startswith(".")]
+        return clean_comps if clean_comps else ["core", "default"]

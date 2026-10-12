@@ -312,7 +312,8 @@ class BenchmarkEvaluator:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
+    parser.add_argument("--repo", default="netbox", help="Benchmark repository ID (default: netbox)")
     parser.add_argument("--split", default="test", choices=["dev", "test", "all"])
     args = parser.parse_args()
-    evaluator = BenchmarkEvaluator("netbox")
+    evaluator = BenchmarkEvaluator(args.repo)
     evaluator.run_suite(args.split)

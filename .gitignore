@@ -10,3 +10,9 @@ venv/
 ENV/
 .DS_Store
 Thumbs.db
+
+# Dynamically cloned external repositories (exclude from repo tracking)
+data/raw/*
+!data/raw/netbox/
+!data/raw/fastapi_demo/
+!data/raw/requests_demo/

@@ -67,3 +67,34 @@ def test_repository_adapter_is_test_file():
     assert adapter.is_test_file("netbox/dcim/tests/test_devices.py") is True
     assert adapter.is_test_file("tests/test_routing.py") is True
     assert adapter.is_test_file("netbox/dcim/models.py") is False
+
+
+def test_parse_github_url():
+    from app.repository.adapter import parse_github_url
+    owner, repo, rid = parse_github_url("https://github.com/pallets/flask.git")
+    assert owner == "pallets"
+    assert repo == "flask"
+    assert rid == "flask"
+
+    owner2, repo2, rid2 = parse_github_url("https://github.com/psf/requests/")
+    assert owner2 == "psf"
+    assert repo2 == "requests"
+    assert rid2 == "requests"
+
+    owner3, repo3, rid3 = parse_github_url("https://gitlab.com/custom/repo-name")
+    assert repo3 == "repo-name"
+    assert rid3 == "repo-name"
+
+
+def test_arbitrary_repo_component_discovery():
+    from app.repository.adapter import RepositoryAdapter
+    cfg = RepositoryConfig(
+        repository_id="custom_pkg",
+        repository_url="https://github.com/example/custom_pkg"
+    )
+    adapter = RepositoryAdapter(cfg)
+    adapter.discovered_components = ["auth", "routing", "models"]
+    assert adapter.map_file_to_component("custom_pkg/auth/tokens.py") == "auth"
+    assert adapter.map_file_to_component("custom_pkg/routing/router.py") == "routing"
+    assert adapter.map_file_to_component("custom_pkg/models.py") == "models"
+

@@ -1,0 +1,16 @@
+component_rules_file: null
+default_branch: master
+description: Repository hello-world
+evaluation_flag: false
+language: Python
+minimum_history_thresholds:
+  min_commits: 30
+  min_issues: 10
+  min_prs: 10
+name: Hello-World
+pinned_commit: null
+repository_id: hello-world
+repository_url: https://github.com/octocat/Hello-World
+test_directories:
+- tests
+test_framework: pytest

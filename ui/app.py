@@ -8,6 +8,7 @@ import json
 import yaml
 import time
 from datetime import datetime
+from typing import Dict, List, Any, Optional, Tuple
 import streamlit as st
 
 # Add project root to sys.path
@@ -29,6 +30,9 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
+from app.repository.adapter import parse_github_url
+from app.ingestion.core import IngestionPipeline
 
 # Initialize singletons in st.session_state
 @st.cache_resource
@@ -54,23 +58,76 @@ page = st.sidebar.radio(
     index=0
 )
 
-# Repository selector available across views
-repo_configs = {
-    "netbox": "NetBox (Primary Benchmark)",
-    "fastapi_demo": "FastAPI Demo (Generalization)",
-    "requests_demo": "Requests Demo (Generalization)"
-}
+def get_available_repositories() -> Dict[str, str]:
+    repos = {}
+    if os.path.exists("configs"):
+        for f in sorted(os.listdir("configs")):
+            if f.endswith(".yaml") or f.endswith(".yml"):
+                rid = os.path.splitext(f)[0]
+                try:
+                    with open(os.path.join("configs", f), "r", encoding="utf-8") as fp:
+                        data = yaml.safe_load(fp)
+                        name = data.get("name") or rid.replace("_", " ").title()
+                        repos[rid] = f"{name} ({rid})"
+                except Exception:
+                    repos[rid] = rid
+    # Check data/raw directory as well
+    if os.path.exists("data/raw"):
+        for d in sorted(os.listdir("data/raw")):
+            if os.path.isdir(os.path.join("data/raw", d)) and not d.startswith(".") and d not in repos:
+                repos[d] = f"{d.replace('_', ' ').title()} ({d})"
+    if not repos:
+        repos = {"netbox": "NetBox (Primary Benchmark)"}
+    return repos
+
+available_repos = get_available_repositories()
+
+if "selected_repo" not in st.session_state or st.session_state["selected_repo"] not in available_repos:
+    st.session_state["selected_repo"] = "netbox" if "netbox" in available_repos else list(available_repos.keys())[0]
+
 selected_repo_id = st.sidebar.selectbox(
     "Active Repository",
-    options=list(repo_configs.keys()),
-    format_func=lambda x: repo_configs[x]
+    options=list(available_repos.keys()),
+    format_func=lambda x: available_repos[x],
+    index=list(available_repos.keys()).index(st.session_state["selected_repo"])
 )
+st.session_state["selected_repo"] = selected_repo_id
+
+# Quick Index from Sidebar
+with st.sidebar.expander("➕ Clone & Index Any Repo", expanded=False):
+    sb_url = st.text_input("Git / GitHub URL", placeholder="https://github.com/owner/repo", key="sb_repo_url")
+    if st.button("🚀 Ingest URL", key="sb_btn_ingest"):
+        if sb_url:
+            with st.spinner("Cloning & ingesting repository..."):
+                _, _, new_id = parse_github_url(sb_url)
+                cfg_path = f"configs/{new_id}.yaml"
+                cfg = RepositoryConfig(
+                    repository_id=new_id,
+                    name=new_id.replace("_", " ").title(),
+                    repository_url=sb_url
+                )
+                os.makedirs("configs", exist_ok=True)
+                with open(cfg_path, "w", encoding="utf-8") as f:
+                    yaml.safe_dump(cfg.model_dump(), f)
+                pipeline = IngestionPipeline(config=cfg, sqlite_store=sqlite_store, chroma_store=chroma_store)
+                res = pipeline.run()
+                st.session_state["selected_repo"] = new_id
+                st.success(f"Indexed {new_id} ({res['total_documents_indexed']} documents)!")
+                time.sleep(1)
+                st.rerun()
 
 # Load selected repo config and profile
 def load_repo(repo_id: str):
     config_file = f"configs/{repo_id}.yaml"
-    with open(config_file, "r", encoding="utf-8") as f:
-        cfg = RepositoryConfig(**yaml.safe_load(f))
+    if os.path.exists(config_file):
+        with open(config_file, "r", encoding="utf-8") as f:
+            cfg = RepositoryConfig(**yaml.safe_load(f))
+    else:
+        cfg = RepositoryConfig(
+            repository_id=repo_id,
+            name=repo_id.replace("_", " ").title(),
+            repository_url=f"https://github.com/unknown/{repo_id}"
+        )
     adapter = RepositoryAdapter(cfg)
     profile = adapter.get_profile()
     stats = sqlite_store.get_repository_stats(repo_id)
@@ -90,21 +147,57 @@ st.sidebar.markdown(f"**Framework:** `{profile.test_framework or 'Generic'}`")
 if page == "Repository":
     st.title("📁 Repository Management & Capability Profile")
     st.markdown(
-        "Inspect repository capabilities, profile cards, indexing statistics, and trigger repeatable ingestion."
+        "Inspect repository capabilities, profile cards, indexing statistics, or **clone and index any repository from a Git/GitHub URL**."
     )
+
+    # 1. Index any repository panel
+    with st.expander("🔗 **Clone & Index Any New Repository (GitHub URL)**", expanded=True):
+        st.markdown("Enter any public Git or GitHub URL (e.g. `https://github.com/pallets/flask`, `https://github.com/psf/requests`, `https://github.com/tiangolo/fastapi`, etc.).")
+        in_col1, in_col2 = st.columns([3, 1])
+        with in_col1:
+            input_repo_url = st.text_input("Repository Link / URL", placeholder="https://github.com/username/repository.git", key="main_repo_url")
+        with in_col2:
+            custom_id_input = st.text_input("Custom ID (optional)", placeholder="auto-derived", key="custom_repo_id")
+
+        if st.button("🚀 Clone, Profile & Ingest Repository", type="primary", key="btn_clone_index"):
+            if not input_repo_url:
+                st.warning("Please provide a repository URL.")
+            else:
+                with st.spinner("Cloning git repository, extracting history, AST chunks, and building vector index..."):
+                    _, _, auto_id = parse_github_url(input_repo_url)
+                    derived_id = custom_id_input.strip() if custom_id_input else auto_id
+                    cfg_file = f"configs/{derived_id}.yaml"
+                    
+                    new_cfg = RepositoryConfig(
+                        repository_id=derived_id,
+                        name=derived_id.replace("_", " ").title(),
+                        repository_url=input_repo_url,
+                        description=f"Repository cloned from {input_repo_url}"
+                    )
+                    os.makedirs("configs", exist_ok=True)
+                    with open(cfg_file, "w", encoding="utf-8") as f:
+                        yaml.safe_dump(new_cfg.model_dump(), f)
+
+                    pipeline = IngestionPipeline(config=new_cfg, sqlite_store=sqlite_store, chroma_store=chroma_store)
+                    res = pipeline.run()
+                    st.session_state["selected_repo"] = derived_id
+                    st.success(f"Successfully cloned and indexed '{derived_id}'! Indexed {res['total_documents_indexed']} documents (Mode: {res['profile']['analysis_mode']}).")
+                    time.sleep(1)
+                    st.rerun()
+
+    st.divider()
 
     col1, col2 = st.columns([1.8, 1.2])
 
     with col1:
-        st.subheader("Repository Profile Card")
-        # Visual profile card as per Section 21 specification
-        mode_color = "#28a745" if profile.analysis_mode == AnalysisMode.ENHANCED else "#ffc107"
+        st.subheader(f"Repository Profile Card: {config.name or selected_repo_id}")
+        mode_color = "#28a745" if profile.analysis_mode == AnalysisMode.ENHANCED else "#ffc107" if profile.analysis_mode == AnalysisMode.LIMITED else "#dc3545"
         
         st.markdown(f"""
         <div style="border: 2px solid #e0e0e0; border-radius: 8px; padding: 18px; background-color: #fdfdfd; margin-bottom: 20px;">
             <h3 style="margin-top:0; color: #1f77b4;">Repository: {config.name or selected_repo_id}</h3>
             <p><strong>URL:</strong> <a href="{config.repository_url}" target="_blank">{config.repository_url}</a> | <strong>Pinned Commit:</strong> <code>{config.pinned_commit or 'HEAD'}</code></p>
-            <p><strong>Language:</strong> {profile.language} &nbsp;|&nbsp; <strong>Test Framework:</strong> {profile.test_framework or 'pytest'}</p>
+            <p><strong>Language:</strong> {profile.language} &nbsp;|&nbsp; <strong>Test Framework:</strong> {profile.test_framework or 'Generic'}</p>
             <hr style="margin: 10px 0; border: 0; border-top: 1px solid #ddd;" />
             <h4 style="margin-bottom: 8px;">Detected Capabilities</h4>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.95em;">
@@ -138,11 +231,11 @@ if page == "Repository":
             st.write(f"- `{t}`: **{cnt}**")
 
         st.divider()
-        st.subheader("Index New / Refresh Repository")
-        new_url = st.text_input("GitHub URL", value=config.repository_url)
-        if st.button("🔄 Run Ingestion Pipeline", type="primary"):
-            with st.spinner("Ingesting commits, issues, PRs, AST code chunks and tests..."):
-                from app.ingestion.core import IngestionPipeline
+        st.subheader("Re-Index Active Repository")
+        current_url = st.text_input("Active Repo URL", value=config.repository_url, key="active_repo_url")
+        if st.button("🔄 Refresh / Re-Ingest", type="secondary"):
+            with st.spinner(f"Re-ingesting {selected_repo_id}..."):
+                config.repository_url = current_url
                 pipeline = IngestionPipeline(config=config, sqlite_store=sqlite_store, chroma_store=chroma_store)
                 res = pipeline.run()
                 st.success(f"Indexed {res['total_documents_indexed']} documents into SQLite & ChromaDB!")
@@ -160,15 +253,26 @@ elif page == "Repository Q&A":
         "The system retrieves current code and historical evidence (commits, issues, PRs) to produce grounded answers."
     )
 
-    sample_questions = [
-        "Why was IPAM VRF isolation implemented this way?",
-        "What was the reason for enforcing model clean() validation rather than database triggers?",
-        "Why does cable connection change emit asynchronous webhooks?",
-        "How are tenant permissions enforced across virtualization clusters?"
-    ]
+    if selected_repo_id == "netbox":
+        sample_questions = [
+            "Why was IPAM VRF isolation implemented this way?",
+            "What was the reason for enforcing model clean() validation rather than database triggers?",
+            "Why does cable connection change emit asynchronous webhooks?",
+            "How are tenant permissions enforced across virtualization clusters?"
+        ]
+    else:
+        comps = profile.discovered_components[:3]
+        c0 = comps[0] if comps else "core"
+        c1 = comps[1] if len(comps) > 1 else "utils"
+        sample_questions = [
+            f"How is {c0} architected and what are its dependencies?",
+            f"What was the rationale behind historical changes in {c1}?",
+            f"Why was {c0} designed with these specific validation constraints?",
+            f"How do {c0} and {c1} interact during runtime?"
+        ]
     selected_sample = st.selectbox("Sample Historical Inquiries", options=["-- Select a sample --"] + sample_questions)
     
-    default_q = selected_sample if selected_sample != "-- Select a sample --" else "Why was IPAM VRF isolation implemented this way?"
+    default_q = selected_sample if selected_sample != "-- Select a sample --" else sample_questions[0]
     user_q = st.text_area("Developer Question", value=default_q, height=90)
     
     system_mode_qa = st.radio("Retrieval Mode", ["History-RAG (Full History)", "Code-RAG (Current Code Only)"], horizontal=True)
@@ -215,13 +319,23 @@ elif page == "Change Analysis":
         "the LLM synthesizes an evidence-grounded explanation with citations and uncertainty."
     )
 
-    sample_changes = [
-        "Refactor interface IP assignment to validate IP address VRF containment",
-        "Add MAC address formatting helper to DCIM interfaces and Wireless interfaces",
-        "Implement custom validation rules hook for Tenancy Tenant assignments",
-        "Circuit termination relationship check when deleting DCIM site",
-        "Optimize IPAM Prefix hierarchy tree reconstruction on bulk deletion"
-    ]
+    if selected_repo_id == "netbox":
+        sample_changes = [
+            "Refactor interface IP assignment to validate IP address VRF containment",
+            "Add MAC address formatting helper to DCIM interfaces and Wireless interfaces",
+            "Implement custom validation rules hook for Tenancy Tenant assignments",
+            "Circuit termination relationship check when deleting DCIM site",
+            "Optimize IPAM Prefix hierarchy tree reconstruction on bulk deletion"
+        ]
+    else:
+        comps = profile.discovered_components[:3]
+        c0 = comps[0] if comps else "core"
+        c1 = comps[1] if len(comps) > 1 else "utils"
+        sample_changes = [
+            f"Refactor {c0} component to enforce strict validation constraints and handle edge cases",
+            f"Optimize {c0} query performance and integrate error handling with {c1}",
+            f"Update {c1} configuration hooks to improve modularity and thread safety"
+        ]
     change_sample = st.selectbox("Sample Change Proposal", options=["-- Custom change --"] + sample_changes)
     default_change = change_sample if change_sample != "-- Custom change --" else sample_changes[0]
 
@@ -295,20 +409,31 @@ elif page == "Change Analysis":
 # PAGE 4: EVALUATION BENCHMARK
 # ==========================================
 elif page == "Evaluation Benchmark":
-    st.title("📊 Research Evaluation Benchmark (NetBox)")
+    st.title("📊 Research Evaluation Benchmark")
     st.markdown(
         "Comparative evaluation across **3 Mandatory Systems**: `LLM-only` vs `Code-RAG` vs `History-RAG` on historical cases with **temporal-leakage control**."
     )
 
-    eval_results_file = "data/evaluation/evaluation_results.json"
+    if selected_repo_id != "netbox":
+        st.info(
+            f"ℹ️ **Current Active Repository:** **{config.name}** (`{selected_repo_id}`).\n\n"
+            f"The quantitative metrics table below displays the **Controlled Research Benchmark** conducted on the pinned ground-truth dataset (**NetBox**, 35 curated historical cases) to validate hypothesis **H1**.\n\n"
+            f"👉 For live, dynamic intelligence specific to **{config.name}**, visit the **Repository**, **Repository Q&A**, **Change Analysis**, or **CI/CD & DevOps** tabs."
+        )
+
+    eval_results_file = f"data/evaluation/{selected_repo_id}_evaluation_results.json"
+    if not os.path.exists(eval_results_file):
+        eval_results_file = "data/evaluation/evaluation_results.json"
+
     if os.path.exists(eval_results_file):
         with open(eval_results_file, "r", encoding="utf-8") as f:
             eval_data = json.load(f)
             
         agg = eval_data.get("aggregated", {})
         split_name = eval_data.get("split", "test")
+        benchmark_repo = eval_data.get("benchmark_repo", "NetBox")
         
-        st.subheader(f"Summary Metrics Table (Split: {split_name.upper()}, N={agg.get('History-RAG', {}).get('cases_evaluated', 21)})")
+        st.subheader(f"Summary Metrics Table — {benchmark_repo.title()} Benchmark (Split: {split_name.upper()}, N={agg.get('History-RAG', {}).get('cases_evaluated', 21)})")
         
         # Display Metrics in tabs or table
         metrics_rows = [
@@ -356,60 +481,74 @@ elif page == "CI/CD & DevOps":
         "**PR Opened ➔ Lint + Baseline Tests ➔ AI Change Analysis ➔ Recommended-Test Selection ➔ Pytest Execution ➔ Docker Build ➔ QA Deploy ➔ QA Health Check**"
     )
 
-    st.subheader("Simulate Pull Request Event")
-    pr_title = st.text_input("PR Title", "PR #5201: Refactor interface IP assignment with VRF validation")
-    pr_diff_summary = st.text_area("PR Diff Summary", "netbox/dcim/models/devices.py: validate IP VRF binding\nnetbox/ipam/models/ip.py: add vrf check helper")
+    st.subheader(f"Simulate Pull Request Event ({config.name or selected_repo_id})")
+
+    # Generate dynamic default PR title and diff summary based on active repo
+    if selected_repo_id == "netbox":
+        default_pr_title = "PR #5201: Refactor interface IP assignment with VRF validation"
+        default_pr_diff = "netbox/dcim/models/devices.py: validate IP VRF binding\nnetbox/ipam/models/ip.py: add vrf check helper"
+    elif profile.discovered_components:
+        comp1 = profile.discovered_components[0]
+        comp2 = profile.discovered_components[1] if len(profile.discovered_components) > 1 else comp1
+        default_pr_title = f"PR #1042: Refactor {comp1} models and validate {comp2} integration"
+        default_pr_diff = f"{comp1}/models.py: add schema validation\n{comp2}/views.py: update error handling"
+    else:
+        default_pr_title = f"PR #101: Refactor core modules and update dependencies"
+        default_pr_diff = "README.md: update documentation\ncore.py: improve error handling"
+
+    pr_title = st.text_input("PR Title", default_pr_title, key=f"ci_pr_title_{selected_repo_id}")
+    pr_diff_summary = st.text_area("PR Diff Summary", default_pr_diff, key=f"ci_pr_diff_{selected_repo_id}")
 
     if st.button("🚀 Trigger CI/CD Pipeline Execution", type="primary"):
         progress_bar = st.progress(0)
         status_box = st.empty()
 
         # Step 1: Checkout
-        status_box.info("Step 1/8: Checking out repository snapshot...")
+        status_box.info(f"Step 1/8: Checking out repository snapshot for [{selected_repo_id}]...")
         progress_bar.progress(12)
-        time.sleep(0.5)
+        time.sleep(0.4)
 
         # Step 2: Lint
         status_box.info("Step 2/8: Running flake8/ruff lint check... [PASS]")
         progress_bar.progress(25)
-        time.sleep(0.5)
+        time.sleep(0.4)
 
         # Step 3: Baseline tests
         status_box.info("Step 3/8: Executing baseline suite tests... [PASS]")
         progress_bar.progress(37)
-        time.sleep(0.5)
+        time.sleep(0.4)
 
         # Step 4: AI Analysis
-        status_box.info("Step 4/8: Calling POST /analyze-change for AI change-impact prediction...")
+        status_box.info(f"Step 4/8: Calling POST /analyze-change for AI change-impact prediction on [{selected_repo_id}]...")
         pack = retriever.build_evidence_pack(
-            repository_id="netbox",
+            repository_id=selected_repo_id,
             query_or_change=f"{pr_title}\n{pr_diff_summary}",
             system_mode="History-RAG",
             candidate_components=profile.discovered_components,
             analysis_mode=profile.analysis_mode.value
         )
         ranked_comps = scoring_engine.score_components(pack, system_mode="History-RAG")
-        top_aff = [c["component"] for c in ranked_comps[:2]]
+        top_aff = [c["component"] for c in ranked_comps[:2]] if ranked_comps else profile.discovered_components[:2]
         rec_tests = test_recommender.rank_tests(pack, top_aff, top_k=3)
         progress_bar.progress(50)
-        time.sleep(0.6)
+        time.sleep(0.5)
 
         # Step 5: Recommended tests execution
         test_files_to_run = [t["test_file"] for t in rec_tests]
         status_box.info(f"Step 5/8: Running AI-recommended tests via pytest: {test_files_to_run}...")
         test_result = pytest_executor.run_tests(test_files_to_run)
         progress_bar.progress(65)
-        time.sleep(0.6)
+        time.sleep(0.5)
 
         # Step 6: Docker build
-        status_box.info("Step 6/8: Building versioned Docker image: historyrag:pr-5201...")
+        status_box.info(f"Step 6/8: Building versioned Docker image: historyrag:{selected_repo_id}-pr...")
         progress_bar.progress(80)
-        time.sleep(0.6)
+        time.sleep(0.5)
 
         # Step 7: QA deployment
         status_box.info("Step 7/8: Deploying image to QA environment...")
         progress_bar.progress(92)
-        time.sleep(0.5)
+        time.sleep(0.4)
 
         # Step 8: Health check
         status_box.success("Step 8/8: Verified GET /health on QA container: [STATUS 200 OK - HEALTHY]")
@@ -418,7 +557,8 @@ elif page == "CI/CD & DevOps":
         st.subheader("Pipeline Execution Summary")
         c1, c2, c3, c4 = st.columns(4)
         c1.metric("Pipeline Status", "PASSED ✅")
-        c2.metric("AI Impact Level", ranked_comps[0]["impact_level"])
+        impact_level = ranked_comps[0]["impact_level"] if ranked_comps else "MODERATE"
+        c2.metric("AI Impact Level", impact_level)
         c3.metric("Recommended Tests Run", f"{test_result['passed']}/{test_result['tests_executed']} Passed")
         c4.metric("QA Health Status", "HEALTHY (200)")
 

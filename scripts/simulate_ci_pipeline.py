@@ -15,6 +15,7 @@ import sys
 import time
 import requests
 import subprocess
+import argparse
 from rich.console import Console
 from rich.panel import Panel
 
@@ -24,10 +25,10 @@ sys.path.insert(0, os.path.abspath("."))
 console = Console()
 
 
-def run_pipeline():
+def run_pipeline(repo_id: str = "netbox", repo_url: str = None, pr_change: str = None):
     console.print(Panel.fit(
-        "[bold cyan]CSE 4011 — History-RAG AI-Enhanced CI/CD Pipeline Execution[/bold cyan]\n"
-        "[dim]Workflow: PR -> Lint -> Tests -> AI Analysis -> Recommended Tests -> Docker -> QA -> Health Check[/dim]"
+        f"[bold cyan]CSE 4011 — History-RAG AI-Enhanced CI/CD Pipeline Execution[/bold cyan]\n"
+        f"[dim]Target Repository: [magenta]{repo_id}[/magenta] | Workflow: PR -> Lint -> Tests -> AI Analysis -> Recommended Tests -> Docker -> QA -> Health Check[/dim]"
     ))
 
     # Step 1: Lint
@@ -57,32 +58,57 @@ def run_pipeline():
     from app.rag.hybrid_retriever import HybridRetriever
     from app.impact.scoring_engine import ImpactScoringEngine
     from app.testing.test_recommender import TestRecommender
+    from app.ingestion.core import IngestionPipeline
+
+    config_path = f"configs/{repo_id}.yaml"
+    if not os.path.exists(config_path):
+        if repo_url:
+            from app.api.routes import _get_or_create_repo_config
+            config = _get_or_create_repo_config(repo_url=repo_url, repo_id=repo_id)
+            pipeline = IngestionPipeline(config=config)
+            pipeline.run()
+        else:
+            console.print(f"[red][FAIL] Config {config_path} not found. Please specify --url or index the repository first.[/red]")
+            return False
 
     sqlite = SQLiteMetadataStore()
     chroma = ChromaVectorStore()
     retriever = HybridRetriever(sqlite, chroma)
     scorer = ImpactScoringEngine()
     recommender = TestRecommender()
-    adapter = RepositoryAdapter("configs/netbox.yaml")
+    adapter = RepositoryAdapter(config_path)
     profile = adapter.get_profile()
 
-    pr_change = "Refactor interface IP assignment to validate IP address VRF containment"
-    console.print(f"  [cyan]Analyzing PR Change:[/cyan] '{pr_change}'")
+    if not pr_change:
+        if repo_id == "netbox":
+            pr_change = "Refactor interface IP assignment to validate IP address VRF containment"
+        elif profile.discovered_components:
+            comp = profile.discovered_components[0]
+            pr_change = f"Refactor {comp} core logic and add validation checks"
+        else:
+            pr_change = "Refactor core components and improve error handling"
+
+    console.print(f"  [cyan]Analyzing PR Change on[/cyan] [magenta]{repo_id}[/magenta]: '{pr_change}'")
 
     pack = retriever.build_evidence_pack(
-        repository_id="netbox",
+        repository_id=repo_id,
         query_or_change=pr_change,
         system_mode="History-RAG",
         candidate_components=profile.discovered_components,
         analysis_mode=profile.analysis_mode.value
     )
     ranked_comps = scorer.score_components(pack, system_mode="History-RAG")
-    top_comp = ranked_comps[0]
-    console.print(f"  [bold green][OK] Top Affected Component:[/bold green] [magenta]{top_comp['component']}[/magenta] (Impact: [red]{top_comp['impact_level']}[/red], Score: {top_comp['score']:.2f})")
+    if ranked_comps:
+        top_comp = ranked_comps[0]
+        console.print(f"  [bold green][OK] Top Affected Component:[/bold green] [magenta]{top_comp['component']}[/magenta] (Impact: [red]{top_comp['impact_level']}[/red], Score: {top_comp['score']:.2f})")
+        comp_name = top_comp["component"]
+    else:
+        comp_name = profile.discovered_components[0] if profile.discovered_components else "core"
+        console.print(f"  [yellow]No specific component matched; using primary module:[/yellow] [magenta]{comp_name}[/magenta]")
 
     # Step 4: Recommended Test Selection
     console.print("\n[bold yellow]Step 4/8: Recommended Test Selection...[/bold yellow]")
-    rec_tests = recommender.rank_tests(pack, [top_comp["component"]], top_k=2)
+    rec_tests = recommender.rank_tests(pack, [comp_name], top_k=2)
     test_paths = [t["test_file"] for t in rec_tests]
     for t in rec_tests:
         console.print(f"  [green]  * Recommended:[/green] {t['test_file']} (Score: {t['score']:.2f})")
@@ -116,10 +142,21 @@ def run_pipeline():
 
     console.print()
     console.print(Panel.fit(
-        "[bold green]FULL CI/CD PIPELINE SUCCEEDED! Candidate passed all automated QA gates.[/bold green]"
+        f"[bold green]FULL CI/CD PIPELINE SUCCEEDED! Candidate [{repo_id}] passed all automated QA gates.[/bold green]"
     ))
     return True
 
 
 if __name__ == "__main__":
-    run_pipeline()
+    parser = argparse.ArgumentParser(description="Simulate AI-enhanced CI/CD pipeline on any repository")
+    parser.add_argument("--repo", default="netbox", help="Repository ID (default: netbox)")
+    parser.add_argument("--url", default=None, help="Remote Git / GitHub URL if repo needs to be cloned/indexed")
+    parser.add_argument("--change", default=None, help="Custom proposed change description")
+    args = parser.parse_args()
+
+    r_id = args.repo
+    if args.url and (args.repo == "netbox" or not args.repo):
+        from app.repository.adapter import parse_github_url
+        _, _, r_id = parse_github_url(args.url)
+
+    run_pipeline(repo_id=r_id, repo_url=args.url, pr_change=args.change)
