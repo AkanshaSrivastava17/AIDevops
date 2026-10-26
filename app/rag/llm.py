@@ -107,6 +107,12 @@ class EvidenceGroundedLLM:
                 explanation_paragraphs.append(
                     f"Component co-change records reveal strong historical coupling between `{top_comp}` and {list(evidence_pack.cochange_evidence.get(top_comp, {}).keys())[:2]}."
                 )
+            if evidence_pack.graph_paths:
+                p = evidence_pack.graph_paths[0]
+                rels = " ➔ ".join([s["relation"] for s in p.get("steps", [])])
+                explanation_paragraphs.append(
+                    f"NetworkX Knowledge Graph confirms multi-hop relationship between `{top_comp}` and `{p['target']}` across {p['hops']} hop(s) ({rels})."
+                )
 
         full_explanation = "\n\n".join(explanation_paragraphs)
 
@@ -119,13 +125,15 @@ class EvidenceGroundedLLM:
                 "commits": evidence_pack.commit_evidence[:5],
                 "issues": evidence_pack.issue_evidence[:5],
                 "prs": evidence_pack.pr_evidence[:5],
-                "citations": citations
+                "citations": citations,
+                "graph_paths": evidence_pack.graph_paths[:5]
             },
             "recommended_tests": ranked_tests,
             "confidence": confidence,
             "limitations": limitations,
             "engine_mode": evidence_pack.system_mode,
             "analysis_mode": evidence_pack.analysis_mode,
+            "graph_paths": evidence_pack.graph_paths[:5],
             "ollama_active": ollama_online
         }
 

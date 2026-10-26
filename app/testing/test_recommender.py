@@ -80,12 +80,22 @@ class TestRecommender:
 
             # 4. Issue and PR references to tests
             issue_score = 0.0
-            if evidence_pack.system_mode == "History-RAG":
+            if evidence_pack.system_mode in ("History-RAG", "History-RAG + Graph"):
                 test_name = test_path.split("/")[-1]
                 for doc in evidence_pack.issue_evidence + evidence_pack.pr_evidence:
                     content = doc.get("content", "").lower()
                     if test_name.lower() in content:
                         issue_score = max(issue_score, 0.9)
+
+            # 5. Graph proximity score (Section 33 Enhancement #1)
+            graph_score = 0.0
+            graph_hops = None
+            if evidence_pack.graph_ranked_tests:
+                for gt in evidence_pack.graph_ranked_tests:
+                    if gt.get("test_file") == test_path:
+                        graph_score = gt.get("graph_score", 0.0)
+                        graph_hops = gt.get("hops")
+                        break
 
             # Composite test score
             composite = (
@@ -94,6 +104,8 @@ class TestRecommender:
                 + (self.w_cochange * cochange_score)
                 + (self.w_issue * issue_score)
             )
+            if evidence_pack.system_mode == "History-RAG + Graph" and graph_score > 0:
+                composite = round(0.75 * composite + 0.25 * graph_score, 4)
 
             score = round(min(1.0, max(0.0, composite)), 4)
             reasons = []
@@ -105,16 +117,22 @@ class TestRecommender:
                 reasons.append("Frequently co-changed with component in past commits")
             if issue_score > 0.4:
                 reasons.append("Explicitly referenced in historical PR/issue discussion")
+            if graph_score > 0 and graph_hops:
+                reasons.append(f"Knowledge Graph proximity ({graph_hops} hop(s))")
+
+            breakdown_dict = {
+                "path_score": path_score,
+                "dependency_score": dep_score,
+                "cochange_score": cochange_score,
+                "issue_reference_score": issue_score
+            }
+            if graph_score > 0:
+                breakdown_dict["graph_proximity_score"] = graph_score
 
             scores[test_path] = {
                 "test_file": test_path,
                 "score": score,
-                "breakdown": {
-                    "path_score": path_score,
-                    "dependency_score": dep_score,
-                    "cochange_score": cochange_score,
-                    "issue_reference_score": issue_score
-                },
+                "breakdown": breakdown_dict,
                 "reasons": reasons or ["Available regression test"]
             }
 

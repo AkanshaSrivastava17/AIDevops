@@ -6,7 +6,7 @@ import os
 import yaml
 from datetime import datetime, timezone
 from typing import List, Dict, Optional, Any
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, Response
 from pydantic import BaseModel, Field
 
 from app.repository.models import RepositoryConfig, AnalysisMode
@@ -17,6 +17,9 @@ from app.ingestion.chroma_store import ChromaVectorStore
 from app.rag.hybrid_retriever import HybridRetriever
 from app.impact.scoring_engine import ImpactScoringEngine
 from app.testing.test_recommender import TestRecommender
+from app.testing.test_generator import CandidateTestGenerator
+from app.devops.pipeline_gate import AdvancedCIDCGate, DeploymentManager
+from app.monitoring.metrics import MetricsManager, CONTENT_TYPE_LATEST
 from app.rag.llm import EvidenceGroundedLLM
 
 app = FastAPI(
@@ -31,7 +34,25 @@ chroma_store = ChromaVectorStore()
 retriever = HybridRetriever(sqlite_store, chroma_store)
 scoring_engine = ImpactScoringEngine()
 test_recommender = TestRecommender()
+candidate_generator = CandidateTestGenerator()
 llm = EvidenceGroundedLLM()
+pipeline_gate = AdvancedCIDCGate()
+deployment_manager = DeploymentManager()
+
+
+# Request / Response Models
+class GateEvaluationRequest(BaseModel):
+    change_analysis: Dict[str, Any]
+    test_results: Dict[str, Any]
+    qa_health_status: Optional[Dict[str, Any]] = None
+    block_on_high_impact: bool = True
+    min_confidence: float = 0.60
+
+
+class RollbackRequest(BaseModel):
+    failed_image: str = "historyrag:candidate"
+    reason: str = "QA Health Check Failure"
+    environment: str = "qa"
 
 
 # Request / Response Models
@@ -47,6 +68,28 @@ class AnalyzeChangeRequest(BaseModel):
     target_time: Optional[str] = None
     system_mode: str = "History-RAG"
     top_k_tests: int = 5
+    generate_candidate_tests: bool = False
+
+
+class CandidateTestModel(BaseModel):
+    test_name: str
+    target_component: str
+    target_function_or_scenario: str
+    test_code: str
+    rationale: str
+    validation_status: str
+    review_status: str
+    framework: str = "pytest"
+    test_type: str = "unit"
+    ast_valid: bool = True
+    created_at: Optional[str] = None
+
+
+class GenerateCandidateTestsRequest(BaseModel):
+    repository_id: str = "netbox"
+    proposed_change: str
+    system_mode: str = "History-RAG"
+    top_k: int = 3
 
 
 class AnalyzeChangeResponse(BaseModel):
@@ -55,6 +98,7 @@ class AnalyzeChangeResponse(BaseModel):
     impact_level: str
     historical_evidence: List[Dict[str, Any]]
     recommended_tests: List[Dict[str, Any]]
+    candidate_tests: Optional[List[Dict[str, Any]]] = None
     confidence: float
     limitations: str
     analysis_mode: Optional[str] = None
@@ -65,6 +109,11 @@ class IndexRequest(BaseModel):
     repository_id: Optional[str] = None
     repository_url: Optional[str] = None
     force_refresh: bool = False
+
+
+class IndexZipRequest(BaseModel):
+    zip_path: str
+    repository_id: Optional[str] = None
 
 
 def _get_or_create_repo_config(repo_id: Optional[str] = None, repo_url: Optional[str] = None) -> RepositoryConfig:
@@ -211,17 +260,128 @@ def analyze_change(req: AnalyzeChangeRequest):
         + evidence_pack.pr_evidence
     )
 
+    # 5. Optional AI-Generated Candidate Tests (Section 33 Enhancement #2)
+    candidates = []
+    if req.generate_candidate_tests:
+        candidates = candidate_generator.generate_candidate_tests(
+            proposed_change=req.proposed_change,
+            affected_components=ranked_components,
+            evidence_pack=evidence_pack,
+            top_k=3
+        )
+
+    # Record Prometheus Telemetry (Section 33 Enhancement #5)
+    MetricsManager.record_change_analysis(
+        mode=req.system_mode,
+        impact_level=llm_report["impact_level"]
+    )
+
     return AnalyzeChangeResponse(
         proposed_change=req.proposed_change,
         affected_components=ranked_components,
         impact_level=llm_report["impact_level"],
         historical_evidence=all_evidence[:10],
         recommended_tests=recommended_tests,
+        candidate_tests=candidates if req.generate_candidate_tests else None,
         confidence=llm_report["confidence"],
         limitations=llm_report["limitations"],
         analysis_mode=profile.analysis_mode.value,
         engine_mode=req.system_mode
     )
+
+
+@app.post("/generate-candidate-tests")
+def generate_candidate_tests(req: GenerateCandidateTestsRequest):
+    """
+    AI-Generated Candidate Tests (Section 33, Enhancement #2).
+    Generates AST-validated pytest test functions for components affected by the change.
+    All candidate tests are marked with @pytest.mark.ai_candidate and require human review.
+    """
+    config = _get_repo_config(req.repository_id)
+    adapter = RepositoryAdapter(config)
+    profile = adapter.get_profile()
+
+    evidence_pack = retriever.build_evidence_pack(
+        repository_id=req.repository_id,
+        query_or_change=req.proposed_change,
+        system_mode=req.system_mode,
+        candidate_components=profile.discovered_components,
+        analysis_mode=profile.analysis_mode.value
+    )
+
+    ranked_components = scoring_engine.score_components(
+        evidence_pack=evidence_pack,
+        system_mode=req.system_mode
+    )
+
+    candidates = candidate_generator.generate_candidate_tests(
+        proposed_change=req.proposed_change,
+        affected_components=ranked_components,
+        evidence_pack=evidence_pack,
+        top_k=req.top_k
+    )
+
+    return {
+        "repository_id": req.repository_id,
+        "proposed_change": req.proposed_change,
+        "system_mode": req.system_mode,
+        "candidate_tests": candidates,
+        "count": len(candidates)
+    }
+
+
+@app.post("/evaluate-gate")
+def evaluate_gate(req: GateEvaluationRequest):
+    """
+    Advanced CI/CD Policy Gate (Section 33 Enhancement #8).
+    Evaluates PR merge readiness based on change impact severity, test results, and QA health.
+    """
+    gate = AdvancedCIDCGate(
+        block_on_high_impact_failure=req.block_on_high_impact,
+        min_confidence_score=req.min_confidence
+    )
+    result = gate.evaluate(
+        change_analysis=req.change_analysis,
+        test_results=req.test_results,
+        qa_health_status=req.qa_health_status
+    )
+    MetricsManager.record_gate_decision(result["decision"])
+    return result
+
+
+@app.post("/devops/rollback")
+def trigger_rollback(req: RollbackRequest):
+    """
+    Automated Rollback Engine (Section 33 Enhancement #7).
+    Redeploys known-good image when candidate deployment or health checks fail.
+    """
+    result = deployment_manager.trigger_auto_rollback(
+        failed_image=req.failed_image,
+        reason=req.reason,
+        environment=req.environment
+    )
+    MetricsManager.record_rollback(environment=req.environment)
+    return result
+
+
+@app.get("/devops/deployments")
+def get_deployment_ledger():
+    """Returns deployment history and current known-good image pointer."""
+    return {
+        "current_deployed_image": deployment_manager.current_deployed_image,
+        "known_good_image": deployment_manager.known_good_image,
+        "history": deployment_manager.deployment_history
+    }
+
+
+@app.get("/metrics")
+def prometheus_metrics():
+    """
+    Prometheus Monitoring Metrics Endpoint (Section 33, Enhancement #5).
+    Exposes infrastructure, RAG retrieval, testing, and rollback telemetry in Prometheus exposition format.
+    """
+    payload = MetricsManager.get_metrics_payload()
+    return Response(content=payload, media_type=CONTENT_TYPE_LATEST)
 
 
 @app.post("/index")
@@ -237,6 +397,29 @@ def index_repository(req: IndexRequest):
         chroma_store=chroma_store
     )
     result = pipeline.run()
+    return result
+
+
+@app.post("/index-zip")
+def index_zip_repository(req: IndexZipRequest):
+    """
+    Local/ZIP Repository Ingestion (Section 33 Enhancement #10).
+    Ingests source code and local Git history from a ZIP archive.
+    """
+    from app.repository.adapter import ingest_zip_archive
+    cfg, target_dir = ingest_zip_archive(req.zip_path, req.repository_id)
+    pipeline = IngestionPipeline(
+        config=cfg,
+        sqlite_store=sqlite_store,
+        chroma_store=chroma_store
+    )
+    result = pipeline.run()
+    result["zip_ingestion"] = {
+        "status": "success",
+        "archive": req.zip_path,
+        "target_directory": target_dir,
+        "repository_id": cfg.repository_id
+    }
     return result
 
 

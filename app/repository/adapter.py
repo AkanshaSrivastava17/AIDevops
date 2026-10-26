@@ -44,6 +44,55 @@ def parse_github_url(url: str) -> Tuple[Optional[str], Optional[str], str]:
     return None, repo_name, repo_id
 
 
+def ingest_zip_archive(zip_path: str, repository_id: Optional[str] = None) -> Tuple[RepositoryConfig, str]:
+    """
+    Ingests a local or uploaded ZIP repository archive (Section 33 Enhancement #10).
+    Safely unpacks archive into data/raw/{repo_id}, generates configs/{repo_id}.yaml,
+    and returns (RepositoryConfig, target_dir).
+    """
+    import zipfile
+    import shutil
+    if not os.path.exists(zip_path):
+        raise FileNotFoundError(f"ZIP file not found at: {zip_path}")
+
+    base_name = os.path.splitext(os.path.basename(zip_path))[0]
+    repo_id = repository_id or re.sub(r"[^\w.-]", "_", base_name).lower()
+    target_dir = os.path.join("data", "raw", repo_id)
+    os.makedirs(target_dir, exist_ok=True)
+
+    with zipfile.ZipFile(zip_path, "r") as z:
+        for member in z.namelist():
+            # Security: prevent zip-slip traversal
+            norm = os.path.normpath(member)
+            if norm.startswith("..") or os.path.isabs(norm):
+                continue
+            z.extract(member, target_dir)
+
+    # Check if files were extracted into a single nested top-level folder
+    extracted_items = [i for i in os.listdir(target_dir) if not i.startswith(".")]
+    if len(extracted_items) == 1 and os.path.isdir(os.path.join(target_dir, extracted_items[0])):
+        nested_dir = os.path.join(target_dir, extracted_items[0])
+        for item in os.listdir(nested_dir):
+            src = os.path.join(nested_dir, item)
+            dst = os.path.join(target_dir, item)
+            if not os.path.exists(dst):
+                shutil.move(src, dst)
+
+    # Create and save repository config
+    config_path = os.path.join("configs", f"{repo_id}.yaml")
+    cfg = RepositoryConfig(
+        repository_id=repo_id,
+        name=repo_id.replace("_", " ").title(),
+        repository_url=f"file://{os.path.abspath(target_dir)}",
+        language="Python"
+    )
+    os.makedirs("configs", exist_ok=True)
+    with open(config_path, "w", encoding="utf-8") as f:
+        yaml.safe_dump(cfg.model_dump(), f)
+
+    return cfg, target_dir
+
+
 class RepositoryAdapter:
     def __init__(self, config_path_or_obj):
         if isinstance(config_path_or_obj, str):

@@ -20,6 +20,8 @@ class EvidencePack(BaseModel):
     cochange_evidence: Dict[str, Dict[str, int]] = Field(default_factory=dict)
     dependency_evidence: List[Dict[str, Any]] = Field(default_factory=list)
     available_tests: List[str] = Field(default_factory=list)
+    graph_paths: List[Dict[str, Any]] = Field(default_factory=list)
+    graph_ranked_tests: List[Dict[str, Any]] = Field(default_factory=list)
     citations: List[str] = Field(default_factory=list)
 
     def total_evidence_items(self) -> int:

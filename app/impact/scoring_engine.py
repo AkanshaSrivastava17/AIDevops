@@ -63,6 +63,21 @@ class ImpactScoringEngine:
         # 4. Test relationship term
         test_scores = self._compute_test_scores(candidate_components, evidence_pack)
 
+        # 5. Graph path connectivity (for Section 33 Enhancement #1: History-RAG + Graph)
+        graph_scores = {}
+        if system_mode == "History-RAG + Graph" and evidence_pack.graph_paths:
+            for c in candidate_components:
+                comp_node = f"comp:{c}"
+                matching_paths = [
+                    p for p in evidence_pack.graph_paths
+                    if comp_node in p.get("path_nodes", [])
+                ]
+                if matching_paths:
+                    shortest_hops = min(p.get("hops", 9) for p in matching_paths)
+                    graph_scores[c] = round(max(0.05, 0.35 / max(1, shortest_hops)), 4)
+                else:
+                    graph_scores[c] = 0.0
+
         # In Limited Mode, dependency evidence is unavailable -> 0
         if evidence_pack.analysis_mode == "Limited":
             dep_scores = {c: 0.0 for c in candidate_components}
@@ -74,13 +89,24 @@ class ImpactScoringEngine:
             s_dep = dep_scores.get(c, 0.0)
             s_co = cochange_scores.get(c, 0.0)
             s_test = test_scores.get(c, 0.0)
+            s_graph = graph_scores.get(c, 0.0)
 
-            total_score = (
-                (self.w1 * s_sem)
-                + (self.w2 * s_dep)
-                + (self.w3 * s_co)
-                + (self.w4 * s_test)
-            )
+            if system_mode == "History-RAG + Graph":
+                # Re-balance 5 terms: sem(0.20) + dep(0.20) + co(0.20) + test(0.20) + graph(0.20)
+                total_score = (
+                    (0.20 * s_sem)
+                    + (0.20 * s_dep)
+                    + (0.20 * s_co)
+                    + (0.20 * s_test)
+                    + (0.20 * s_graph)
+                )
+            else:
+                total_score = (
+                    (self.w1 * s_sem)
+                    + (self.w2 * s_dep)
+                    + (self.w3 * s_co)
+                    + (self.w4 * s_test)
+                )
             # Normalize between 0.0 and 1.0
             score = round(min(1.0, max(0.0, total_score)), 4)
 
@@ -101,17 +127,23 @@ class ImpactScoringEngine:
                 reasons.append(f"Historical co-change correlation ({s_co:.2f})")
             if s_test > 0.3:
                 reasons.append(f"Strong test linkage ({s_test:.2f})")
+            if s_graph > 0.1:
+                reasons.append(f"Multi-hop knowledge graph path connectivity ({s_graph:.2f})")
+
+            breakdown_dict = {
+                "semantic_relevance": round(s_sem, 4),
+                "dependency_evidence": round(s_dep, 4),
+                "historical_cochange": round(s_co, 4),
+                "test_relationship": round(s_test, 4)
+            }
+            if system_mode == "History-RAG + Graph":
+                breakdown_dict["graph_connectivity"] = round(s_graph, 4)
 
             results.append({
                 "component": c,
                 "score": score,
                 "impact_level": level,
-                "breakdown": {
-                    "semantic_relevance": round(s_sem, 4),
-                    "dependency_evidence": round(s_dep, 4),
-                    "historical_cochange": round(s_co, 4),
-                    "test_relationship": round(s_test, 4)
-                },
+                "breakdown": breakdown_dict,
                 "reasons": reasons or ["Baseline contextual relevance"]
             })
 

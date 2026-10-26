@@ -9,6 +9,7 @@ from app.ingestion.chroma_store import ChromaVectorStore
 from app.rag.evidence_pack import EvidencePack
 from app.rag.temporal_filter import TemporalLeakageFilter
 from app.ingestion.schema import DocumentType
+from app.graph.knowledge_graph import RepositoryKnowledgeGraph
 
 logger = logging.getLogger(__name__)
 
@@ -21,6 +22,7 @@ class HybridRetriever:
     ):
         self.sqlite = sqlite_store or SQLiteMetadataStore()
         self.chroma = chroma_store or ChromaVectorStore()
+        self.knowledge_graph = RepositoryKnowledgeGraph(self.sqlite)
 
     def build_evidence_pack(
         self,
@@ -146,8 +148,8 @@ class HybridRetriever:
                 if pr_id:
                     citations.append(f"PR: #{pr_id}")
 
-        # 3. History-RAG: Add co-change counts and dependency links
-        if system_mode == "History-RAG":
+        # 3. History-RAG & History-RAG + Graph: Add co-change counts and dependency links
+        if system_mode in ("History-RAG", "History-RAG + Graph"):
             for comp in components:
                 co_counts = self.sqlite.get_co_change_counts(
                     repository_id=repository_id,
@@ -156,6 +158,28 @@ class HybridRetriever:
                 )
                 if co_counts:
                     pack.cochange_evidence[comp] = co_counts
+
+        if system_mode == "History-RAG + Graph":
+            # Build Knowledge Graph with temporal cutoff and exclusions (Section 33 #1)
+            try:
+                self.knowledge_graph.build_graph(
+                    repository_id=repository_id,
+                    max_timestamp=target_time,
+                    excluded_commit_shas=excluded_commit_shas,
+                    excluded_issue_ids=excluded_issue_ids,
+                    excluded_pr_ids=excluded_pr_ids,
+                    excluded_test_paths=excluded_test_paths
+                )
+                pack.graph_paths = self.knowledge_graph.find_impact_paths(
+                    source_components=components,
+                    max_hops=3
+                )
+                pack.graph_ranked_tests = self.knowledge_graph.rank_tests_by_graph_proximity(
+                    affected_components=components,
+                    top_k=5
+                )
+            except Exception as e:
+                logger.warning(f"Knowledge Graph enrichment error: {e}")
 
         # 4. Dependency analysis (Available in Enhanced mode)
         if analysis_mode == "Enhanced":

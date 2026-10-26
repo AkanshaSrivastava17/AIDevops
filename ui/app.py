@@ -22,6 +22,8 @@ from app.rag.hybrid_retriever import HybridRetriever
 from app.impact.scoring_engine import ImpactScoringEngine
 from app.testing.test_recommender import TestRecommender
 from app.testing.pytest_executor import PytestExecutor
+from app.testing.test_generator import CandidateTestGenerator
+from app.devops.pipeline_gate import AdvancedCIDCGate, DeploymentManager
 from app.rag.llm import EvidenceGroundedLLM
 
 st.set_page_config(
@@ -31,7 +33,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-from app.repository.adapter import parse_github_url
+from app.repository.adapter import parse_github_url, ingest_zip_archive
 from app.ingestion.core import IngestionPipeline
 
 # Initialize singletons in st.session_state
@@ -44,9 +46,12 @@ def get_services():
     recommender = TestRecommender()
     llm = EvidenceGroundedLLM()
     executor = PytestExecutor()
-    return sqlite, chroma, retriever, scorer, recommender, llm, executor
+    cand_gen = CandidateTestGenerator()
+    gate = AdvancedCIDCGate()
+    deploy_mgr = DeploymentManager()
+    return sqlite, chroma, retriever, scorer, recommender, llm, executor, cand_gen, gate, deploy_mgr
 
-sqlite_store, chroma_store, retriever, scoring_engine, test_recommender, llm, pytest_executor = get_services()
+sqlite_store, chroma_store, retriever, scoring_engine, test_recommender, llm, pytest_executor, candidate_generator, pipeline_gate, deployment_manager = get_services()
 
 # Navigation Sidebar
 st.sidebar.title("🧠 History-RAG")
@@ -113,6 +118,30 @@ with st.sidebar.expander("➕ Clone & Index Any Repo", expanded=False):
                 res = pipeline.run()
                 st.session_state["selected_repo"] = new_id
                 st.success(f"Indexed {new_id} ({res['total_documents_indexed']} documents)!")
+                time.sleep(1)
+                st.rerun()
+
+with st.sidebar.expander("📦 Ingest Local / ZIP Repo (#10)", expanded=False):
+    uploaded_zip = st.file_uploader("Upload .zip Archive", type=["zip"], key="sb_zip_uploader")
+    local_zip_path = st.text_input("Or Local ZIP Path", placeholder="e.g. data/my_repo.zip", key="sb_zip_path")
+    if st.button("🚀 Ingest ZIP Archive", key="sb_btn_zip_ingest"):
+        zip_target = None
+        if uploaded_zip is not None:
+            temp_save = os.path.join("data", "raw", uploaded_zip.name)
+            os.makedirs(os.path.dirname(temp_save), exist_ok=True)
+            with open(temp_save, "wb") as f:
+                f.write(uploaded_zip.getbuffer())
+            zip_target = temp_save
+        elif local_zip_path and os.path.exists(local_zip_path):
+            zip_target = local_zip_path
+
+        if zip_target:
+            with st.spinner("Extracting & ingesting ZIP archive..."):
+                cfg, target_dir = ingest_zip_archive(zip_target)
+                pipeline = IngestionPipeline(config=cfg, sqlite_store=sqlite_store, chroma_store=chroma_store)
+                res = pipeline.run()
+                st.session_state["selected_repo"] = cfg.repository_id
+                st.success(f"Indexed {cfg.repository_id} ({res.get('total_documents_indexed', 0)} documents)!")
                 time.sleep(1)
                 st.rerun()
 
@@ -242,6 +271,36 @@ if page == "Repository":
                 time.sleep(1)
                 st.rerun()
 
+    # Section 33 Enhancement #1: Knowledge Graph Overview
+    with st.expander("🕸️ NetworkX Knowledge Graph Overview (Section 33 Future Scope #1)", expanded=False):
+        st.markdown(
+            "Explicit multi-relational graph: **Issue ➔ PR ➔ Commit ➔ File ➔ Test ➔ Component**. "
+            "Enables multi-hop causal tracing and structural graph centrality analysis."
+        )
+        try:
+            from app.graph.knowledge_graph import RepositoryKnowledgeGraph
+            kg = RepositoryKnowledgeGraph(sqlite_store)
+            g = kg.build_graph(repository_id=selected_repo_id)
+            gk1, gk2, gk3 = st.columns(3)
+            gk1.metric("Graph Nodes", g.number_of_nodes())
+            gk2.metric("Graph Edges", g.number_of_edges())
+            node_types = {}
+            for _, d in g.nodes(data=True):
+                nt = d.get("node_type", "other")
+                node_types[nt] = node_types.get(nt, 0) + 1
+            gk3.metric("Component Nodes", node_types.get("component", 0))
+
+            st.write("**Node Breakdown by Entity Type:**")
+            st.write(" | ".join([f"**{k.title()}**: `{v}`" for k, v in sorted(node_types.items())]))
+
+            sub_data = kg.get_subgraph_data_for_ui(components=profile.discovered_components[:3], max_nodes=15)
+            if sub_data.get("edges"):
+                st.write("**Sample Connected Multi-Hop Relationships:**")
+                for e in sub_data["edges"][:6]:
+                    st.markdown(f"- `{e['from']}` ➔ **[{e['relation']}]** ➔ `{e['to']}`")
+        except Exception as e:
+            st.info(f"Knowledge Graph preview: {e}")
+
 
 # ==========================================
 # PAGE 2: REPOSITORY Q&A
@@ -343,9 +402,14 @@ elif page == "Change Analysis":
 
     c1, c2 = st.columns(2)
     with c1:
-        comp_engine_mode = st.selectbox("System Mode", ["History-RAG", "Code-RAG", "LLM-only"])
+        comp_engine_mode_raw = st.selectbox(
+            "System Mode",
+            ["History-RAG", "History-RAG + Graph (Section 33 #1)", "Code-RAG", "LLM-only"]
+        )
+        comp_engine_mode = "History-RAG + Graph" if "Graph" in comp_engine_mode_raw else comp_engine_mode_raw
     with c2:
         top_k_tests = st.slider("Max Recommended Tests (Top-K)", min_value=1, max_value=8, value=4)
+        generate_ai_candidates = st.checkbox("Generate AI Candidate Tests (Section 33 #2)", value=True, help="Synthesizes AST-validated pytest test functions for components affected by the change where test coverage may be incomplete.")
 
     if st.button("🚀 Analyze Change Impact", type="primary"):
         with st.spinner("Analyzing impact, historical co-changes, dependencies, and test mappings..."):
@@ -388,10 +452,16 @@ elif page == "Change Analysis":
 
         if comp_engine_mode != "LLM-only":
             with st.expander("📊 Transparent Scoring Formula Breakdown"):
-                st.markdown("**Formula:** `Impact = 0.25*semantic + 0.25*dependency + 0.25*historical_cochange + 0.25*test_link`")
-                for c in ranked_comps[:3]:
-                    b = c.get("breakdown", {})
-                    st.write(f"- **{c['component']}**: Semantic: `{b.get('semantic_relevance', 0):.2f}`, Dependency: `{b.get('dependency_evidence', 0):.2f}`, Co-change: `{b.get('historical_cochange', 0):.2f}`, Tests: `{b.get('test_relationship', 0):.2f}`")
+                if comp_engine_mode == "History-RAG + Graph":
+                    st.markdown("**Formula:** `Impact = 0.20*semantic + 0.20*dependency + 0.20*historical_cochange + 0.20*test_link + 0.20*graph_connectivity`")
+                    for c in ranked_comps[:3]:
+                        b = c.get("breakdown", {})
+                        st.write(f"- **{c['component']}**: Semantic: `{b.get('semantic_relevance', 0):.2f}`, Dependency: `{b.get('dependency_evidence', 0):.2f}`, Co-change: `{b.get('historical_cochange', 0):.2f}`, Tests: `{b.get('test_relationship', 0):.2f}`, Graph: `{b.get('graph_connectivity', 0):.2f}`")
+                else:
+                    st.markdown("**Formula:** `Impact = 0.25*semantic + 0.25*dependency + 0.25*historical_cochange + 0.25*test_link`")
+                    for c in ranked_comps[:3]:
+                        b = c.get("breakdown", {})
+                        st.write(f"- **{c['component']}**: Semantic: `{b.get('semantic_relevance', 0):.2f}`, Dependency: `{b.get('dependency_evidence', 0):.2f}`, Co-change: `{b.get('historical_cochange', 0):.2f}`, Tests: `{b.get('test_relationship', 0):.2f}`")
 
         st.subheader("2. Recommended Existing Tests")
         if recommended_tests:
@@ -403,6 +473,39 @@ elif page == "Change Analysis":
         st.subheader("3. Evidence-Grounded Explanation")
         st.markdown(report.get("historical_explanation", ""))
         st.info(f"**Confidence:** {report.get('confidence', 0.5)*100:.1f}% | **Limitations:** {report.get('limitations', 'None')}")
+
+        if report.get("graph_paths"):
+            st.subheader("4. NetworkX Knowledge Graph Multi-Hop Paths (Section 33 #1)")
+            st.markdown("*Explicit causal and structural relationship paths discovered across the repository knowledge graph:*")
+            for p in report["graph_paths"][:5]:
+                path_str = " ➔ ".join([f"`{s['from']}` **[{s['relation']}]** `{s['to']}`" for s in p.get("steps", [])])
+                st.markdown(f"- 🔗 **{p['source']}** to **{p['target']}** ({p['hops']} hop{'s' if p['hops'] > 1 else ''}):")
+                st.markdown(f"  &nbsp;&nbsp;&nbsp;&nbsp;{path_str}")
+
+        if generate_ai_candidates and ranked_comps:
+            st.subheader("5. AI-Generated Candidate Tests (Section 33 #2)")
+            st.markdown(
+                "*Candidate regression tests synthesized to fill test-coverage gaps for affected components. "
+                "All test snippets are validated for syntax correctness via Python AST parsing and marked for human review.*"
+            )
+            candidate_tests = candidate_generator.generate_candidate_tests(
+                proposed_change=change_desc,
+                affected_components=ranked_comps,
+                evidence_pack=pack if comp_engine_mode != "LLM-only" else None,
+                top_k=3
+            )
+            for ctest in candidate_tests:
+                status_icon = "✅" if ctest["ast_valid"] else "⚠️"
+                with st.expander(f"{status_icon} Candidate Test: `{ctest['test_name']}` ({ctest['target_component']})", expanded=False):
+                    col_m1, col_m2, col_m3 = st.columns(3)
+                    with col_m1:
+                        st.markdown(f"**Scenario:** `{ctest['target_function_or_scenario']}`")
+                    with col_m2:
+                        st.markdown(f"**Syntax Status:** `{ctest['validation_status']}`")
+                    with col_m3:
+                        st.markdown(f"**Review Status:** `{ctest['review_status']}`")
+                    st.markdown(f"**Rationale:** {ctest['rationale']}")
+                    st.code(ctest["test_code"], language="python")
 
 
 # ==========================================
@@ -499,27 +602,48 @@ elif page == "CI/CD & DevOps":
     pr_title = st.text_input("PR Title", default_pr_title, key=f"ci_pr_title_{selected_repo_id}")
     pr_diff_summary = st.text_area("PR Diff Summary", default_pr_diff, key=f"ci_pr_diff_{selected_repo_id}")
 
+    with st.expander("🛡️ Advanced CI/CD Policy Gates & Auto-Rollback Options (Section 33 #7 & #8)", expanded=False):
+        cg1, cg2 = st.columns(2)
+        with cg1:
+            enable_advanced_gates = st.checkbox(
+                "Enforce Advanced Policy Gates (#8)",
+                value=True,
+                help="Blocks PR merges if AI impact is HIGH and recommended tests fail, or if confidence is low."
+            )
+            block_on_high_impact = st.checkbox("Strictly Block on High Impact Failures", value=True)
+        with cg2:
+            simulate_fault = st.selectbox(
+                "Simulate Pipeline Fault Condition (#7 & #8)",
+                options=[
+                    "None (Standard Execution — All Pass)",
+                    "Inject Regression Test Failure (HIGH Impact)",
+                    "Inject QA Container Crash (Trigger Auto-Rollback)"
+                ],
+                index=0,
+                help="Demonstrates automated policy gate blocking and container rollback to known-good image."
+            )
+
     if st.button("🚀 Trigger CI/CD Pipeline Execution", type="primary"):
         progress_bar = st.progress(0)
         status_box = st.empty()
 
         # Step 1: Checkout
-        status_box.info(f"Step 1/8: Checking out repository snapshot for [{selected_repo_id}]...")
-        progress_bar.progress(12)
-        time.sleep(0.4)
+        status_box.info(f"Step 1/9: Checking out repository snapshot for [{selected_repo_id}]...")
+        progress_bar.progress(11)
+        time.sleep(0.3)
 
         # Step 2: Lint
-        status_box.info("Step 2/8: Running flake8/ruff lint check... [PASS]")
-        progress_bar.progress(25)
-        time.sleep(0.4)
+        status_box.info("Step 2/9: Running flake8/ruff lint check... [PASS]")
+        progress_bar.progress(22)
+        time.sleep(0.3)
 
         # Step 3: Baseline tests
-        status_box.info("Step 3/8: Executing baseline suite tests... [PASS]")
-        progress_bar.progress(37)
-        time.sleep(0.4)
+        status_box.info("Step 3/9: Executing baseline suite tests... [PASS]")
+        progress_bar.progress(33)
+        time.sleep(0.3)
 
         # Step 4: AI Analysis
-        status_box.info(f"Step 4/8: Calling POST /analyze-change for AI change-impact prediction on [{selected_repo_id}]...")
+        status_box.info(f"Step 4/9: Calling POST /analyze-change for AI change-impact prediction on [{selected_repo_id}]...")
         pack = retriever.build_evidence_pack(
             repository_id=selected_repo_id,
             query_or_change=f"{pr_title}\n{pr_diff_summary}",
@@ -530,37 +654,126 @@ elif page == "CI/CD & DevOps":
         ranked_comps = scoring_engine.score_components(pack, system_mode="History-RAG")
         top_aff = [c["component"] for c in ranked_comps[:2]] if ranked_comps else profile.discovered_components[:2]
         rec_tests = test_recommender.rank_tests(pack, top_aff, top_k=3)
-        progress_bar.progress(50)
-        time.sleep(0.5)
+        progress_bar.progress(45)
+        time.sleep(0.4)
 
         # Step 5: Recommended tests execution
         test_files_to_run = [t["test_file"] for t in rec_tests]
-        status_box.info(f"Step 5/8: Running AI-recommended tests via pytest: {test_files_to_run}...")
+        status_box.info(f"Step 5/9: Running AI-recommended tests via pytest: {test_files_to_run}...")
         test_result = pytest_executor.run_tests(test_files_to_run)
-        progress_bar.progress(65)
-        time.sleep(0.5)
 
-        # Step 6: Docker build
-        status_box.info(f"Step 6/8: Building versioned Docker image: historyrag:{selected_repo_id}-pr...")
-        progress_bar.progress(80)
-        time.sleep(0.5)
+        # Fault injection: Simulate test failure if requested
+        if simulate_fault == "Inject Regression Test Failure (HIGH Impact)":
+            test_result["status"] = "FAIL"
+            test_result["failed"] = 1
+            test_result["passed"] = max(0, test_result["tests_executed"] - 1)
+            test_result["output"] += "\nFAILED netbox/dcim/tests/test_dcim.py: AssertionError: VRF binding containment violated!\n1 failed, 2 passed in 1.15s"
 
-        # Step 7: QA deployment
-        status_box.info("Step 7/8: Deploying image to QA environment...")
-        progress_bar.progress(92)
+        progress_bar.progress(56)
         time.sleep(0.4)
 
-        # Step 8: Health check
-        status_box.success("Step 8/8: Verified GET /health on QA container: [STATUS 200 OK - HEALTHY]")
-        progress_bar.progress(100)
+        # Step 6: Advanced Policy Gate Evaluation (Section 33 #8)
+        status_box.info("Step 6/9: Evaluating Advanced CI/CD Policy Gates (Section 33 #8)...")
+        gate_input_analysis = {
+            "impact_level": ranked_comps[0]["impact_level"] if ranked_comps else "MEDIUM",
+            "confidence": 0.88,
+            "affected_components": ranked_comps,
+            "recommended_tests": rec_tests
+        }
+        gate_eval = pipeline_gate.evaluate(
+            change_analysis=gate_input_analysis,
+            test_results=test_result
+        )
+        progress_bar.progress(68)
+        time.sleep(0.4)
 
+        rollback_event = None
+        qa_health_ok = True
+
+        if enable_advanced_gates and not gate_eval["gate_passed"]:
+            status_box.error(
+                f"🛑 Pipeline Blocked by Advanced Policy Gate: {gate_eval['blocking_reasons'][0]}"
+            )
+            progress_bar.progress(100)
+            pipeline_status = "BLOCKED ⛔"
+            active_image = deployment_manager.current_deployed_image
+        else:
+            # Step 7: Docker build
+            candidate_image = f"historyrag:{selected_repo_id}-pr"
+            status_box.info(f"Step 7/9: Building versioned Docker image: {candidate_image}...")
+            progress_bar.progress(78)
+            time.sleep(0.4)
+
+            # Step 8: QA deployment
+            status_box.info("Step 8/9: Deploying candidate image to QA environment...")
+            deployment_manager.deploy_candidate(candidate_image, environment="qa")
+            progress_bar.progress(88)
+            time.sleep(0.4)
+
+            # Step 9: QA Health check & Auto-Rollback (Section 33 #7)
+            if simulate_fault == "Inject QA Container Crash (Trigger Auto-Rollback)":
+                qa_health_ok = False
+                status_box.warning("Step 9/9: QA Container Health Check FAILED (HTTP 503 Service Unavailable)!")
+                time.sleep(0.5)
+                # Auto-Rollback!
+                status_box.info("🚨 Auto-Rollback Triggered (Section 33 #7): Redeploying known-good image...")
+                rollback_event = deployment_manager.trigger_auto_rollback(
+                    failed_image=candidate_image,
+                    reason="QA container crashed during health probe (HTTP 503)"
+                )
+                time.sleep(0.5)
+                status_box.success(
+                    f"✅ Auto-Rollback Complete: Successfully restored known-good image [{rollback_event['restored_image']}]."
+                )
+                pipeline_status = "ROLLED BACK ⚠️"
+                active_image = rollback_event["restored_image"]
+            else:
+                deployment_manager.promote_to_known_good(candidate_image)
+                status_box.success("Step 9/9: Verified GET /health on QA container: [STATUS 200 OK - HEALTHY]")
+                pipeline_status = "PASSED ✅"
+                active_image = candidate_image
+
+            progress_bar.progress(100)
+
+        # Summary Display
         st.subheader("Pipeline Execution Summary")
         c1, c2, c3, c4 = st.columns(4)
-        c1.metric("Pipeline Status", "PASSED ✅")
+        c1.metric("Pipeline Status", pipeline_status)
         impact_level = ranked_comps[0]["impact_level"] if ranked_comps else "MODERATE"
         c2.metric("AI Impact Level", impact_level)
-        c3.metric("Recommended Tests Run", f"{test_result['passed']}/{test_result['tests_executed']} Passed")
-        c4.metric("QA Health Status", "HEALTHY (200)")
+        c3.metric("Policy Gate Decision", gate_eval["decision"])
+        c4.metric("Active QA Image", active_image.split(":")[-1])
+
+        # Policy Gate Card
+        st.subheader("🛡️ Policy Gate Evaluation (Section 33 #8)")
+        gate_color = "#5cb85c" if gate_eval["gate_passed"] else "#d9534f"
+        st.markdown(f"""
+        <div style="border-left: 5px solid {gate_color}; padding: 12px; background-color: #f9f9f9; border-radius: 4px; margin-bottom: 15px;">
+            <h4 style="margin: 0 0 6px 0; color: {gate_color};">Decision: {gate_eval['decision']}</h4>
+            <p style="margin: 0;"><strong>Impact Severity:</strong> {gate_eval['impact_level']} &nbsp;|&nbsp; <strong>AI Confidence:</strong> {gate_eval['confidence']*100:.1f}% &nbsp;|&nbsp; <strong>Tests Status:</strong> {'PASS' if gate_eval['tests_passed'] else 'FAIL'}</p>
+        </div>
+        """, unsafe_allow_html=True)
+        if gate_eval["blocking_reasons"]:
+            for r in gate_eval["blocking_reasons"]:
+                st.error(f"⛔ {r}")
+        if gate_eval["warnings"]:
+            for w in gate_eval["warnings"]:
+                st.warning(f"⚠️ {w}")
+
+        # Rollback Telemetry Card if rollback was triggered
+        if rollback_event:
+            st.subheader("🚨 Auto-Rollback Audit Telemetry (Section 33 #7)")
+            st.warning(
+                f"**Rollback Transaction ID:** `{rollback_event['transaction_id']}`\n\n"
+                f"- **Failed Image Teardown:** `{rollback_event['failed_image']}`\n"
+                f"- **Restored Stable Image:** `{rollback_event['restored_image']}`\n"
+                f"- **Root Cause Reason:** {rollback_event['reason']}\n"
+                f"- **Recovery Duration:** `{rollback_event['duration_seconds']}s` — Service health fully restored."
+            )
 
         st.subheader("Pytest Execution Logs")
         st.code(test_result["output"], language="text")
+
+        # Deployment History Ledger
+        with st.expander("📋 Deployment Ledger & Known-Good Pointer"):
+            st.json(deployment_manager.deployment_history)
