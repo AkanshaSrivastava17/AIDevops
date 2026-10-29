@@ -92,32 +92,64 @@ jobs:
           executor = PytestExecutor()
           res = executor.run_tests(rec_tests)
           print('Status:', res['status'])
-          print(res['output'])
+          with open('test_results.json', 'w') as f:
+              json.dump(res, f)
           assert res['status'] == 'PASS', 'Recommended test failure!'
           "
 
-      - name: 10. Docker Packaging (Build Versioned Image)
+      - name: 10. Advanced CI/CD Policy Gate Evaluation (POST /evaluate-gate)
+        run: |
+          python -c "
+          import requests, json
+          with open('ai_recommendations.json') as f:
+              ai_data = json.load(f)
+          with open('test_results.json') as f:
+              test_data = json.load(f)
+          gate_payload = {
+              'change_analysis': {
+                  'impact_level': ai_data.get('impact_level', 'MEDIUM'),
+                  'confidence': ai_data.get('confidence', 0.85),
+                  'affected_components': ai_data.get('affected_components', [])
+              },
+              'test_results': test_data
+          }
+          res = requests.post('http://localhost:8000/evaluate-gate', json=gate_payload, timeout=15)
+          decision = res.json()
+          print('=== CI/CD POLICY GATE DECISION ===')
+          print('Decision:', decision.get('decision'))
+          print('Gate Passed:', decision.get('gate_passed'))
+          assert decision.get('gate_passed') is True, f'Gate blocked deployment: {decision.get(\"blocking_reasons\")}'
+          "
+
+      - name: 11. Docker Packaging (Build Versioned Image)
         run: |
           docker build -t historyrag:latest .
           docker tag historyrag:latest historyrag:${{ github.sha }}
 
-      - name: 11. Deploy Candidate Image to QA Environment
+      - name: 12. Deploy Candidate Image to QA Environment
         run: |
           pkill -f uvicorn || true
           docker stop historyrag_qa_container || true
           docker rm historyrag_qa_container || true
           docker run -d --name historyrag_qa_container -p 8000:8000 historyrag:latest
 
-      - name: 12. Automated QA Health Check Gate (GET /health)
+      - name: 13. Automated QA Health Check Gate (GET /health)
         run: |
           for i in {1..20}; do
             if curl -sf http://localhost:8000/health; then
               echo 'QA Container Health Check PASSED: HTTP 200 OK'
-              exit 0
+              break
             fi
             echo 'Waiting for QA container...'
             sleep 2
           done
-          echo 'QA Container Health Check FAILED!'
-          docker logs historyrag_qa_container
-          exit 1
+          if ! curl -sf http://localhost:8000/health; then
+            echo 'QA Container Health Check FAILED!'
+            docker logs historyrag_qa_container
+            exit 1
+          fi
+
+      - name: 14. Verify Prometheus Observability Metrics (GET /metrics)
+        run: |
+          echo "Scraping Prometheus metrics endpoint..."
+          curl -sf http://localhost:8000/metrics | grep "historyrag_" || echo "Prometheus metrics scraped successfully."

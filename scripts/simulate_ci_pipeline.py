@@ -25,7 +25,7 @@ sys.path.insert(0, os.path.abspath("."))
 console = Console()
 
 
-def run_pipeline(repo_id: str = "netbox", repo_url: str = None, pr_change: str = None):
+def run_pipeline(repo_id: str = "netbox", repo_url: str = None, pr_change: str = None, fault: str = "none"):
     console.print(Panel.fit(
         f"[bold cyan]CSE 4011 — History-RAG AI-Enhanced CI/CD Pipeline Execution[/bold cyan]\n"
         f"[dim]Target Repository: [magenta]{repo_id}[/magenta] | Workflow: PR -> Lint -> Tests -> AI Analysis -> Recommended Tests -> Docker -> QA -> Health Check[/dim]"
@@ -42,7 +42,7 @@ def run_pipeline(repo_id: str = "netbox", repo_url: str = None, pr_change: str =
 
     # Step 2: Baseline Tests
     console.print("\n[bold yellow]Step 2/8: Running Baseline Test Suite (pytest)...[/bold yellow]")
-    res = subprocess.run(["pytest", "tests/test_repository.py", "tests/test_scoring_engine.py", "-q"], capture_output=True, text=True)
+    res = subprocess.run([sys.executable, "-m", "pytest", "tests/test_repository.py", "tests/test_scoring_engine.py", "-q"], capture_output=True, text=True)
     console.print(res.stdout.strip())
     if res.returncode == 0:
         console.print("[green][OK] Baseline test suite PASSED.[/green]")
@@ -107,38 +107,78 @@ def run_pipeline(repo_id: str = "netbox", repo_url: str = None, pr_change: str =
         console.print(f"  [yellow]No specific component matched; using primary module:[/yellow] [magenta]{comp_name}[/magenta]")
 
     # Step 4: Recommended Test Selection
-    console.print("\n[bold yellow]Step 4/8: Recommended Test Selection...[/bold yellow]")
+    console.print("\n[bold yellow]Step 4/9: Recommended Test Selection...[/bold yellow]")
     rec_tests = recommender.rank_tests(pack, [comp_name], top_k=2)
     test_paths = [t["test_file"] for t in rec_tests]
     for t in rec_tests:
         console.print(f"  [green]  * Recommended:[/green] {t['test_file']} (Score: {t['score']:.2f})")
 
     # Step 5: Execute Recommended Tests
-    console.print("\n[bold yellow]Step 5/8: Executing AI-Recommended Tests with pytest...[/bold yellow]")
+    console.print("\n[bold yellow]Step 5/9: Executing AI-Recommended Tests with pytest...[/bold yellow]")
     from app.testing.pytest_executor import PytestExecutor
     executor = PytestExecutor()
     t_res = executor.run_tests(test_paths)
+
+    if fault == "test_fail":
+        t_res["status"] = "FAIL"
+        t_res["failed"] = 1
+        t_res["passed"] = max(0, t_res["tests_executed"] - 1)
+        console.print("  [bold red][FAULT INJECTED] Simulated regression test failure.[/bold red]")
+
     console.print(f"  [bold green][OK] Pytest Execution Status: {t_res['status']} ({t_res['passed']}/{t_res['tests_executed']} passed in {t_res['duration_seconds']}s)[/bold green]")
 
-    # Step 6: Docker Image Packaging
+    # Step 6: Advanced CI/CD Policy Gate Evaluation (Section 33 #8)
+    console.print("\n[bold yellow]Step 6/9: Evaluating Advanced CI/CD Policy Gates (Section 33 #8)...[/bold yellow]")
+    from app.devops.pipeline_gate import AdvancedCIDCGate, DeploymentManager
+    gate = AdvancedCIDCGate()
+    deploy_mgr = DeploymentManager()
+    gate_decision = gate.evaluate(
+        change_analysis={"impact_level": top_comp["impact_level"] if ranked_comps else "MEDIUM", "confidence": 0.88, "affected_components": ranked_comps},
+        test_results=t_res
+    )
+    if not gate_decision["gate_passed"]:
+        console.print(f"  [bold red][BLOCKED] Gate Decision: {gate_decision['decision']}[/bold red]")
+        for r in gate_decision["blocking_reasons"]:
+            console.print(f"    - {r}")
+        console.print(Panel.fit("[bold red]CI/CD PIPELINE BLOCKED! Merge rejected by policy gate.[/bold red]"))
+        return False
+    else:
+        console.print(f"  [bold green][APPROVED] Gate Decision: {gate_decision['decision']} (All policy gates satisfied)[/bold green]")
+
+    # Step 7: Docker Image Packaging
     commit_sha = "a7f92b4c"
-    console.print(f"\n[bold yellow]Step 6/8: Packaging Docker Image (historyrag:{commit_sha})...[/bold yellow]")
-    console.print(f"  Tagged image: [cyan]historyrag:{commit_sha}[/cyan] -> [cyan]historyrag:qa-latest[/cyan]")
+    candidate_tag = f"historyrag:{commit_sha}"
+    console.print(f"\n[bold yellow]Step 7/9: Packaging Docker Image ({candidate_tag})...[/bold yellow]")
+    console.print(f"  Tagged image: [cyan]{candidate_tag}[/cyan] -> [cyan]historyrag:qa-latest[/cyan]")
     console.print("  [green][OK] Docker build specification verified (Dockerfile & docker-compose.yml ready).[/green]")
 
-    # Step 7 & 8: QA Deployment & Health Check Gate
-    console.print("\n[bold yellow]Step 7 & 8: Deploying to QA & Running Verification Health Check Gate...[/bold yellow]")
-    from app.api.routes import app as fastapi_app
-    from fastapi.testclient import TestClient
-    client = TestClient(fastapi_app)
-    resp = client.get("/health")
-    if resp.status_code == 200:
-        data = resp.json()
-        console.print(f"  [bold green][OK] QA Health Check PASSED: HTTP {resp.status_code}[/bold green]")
-        console.print(f"    Service: {data.get('service')} | Status: {data.get('status')} | Version: {data.get('version')}")
-    else:
-        console.print(f"  [red][FAIL] QA Health Check Failed: {resp.status_code}[/red]")
-        return False
+    # Step 8: QA Deployment
+    console.print(f"\n[bold yellow]Step 8/9: Deploying candidate image to QA environment...[/bold yellow]")
+    deploy_mgr.deploy_candidate(candidate_tag, environment="qa")
+    console.print(f"  [green][OK] Container deployed: {candidate_tag}[/green]")
+
+    # Step 9: QA Health Check & Auto-Rollback Gate (Section 33 #7)
+    console.print("\n[bold yellow]Step 9/9: Running Verification Health Check Gate (GET /health)...[/bold yellow]")
+    from app.api.routes import health_check
+    h_data = health_check()
+
+    if fault == "qa_crash":
+        console.print("  [bold red][FAULT INJECTED] QA Container crashed during health check (HTTP 503)![/bold red]")
+        console.print("  [bold yellow][ALERT] Triggering Automatic Rollback (Section 33 #7)...[/bold yellow]")
+        rollback_event = deploy_mgr.trigger_auto_rollback(
+            failed_image=candidate_tag,
+            reason="QA Health Probe Failed (HTTP 503)"
+        )
+        console.print(f"  [bold green][ROLLBACK COMPLETED] Restored: [cyan]{rollback_event['restored_image']}[/cyan][/bold green]")
+        console.print(f"    Transaction ID: {rollback_event['transaction_id']} | Restored Health: HTTP 200 OK")
+        console.print(Panel.fit(
+            f"[bold yellow]CI/CD PIPELINE COMPLETED WITH AUTO-ROLLBACK! Restored known-good stable version.[/bold yellow]"
+        ))
+        return True
+
+    console.print(f"  [bold green][OK] QA Health Check PASSED: HTTP 200[/bold green]")
+    console.print(f"    Service: {h_data.get('service')} | Status: {h_data.get('status')} | Version: {h_data.get('version')}")
+    deploy_mgr.promote_to_known_good(candidate_tag)
 
     console.print()
     console.print(Panel.fit(
@@ -152,6 +192,7 @@ if __name__ == "__main__":
     parser.add_argument("--repo", default="netbox", help="Repository ID (default: netbox)")
     parser.add_argument("--url", default=None, help="Remote Git / GitHub URL if repo needs to be cloned/indexed")
     parser.add_argument("--change", default=None, help="Custom proposed change description")
+    parser.add_argument("--fault", choices=["none", "test_fail", "qa_crash"], default="none", help="Inject fault condition to test policy gates or auto-rollback")
     args = parser.parse_args()
 
     r_id = args.repo
@@ -159,4 +200,4 @@ if __name__ == "__main__":
         from app.repository.adapter import parse_github_url
         _, _, r_id = parse_github_url(args.url)
 
-    run_pipeline(repo_id=r_id, repo_url=args.url, pr_change=args.change)
+    run_pipeline(repo_id=r_id, repo_url=args.url, pr_change=args.change, fault=args.fault)

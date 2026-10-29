@@ -1,0 +1,149 @@
+{
+  "annotations": {
+    "list": []
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 },
+      "id": 1,
+      "title": "History-RAG Application & Research Intelligence",
+      "type": "row"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": { "fillOpacity": 80 }
+        }
+      },
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 1 },
+      "id": 2,
+      "title": "Change-Impact Analyses by Mode",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "sum by (mode) (historyrag_change_analyses_total)",
+          "legendFormat": "{{mode}}"
+        }
+      ]
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" }
+        }
+      },
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 1 },
+      "id": 3,
+      "title": "Impact Severity Distribution",
+      "type": "piechart",
+      "targets": [
+        {
+          "expr": "sum by (impact_level) (historyrag_impact_predictions_total)",
+          "legendFormat": "{{impact_level}}"
+        }
+      ]
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s"
+        }
+      },
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 1 },
+      "id": 4,
+      "title": "Hybrid Evidence Retrieval Latency (P95)",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(historyrag_rag_retrieval_seconds_bucket[5m])) by (le))",
+          "legendFormat": "P95 Retrieval Latency"
+        }
+      ]
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 9 },
+      "id": 5,
+      "title": "CI/CD Gates, Testing & Automated Rollbacks",
+      "type": "row"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" }
+        }
+      },
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 10 },
+      "id": 6,
+      "title": "Recommended Regression Tests Run (PASS vs FAIL)",
+      "type": "barchart",
+      "targets": [
+        {
+          "expr": "sum by (status) (historyrag_tests_executed_total)",
+          "legendFormat": "{{status}}"
+        }
+      ]
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" }
+        }
+      },
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 10 },
+      "id": 7,
+      "title": "CI/CD Policy Gate Decisions",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "sum by (decision) (historyrag_pipeline_gate_decisions_total)",
+          "legendFormat": "{{decision}}"
+        }
+      ]
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "fixedColor": "red", "mode": "fixed" }
+        }
+      },
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 10 },
+      "id": 8,
+      "title": "Automated Rollbacks Triggered",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "sum(historyrag_rollbacks_total) or vector(0)",
+          "legendFormat": "Total Rollbacks"
+        }
+      ]
+    }
+  ],
+  "refresh": "5s",
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": ["historyrag", "devops", "prometheus", "rag"],
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "History-RAG Telemetry & DevOps Dashboard (Section 33 #6)",
+  "uid": "historyrag-devops-metrics",
+  "version": 1
+}

@@ -33,7 +33,8 @@ class PytestExecutor:
         
         # If files exist, run actual pytest subprocess
         if existing_files:
-            cmd = ["pytest", "-v"] + existing_files
+            import sys
+            cmd = [sys.executable, "-m", "pytest", "-v"] + existing_files
             try:
                 proc = subprocess.run(
                     cmd,

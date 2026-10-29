@@ -101,9 +101,9 @@ To ensure scientific validity in retrospective evaluations:
 ```
 project/
 ├── app/
-│   ├── api/routes.py            # FastAPI endpoints (/health, /ask, /analyze-change, /index, /repository-status)
+│   ├── api/routes.py            # FastAPI endpoints (/health, /ask, /analyze-change, /index, /index-zip, /generate-candidate-tests, /evaluate-gate, /devops/rollback, /devops/deployments, /metrics, /repository-status)
 │   ├── repository/
-│   │   ├── adapter.py           # Git & GitHub adapter
+│   │   ├── adapter.py           # Git, GitHub adapter & ZIP archive ingestion
 │   │   ├── profiler.py          # Capability profiling & mode detection
 │   │   └── models.py            # Pydantic schemas (CapabilityProfile, RepositoryConfig)
 │   ├── ingestion/
@@ -119,13 +119,21 @@ project/
 │   │   ├── temporal_filter.py   # Strict temporal leakage filter
 │   │   └── llm.py               # Evidence-grounded LLM synthesis
 │   ├── impact/
-│   │   └── scoring_engine.py    # Transparent 4-term impact scoring engine
+│   │   └── scoring_engine.py    # Transparent 4-term & 5-term impact scoring engine
+│   ├── graph/
+│   │   └── knowledge_graph.py   # NetworkX MultiDiGraph relationship graph & shortest-path impact
 │   ├── testing/
 │   │   ├── test_recommender.py  # Existing-test ranker
+│   │   ├── test_generator.py    # AI candidate test generator (AST validated, @pytest.mark.ai_candidate)
 │   │   └── pytest_executor.py   # Pytest execution harness
+│   ├── devops/
+│   │   └── pipeline_gate.py     # CI/CD policy gate evaluator & auto-rollback deployment manager
+│   ├── monitoring/
+│   │   └── metrics.py           # Prometheus metrics exposition (counters, histograms, gauges)
 │   └── prompts/
 │       └── templates.py         # Versioned prompt templates
 ├── configs/                     # Per-repository configs (netbox.yaml, fastapi_demo.yaml, requests_demo.yaml)
+├── dashboards/                  # Grafana dashboard templates (grafana_historyrag_dashboard.json)
 ├── data/
 │   ├── raw/                     # Seeded raw repository sources, commits, issues, PRs
 │   ├── processed/               # SQLite database (metadata.db) and Chroma embeddings
@@ -137,11 +145,12 @@ project/
 │   ├── ingest_repo.py           # CLI repository ingestion
 │   ├── build_index.py           # Multi-repo index builder
 │   ├── run_evaluation.py        # 3-system comparative benchmark runner
-│   └── seed_repositories.py     # Dataset & repository fixture generator
-├── tests/                       # Complete Pytest test suite (22 unit & integration tests)
+│   ├── seed_repositories.py     # Dataset & repository fixture generator
+│   └── simulate_ci_pipeline.py  # 9-stage CI/CD pipeline simulation with policy gates & auto-rollback
+├── tests/                       # Complete Pytest test suite (11 test modules, 48 unit & integration tests)
 ├── ui/
-│   └── app.py                   # Streamlit developer dashboard (5 pages)
-├── .github/workflows/ci.yml     # Self-hosted GitHub Actions CI/CD workflow
+│   └── app.py                   # Streamlit developer dashboard (6 interactive pages)
+├── .github/workflows/ci.yml     # Self-hosted GitHub Actions CI/CD workflow with policy gates
 ├── Dockerfile                   # Application container specification
 └── requirements.txt             # Project dependencies
 ```
@@ -231,9 +240,15 @@ streamlit run ui/app.py
 | `/health` | `GET` | Health check endpoint (used by QA deployment gate). |
 | `/repositories` | `GET` | List all discovered and indexed repositories. |
 | `/ask` | `POST` | Repository historical Q&A with evidence citations. |
-| `/analyze-change` | `POST` | Change-impact analysis and test recommendations. |
+| `/analyze-change` | `POST` | Change-impact analysis and test recommendations (supports `LLM-only`, `Code-RAG`, `History-RAG`, `History-RAG + Graph`). |
 | `/index` | `POST` | Clone (shallow/fast) and index any repository by Git/GitHub URL. |
+| `/index-zip` | `POST` | Ingest and index a local repository from a ZIP archive file. |
 | `/repository-status` | `GET` | Return capability profile card, capabilities, and index statistics. |
+| `/generate-candidate-tests` | `POST` | Synthesize new compiler-validated candidate pytest suites (`@pytest.mark.ai_candidate`). |
+| `/evaluate-gate` | `POST` | Multi-factor CI/CD policy gate evaluation (`APPROVED`, `WARNING`, `BLOCKED`). |
+| `/devops/rollback` | `POST` | Trigger automated container rollback to known-good image (`historyrag:v1.0.0-stable`). |
+| `/devops/deployments` | `GET` | Query deployment audit log and active deployment statuses. |
+| `/metrics` | `GET` | Prometheus exposition endpoint for requests, latency, token usage, and cache metrics. |
 
 ### Example cURL: Index Any Remote Repository Link
 ```bash
@@ -244,27 +259,118 @@ curl -X POST "http://localhost:8000/index" \
   }'
 ```
 
-### Example cURL: Analyze Proposed Change
+### Example cURL: Analyze Proposed Change (History-RAG + Graph)
 ```bash
 curl -X POST "http://localhost:8000/analyze-change" \
   -H "Content-Type: application/json" \
   -d '{
     "repository_id": "netbox",
     "proposed_change": "Refactor interface IP assignment to validate IP address VRF containment",
-    "system_mode": "History-RAG",
+    "system_mode": "History-RAG + Graph",
     "top_k_tests": 3
   }'
 ```
 
+### Example cURL: Evaluate CI/CD Policy Gate
+```bash
+curl -X POST "http://localhost:8000/evaluate-gate" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "change_analysis": {
+      "impact_level": "HIGH",
+      "confidence": 0.88,
+      "affected_components": [{"component": "ipam", "impact_score": 0.85}]
+    },
+    "test_results": {
+      "status": "PASS",
+      "passed": 4,
+      "failed": 0,
+      "tests_executed": 4
+    }
+  }'
+```
+
+### Example cURL: Prometheus Metrics
+```bash
+curl -s http://localhost:8000/metrics
+```
+
 ---
 
-## 10. DevOps CI/CD & Docker Packaging
+## 10. DevOps CI/CD & Automated Governance
 
-The pipeline in `.github/workflows/ci.yml` demonstrates that AI change analysis can participate in an automated software development workflow:
-1. Developer opens PR.
-2. Baseline tests and syntax lint pass.
-3. CI queries `POST /analyze-change`.
-4. Recommended regression tests are executed with `pytest`.
-5. Versioned Docker container `historyrag:<sha>` is built.
-6. Container is deployed to QA.
-7. Verification gate calls `GET /health` to confirm QA environment readiness.
+The pipeline in `.github/workflows/ci.yml` and the simulation harness in `scripts/simulate_ci_pipeline.py` implement an automated software development workflow:
+1. **Developer opens PR / pushes commit.**
+2. **Baseline tests and syntax lint pass.**
+3. **AI Change Analysis** queries `POST /analyze-change` with graph-augmented retrieval.
+4. **Targeted Pytest Execution**: Only AI-recommended regression tests are run, cutting CI cycle times.
+5. **CI/CD Policy Gate Evaluation**: `POST /evaluate-gate` determines whether impact risk, confidence, and test passes permit deployment.
+6. **Docker Image Packaging**: Candidate tagged as `historyrag:<sha>`.
+7. **QA Deployment**: Candidate container spun up in isolated test environment.
+8. **Automated Health Check & Auto-Rollback Gate**: Container verified via `GET /health`. On probe failure, `DeploymentManager` rolls back instantaneously to the last known-good image (`historyrag:v1.0.0-stable`).
+9. **Observability**: Metrics scraped by Prometheus (`/metrics`) and rendered in Grafana.
+
+---
+
+## 11. Implemented Future Scope (Section 33)
+
+All roadmap items from **Section 33 of the Project Implementation Plan** have been implemented and verified:
+
+### 1. NetworkX MultiDiGraph Relationship Graph (`app/graph/knowledge_graph.py`)
+- Constructs an explicit multi-relational graph connecting components, source files, test suites, commits, and pull requests via typed edges (`IMPORTS`, `TESTS`, `MODIFIES`, `CO_CHANGES_WITH`, `DISCUSSES`).
+- Computes bidirectional shortest-path distances and graph degree centrality to calculate graph-informed impact scores.
+- Enables **History-RAG + Graph** 5-term scoring in `app/impact/scoring_engine.py`:
+  $$\text{Score} = 0.20 \cdot \text{sem} + 0.20 \cdot \text{dep} + 0.20 \cdot \text{co} + 0.20 \cdot \text{test} + 0.20 \cdot \text{graph}$$
+- Streamlit UI features an interactive NetworkX graph visualizer with edge/node metadata filtering.
+
+### 2. AI-Generated Candidate Test Suite Synthesis (`app/testing/test_generator.py`)
+- Automatically generates new test cases covering proposed changes across three test types:
+  - **Contract Tests**: Verifies API parameter contracts, return types, and schema boundaries.
+  - **Co-change Regression Tests**: Ensures coupled components remain in lockstep.
+  - **Boundary / Error Handling Tests**: Asserts correct exceptions on malformed input.
+- Validates all generated Python code against compiler syntax using `ast.parse()`.
+- Marks all suites with `@pytest.mark.ai_candidate` and enforces human review governance.
+
+### 3. Advanced CI/CD Policy Gates (`app/devops/pipeline_gate.py`)
+- Automated multi-factor gate engine (`AdvancedCIDCGate`) evaluating:
+  - `impact_level` (`HIGH` / `CRITICAL` / `MEDIUM` / `LOW`)
+  - Model `confidence` threshold (requires $\ge 0.60$)
+  - Recommended test pass rate (requires 100% passes on affected modules)
+  - Deployment health probe verification
+- Categorizes deployments into `APPROVED`, `WARNING` (human-in-the-loop review recommended), or `BLOCKED`.
+
+### 4. Automated Rollback & Fault Injection Engine (`app/devops/pipeline_gate.py`)
+- `DeploymentManager` tracks known-good deployment tags (`historyrag:v1.0.0-stable`) and active candidates.
+- Automatically captures failed health probes and executes zero-downtime rollback with full audit logging.
+- `scripts/simulate_ci_pipeline.py` supports fault injection flags:
+  ```bash
+  # Test normal passing pipeline
+  python scripts/simulate_ci_pipeline.py --fault none
+
+  # Test policy gate blocking on test failure
+  python scripts/simulate_ci_pipeline.py --fault test_fail
+
+  # Test automatic rollback on QA crash
+  python scripts/simulate_ci_pipeline.py --fault qa_crash
+  ```
+
+### 5. Prometheus Observability Metrics (`app/monitoring/metrics.py`)
+- Exposes standard Prometheus text format metrics at `GET /metrics`:
+  - `historyrag_requests_total{endpoint, status}`
+  - `historyrag_request_duration_seconds{endpoint}` (p50, p90, p99 percentiles)
+  - `historyrag_tokens_total{type}` (prompt vs. completion)
+  - `historyrag_cache_hits_total` and `historyrag_cache_misses_total`
+  - `historyrag_active_deployments{environment}`
+
+### 6. Production-Ready Grafana Dashboard (`dashboards/grafana_historyrag_dashboard.json`)
+- 6 pre-configured panels:
+  - API Request Throughput & RPS
+  - p95 End-to-End Latency
+  - Token Usage & Prompt/Completion Breakdown
+  - Cache Hit Ratio Gauge
+  - CI/CD Deployment Health Status
+  - Rollback & Incident Counter
+
+### 7. Local & ZIP Archive Repository Ingestion (`app/repository/adapter.py`)
+- Support for offline and air-gapped repositories via `ingest_zip_archive()` and `POST /index-zip`.
+- Interactive Streamlit file uploader enables drag-and-drop ZIP archive ingestion.
