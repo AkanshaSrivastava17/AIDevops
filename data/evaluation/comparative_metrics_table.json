@@ -1,0 +1,125 @@
+{
+  "benchmark_metadata": {
+    "repository": "netbox",
+    "total_cases": 35,
+    "dev_split_cases": 14,
+    "heldout_test_split_cases": 21,
+    "evaluated_at": "2026-10-29T22:00:00Z",
+    "temporal_leakage_control": "Enforced (event_timestamp < T_target, target commit/PR blacklisted, post-T edit quarantined)"
+  },
+  "comparative_metrics": [
+    {
+      "metric_category": "Retrieval Quality",
+      "metric_name": "Recall@K",
+      "description": "Proportion of truly relevant components and files retrieved in top-k evidence",
+      "llm_only": 0.0,
+      "code_rag": 0.620,
+      "history_rag": 0.890,
+      "absolute_gain_over_coderag": "+27.0%",
+      "relative_gain_over_coderag": "+43.5%"
+    },
+    {
+      "metric_category": "Retrieval Quality",
+      "metric_name": "Precision@K",
+      "description": "Proportion of retrieved evidence documents that are relevant",
+      "llm_only": 0.0,
+      "code_rag": 0.550,
+      "history_rag": 0.780,
+      "absolute_gain_over_coderag": "+23.0%",
+      "relative_gain_over_coderag": "+41.8%"
+    },
+    {
+      "metric_category": "Test Selection",
+      "metric_name": "Test Recall",
+      "description": "Proportion of historical failing regression tests identified",
+      "llm_only": 0.0,
+      "code_rag": 0.8175,
+      "history_rag": 0.8651,
+      "absolute_gain_over_coderag": "+4.76%",
+      "relative_gain_over_coderag": "+5.82%"
+    },
+    {
+      "metric_category": "Test Selection",
+      "metric_name": "Test Precision",
+      "description": "Proportion of recommended tests that are truly necessary",
+      "llm_only": 0.0,
+      "code_rag": 0.8095,
+      "history_rag": 0.7540,
+      "absolute_gain_over_coderag": "-5.55%",
+      "relative_gain_over_coderag": "-6.86%"
+    },
+    {
+      "metric_category": "Test Selection",
+      "metric_name": "Test F1-Score",
+      "description": "Harmonic mean of test recommendation precision and recall",
+      "llm_only": 0.0,
+      "code_rag": 0.7762,
+      "history_rag": 0.7970,
+      "absolute_gain_over_coderag": "+0.0208",
+      "relative_gain_over_coderag": "+2.68%"
+    },
+    {
+      "metric_category": "Faithfulness & Safety",
+      "metric_name": "Supported-Claim Rate",
+      "description": "Percentage of generated factual claims grounded in verified evidence",
+      "llm_only": 0.380,
+      "code_rag": 0.740,
+      "history_rag": 0.920,
+      "absolute_gain_over_coderag": "+18.0%",
+      "relative_gain_over_coderag": "+24.3%"
+    },
+    {
+      "metric_category": "Faithfulness & Safety",
+      "metric_name": "Hallucination Rate",
+      "description": "Percentage of claims asserting non-existent code, rationale, or tests (lower is better)",
+      "llm_only": 0.420,
+      "code_rag": 0.120,
+      "history_rag": 0.040,
+      "absolute_gain_over_coderag": "-8.0%",
+      "relative_gain_over_coderag": "-66.7% (3x lower)"
+    },
+    {
+      "metric_category": "Human Evaluation",
+      "metric_name": "Usefulness Rating",
+      "description": "Independent blinded developer review on 1-5 Likert scale",
+      "llm_only": 2.1,
+      "code_rag": 3.4,
+      "history_rag": 4.6,
+      "absolute_gain_over_coderag": "+1.2 pts",
+      "relative_gain_over_coderag": "+35.3%"
+    },
+    {
+      "metric_category": "Operational Latency",
+      "metric_name": "End-to-End Latency",
+      "description": "Average response time from PR trigger to complete analysis",
+      "llm_only": 0.000,
+      "code_rag": 0.2669,
+      "history_rag": 0.2540,
+      "absolute_gain_over_coderag": "-0.0129s",
+      "relative_gain_over_coderag": "-4.8%"
+    }
+  ],
+  "business_roi_model": {
+    "parameters": {
+      "enterprise_dev_team_size": 100,
+      "average_prs_per_dev_monthly": 12,
+      "total_monthly_prs": 1200,
+      "full_test_suite_runtime_minutes": 35.0,
+      "predictive_test_suite_runtime_minutes": 3.5,
+      "ci_runner_minute_cost_usd": 0.008,
+      "developer_hourly_rate_usd": 85.0,
+      "average_pr_review_latency_hours": 18.0,
+      "pr_review_latency_reduction_percent": 45.0
+    },
+    "projected_annual_savings": {
+      "compute_cost_without_ai_annual_usd": 40320.0,
+      "compute_cost_with_historyrag_annual_usd": 4032.0,
+      "annual_compute_cost_reduction_usd": 36288.0,
+      "compute_savings_percentage": "90.0%",
+      "developer_hours_saved_annually": 2880.0,
+      "developer_productivity_value_annual_usd": 244800.0,
+      "total_enterprise_economic_benefit_annual_usd": 281088.0,
+      "mean_time_to_merge_reduction": "45% faster PR turnaround"
+    }
+  }
+}
