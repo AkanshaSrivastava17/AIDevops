@@ -3,10 +3,12 @@ GitHub Workflow Installer: 1-Click Automated Onboarding for any GitHub Repositor
 Automates the creation of a setup branch, commits .github/workflows/historyrag.yml,
 and opens an onboarding Pull Request (similar to SonarCloud, Snyk, and Dependabot).
 """
+import os
 import re
 import json
 import base64
 import logging
+import subprocess
 import urllib.request
 import urllib.error
 from typing import Dict, Any, Optional, List, Tuple
@@ -37,6 +39,67 @@ def parse_repo_slug(url_or_slug: str) -> Tuple[Optional[str], Optional[str]]:
     return None, None
 
 
+def get_active_github_token(explicit_token: Optional[str] = None) -> Tuple[Optional[str], str]:
+    """
+    Resolves the best available GitHub token and returns (token, source_name).
+    Sources checked:
+    1. explicit_token passed by user
+    2. os.environ["GITHUB_TOKEN"] or os.environ["GH_TOKEN"]
+    3. git credential fill (local Git Credential Manager)
+    """
+    if explicit_token and explicit_token.strip():
+        tok = explicit_token.strip()
+        if tok.lower() in ("demo", "mock", "simulation"):
+            return None, "demo"
+        return tok, "user_input"
+
+    for env_var in ("GITHUB_TOKEN", "GH_TOKEN"):
+        val = os.environ.get(env_var)
+        if val and val.strip():
+            return val.strip(), f"env:{env_var}"
+
+    # Check local Git Credential Manager
+    try:
+        proc = subprocess.Popen(
+            ["git", "credential", "fill"],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True
+        )
+        stdout, _ = proc.communicate("protocol=https\nhost=github.com\n\n", timeout=4)
+        for line in stdout.splitlines():
+            if line.startswith("password="):
+                tok = line.split("=", 1)[1].strip()
+                if tok:
+                    return tok, "git_credential_manager"
+    except Exception:
+        pass
+
+    return None, "none"
+
+
+def get_authenticated_github_user(token: Optional[str] = None) -> Optional[str]:
+    """Returns the authenticated GitHub username or None."""
+    resolved_token, _ = get_active_github_token(token)
+    if not resolved_token:
+        return None
+    req = urllib.request.Request(
+        "https://api.github.com/user",
+        headers={
+            "Authorization": f"Bearer {resolved_token}",
+            "Accept": "application/vnd.github+json",
+            "User-Agent": "HistoryRAG-Installer/1.0"
+        }
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=5) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+            return data.get("login")
+    except Exception:
+        return None
+
+
 class GitHubWorkflowInstaller:
     """
     Automated repository onboarder that connects to GitHub REST API to
@@ -60,7 +123,7 @@ class GitHubWorkflowInstaller:
         tests = default_tests or ["tests/"]
         test_str = ", ".join([f"'{t}'" for t in tests])
 
-        yaml_content = f"""name: History-RAG AI-Enhanced CI/CD
+        template = """name: History-RAG AI-Enhanced CI/CD
 
 on:
   pull_request:
@@ -122,20 +185,20 @@ jobs:
           print('Detected changed files:', changed_files)
 
           impact_level = 'LOW'
-          affected_components = [{comp_str}]
-          recommended_tests = [{test_str}]
+          affected_components = [__COMP_STR__]
+          recommended_tests = [__TEST_STR__]
 
           if any(f.endswith('.py') for f in changed_files):
               impact_level = 'MEDIUM'
 
-          analysis = {{
-              'repository': '{repo_name}',
+          analysis = {
+              'repository': '__REPO_NAME__',
               'impact_level': impact_level,
               'changed_files': changed_files,
               'affected_components': affected_components,
               'recommended_tests': recommended_tests,
               'confidence': 0.90
-          }}
+          }
 
           with open('ai_analysis.json', 'w') as f:
               json.dump(analysis, f, indent=2)
@@ -175,16 +238,16 @@ jobs:
           decision = 'APPROVED'
           reasons = [
               'All recommended regression tests passed cleanly.',
-              f'Confidence threshold met ({{confidence:.2f}} >= 0.60).'
+              f'Confidence threshold met ({confidence:.2f} >= 0.60).'
           ]
 
-          gate_result = {{
+          gate_result = {
               'decision': decision,
               'gate_passed': True,
               'impact_level': impact,
               'confidence': confidence,
               'reasons': reasons
-          }}
+          }
 
           with open('gate_decision.json', 'w') as f:
               json.dump(gate_result, f, indent=2)
@@ -196,7 +259,7 @@ jobs:
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
         with:
-          github-token: ${{{{ secrets.GITHUB_TOKEN }}}}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const fs = require('fs');
             const analysis = JSON.parse(fs.readFileSync('ai_analysis.json', 'utf8'));
@@ -206,28 +269,28 @@ jobs:
 
             | Metric | Value |
             |---|---|
-            | **Impact Level** | \\`${{{{analysis.impact_level}}}}\\` |
-            | **Affected Components** | \\`${{{{analysis.affected_components.join(', ')}}}}\\` |
-            | **AI Confidence** | \\`${{{{analysis.confidence * 100}}%}}\\` |
-            | **Policy Gate Decision** | **${{{{gate.decision === 'APPROVED' ? '✅ APPROVED (Merge Safe)' : '❌ BLOCKED'}}}}** |
+            | **Impact Level** | \\`${analysis.impact_level}\\` |
+            | **Affected Components** | \\`${analysis.affected_components.join(', ')}\\` |
+            | **AI Confidence** | \\`${analysis.confidence * 100}%\\` |
+            | **Policy Gate Decision** | **${gate.decision === 'APPROVED' ? '✅ APPROVED (Merge Safe)' : '❌ BLOCKED'}** |
 
             ### 🧪 Recommended Regression Tests Executed:
-            ${{{{analysis.recommended_tests.map(t => `- \\`${{{{t}}}}\\` (Status: PASS)`).join('\\n')}}}}
+            ${analysis.recommended_tests.map(t => `- \\`${t}\\` (Status: PASS)`).join('\\n')}
 
             ### 🛡️ Policy Gate Validation:
-            ${{{{gate.reasons.map(r => `- ${{{{r}}}}`).join('\\n')}}}}
+            ${gate.reasons.map(r => `- ${r}`).join('\\n')}
 
             ---
             *Automated governance by History-Aware Repository Intelligence*`;
 
-            await github.rest.issues.createComment({{
+            await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
               body: body
-            }});
+            });
 """
-        return yaml_content
+        return template.replace("__REPO_NAME__", repo_name).replace("__COMP_STR__", comp_str).replace("__TEST_STR__", test_str)
 
     def install(
         self,
@@ -248,14 +311,18 @@ jobs:
 
         workflow_yaml = custom_workflow or self.generate_workflow_yaml(repo_name=repo)
 
+        # Resolve active token
+        resolved_token, token_source = get_active_github_token(token)
+
         # Simulation / Dry-run Mode
-        if dry_run or not token or token.lower() in ("mock", "demo", "simulation"):
+        if dry_run or not resolved_token:
             target_branch = "main" if commit_to_main else branch_name
             sim_pr_number = 101
             sim_pr_url = f"https://github.com/{owner}/{repo}/pull/{sim_pr_number}"
             return {
                 "status": "success",
                 "dry_run": True,
+                "token_source": token_source,
                 "mode": "direct_commit" if commit_to_main else "pull_request",
                 "owner": owner,
                 "repo": repo,
@@ -265,15 +332,15 @@ jobs:
                 "pr_number": sim_pr_number if not commit_to_main else None,
                 "pr_url": sim_pr_url if not commit_to_main else None,
                 "message": (
-                    f"Successfully simulated 1-click installation for {owner}/{repo}. "
-                    f"Onboarding PR: {sim_pr_url}" if not commit_to_main
-                    else f"Successfully simulated direct commit to {owner}/{repo}:main"
+                    f"Simulation Mode: Simulated 1-click installation for {owner}/{repo}. "
+                    f"Sample PR: {sim_pr_url}" if not commit_to_main
+                    else f"Simulation Mode: Simulated direct commit to {owner}/{repo}:main"
                 ),
                 "workflow_content": workflow_yaml
             }
 
         headers = {
-            "Authorization": f"Bearer {token}",
+            "Authorization": f"Bearer {resolved_token}",
             "Accept": "application/vnd.github+json",
             "X-GitHub-Api-Version": "2022-11-28",
             "User-Agent": "HistoryRAG-Installer/1.0"
@@ -372,17 +439,17 @@ jobs:
                 pr_url = pr_res.get("html_url")
             except Exception as e:
                 # PR might already be open
-                if "A pull request already exists" in str(e):
-                    pulls = _request("GET", f"/repos/{owner}/{repo}/pulls?head={owner}:{target_branch}&state=open")
-                    if pulls and isinstance(pulls, list):
-                        pr_number = pulls[0].get("number")
-                        pr_url = pulls[0].get("html_url")
+                pulls = _request("GET", f"/repos/{owner}/{repo}/pulls?head={owner}:{target_branch}&state=open")
+                if pulls and isinstance(pulls, list):
+                    pr_number = pulls[0].get("number")
+                    pr_url = pulls[0].get("html_url")
                 else:
                     raise e
 
         return {
             "status": "success",
             "dry_run": False,
+            "token_source": token_source,
             "mode": "direct_commit" if commit_to_main else "pull_request",
             "owner": owner,
             "repo": repo,

@@ -25,7 +25,7 @@ from app.testing.test_recommender import TestRecommender
 from app.testing.pytest_executor import PytestExecutor
 from app.testing.test_generator import CandidateTestGenerator
 from app.devops.pipeline_gate import AdvancedCIDCGate, DeploymentManager
-from app.devops.github_installer import GitHubWorkflowInstaller, parse_repo_slug
+from app.devops.github_installer import GitHubWorkflowInstaller, parse_repo_slug, get_authenticated_github_user
 from app.rag.llm import EvidenceGroundedLLM
 
 st.set_page_config(
@@ -220,9 +220,13 @@ if page == "Repository":
     # 1-Click Auto-Install GitHub Workflow (SonarCloud / Snyk Style)
     with st.expander("⚡ **1-Click Auto-Install History-RAG CI/CD to Any GitHub Repo (SonarCloud / Snyk Style)**", expanded=False):
         st.markdown(
-            "Automatically creates a setup branch and opens an onboarding Pull Request titled `Setup History-RAG AI CI/CD` "
+            "Automatically creates a setup branch and opens a live onboarding Pull Request titled `Setup History-RAG AI CI/CD` "
             "directly into any target GitHub repository, installing `.github/workflows/historyrag.yml` with zero terminal commands."
         )
+        authed_user = get_authenticated_github_user()
+        if authed_user:
+            st.success(f"🟢 **GitHub Connected:** Authenticated as `{authed_user}` via Git Credentials. Token entry is optional!")
+
         inst_c1, inst_c2 = st.columns([2, 1])
         with inst_c1:
             default_target_url = config.repository_url if config.repository_url and config.repository_url.startswith("http") else "https://github.com/Radhikag19/PyCalculator"
@@ -233,11 +237,12 @@ if page == "Repository":
                 key="inst_repo_url_p1"
             )
         with inst_c2:
+            token_placeholder = f"Auto-detected ({authed_user})" if authed_user else "ghp_... (or leave blank for Demo)"
             inst_gh_token = st.text_input(
                 "GitHub Personal Access Token (PAT)",
                 type="password",
-                placeholder="ghp_... (or leave blank for Demo simulation)",
-                help="Needs 'repo' or 'contents:write' + 'pull_requests:write' scope. Leave blank for Simulation mode.",
+                placeholder=token_placeholder,
+                help="Leave blank to use auto-detected credentials, or enter custom PAT.",
                 key="inst_gh_token_p1"
             )
 
@@ -252,7 +257,7 @@ if page == "Repository":
         with inst_opt2:
             inst_branch = st.text_input(
                 "Setup Branch Name",
-                value="historyrag-setup-cicd",
+                value="historyrag-ai-cicd-setup",
                 key="inst_branch_name_p1"
             )
 
@@ -273,10 +278,10 @@ if page == "Repository":
                     if res.get("dry_run"):
                         st.info(f"💡 **Demo / Simulation Mode**: {res.get('message')}")
                     else:
-                        st.success(f"🎉 **Installation Successful!** {res.get('message')}")
+                        st.success(f"🎉 **Live Installation Successful!** {res.get('message')}")
 
                     if res.get("pr_url"):
-                        st.markdown(f"👉 **View Onboarding Pull Request:** [{res.get('pr_url')}]({res.get('pr_url')})")
+                        st.markdown(f"👉 **View Live Pull Request:** [{res.get('pr_url')}]({res.get('pr_url')})")
 
                     with st.expander("📄 View Generated .github/workflows/historyrag.yml"):
                         st.code(res.get("workflow_content", ""), language="yaml")
@@ -846,8 +851,12 @@ elif page == "CI/CD & DevOps":
     with st.expander("🤖 **1-Click Auto-Install CI/CD to GitHub Repo (SonarCloud / Snyk Style)**", expanded=False):
         st.markdown(
             "Connect any GitHub repository to History-RAG. Automatically creates a setup branch and opens "
-            "an onboarding Pull Request containing `.github/workflows/historyrag.yml`."
+            "a live onboarding Pull Request containing `.github/workflows/historyrag.yml`."
         )
+        authed_user_p5 = get_authenticated_github_user()
+        if authed_user_p5:
+            st.success(f"🟢 **GitHub Connected:** Authenticated as `{authed_user_p5}` via Git Credentials. Token entry is optional!")
+
         p5_c1, p5_c2 = st.columns([2, 1])
         with p5_c1:
             p5_url = st.text_input(
@@ -856,10 +865,12 @@ elif page == "CI/CD & DevOps":
                 key="p5_inst_url"
             )
         with p5_c2:
+            p5_tok_ph = f"Auto-detected ({authed_user_p5})" if authed_user_p5 else "ghp_... (or leave blank for Demo)"
             p5_tok = st.text_input(
                 "GitHub Personal Access Token (PAT)",
                 type="password",
-                placeholder="ghp_... (or leave blank for Demo simulation)",
+                placeholder=p5_tok_ph,
+                help="Leave blank to use auto-detected credentials, or enter custom PAT.",
                 key="p5_inst_tok"
             )
         p5_m1, p5_m2 = st.columns(2)
@@ -871,7 +882,7 @@ elif page == "CI/CD & DevOps":
                 key="p5_inst_mode"
             )
         with p5_m2:
-            p5_branch = st.text_input("Setup Branch Name", value="historyrag-setup-cicd", key="p5_inst_branch")
+            p5_branch = st.text_input("Setup Branch Name", value="historyrag-ai-cicd-setup", key="p5_inst_branch")
 
         if st.button("🚀 1-Click Install CI/CD into Repository", type="primary", key="p5_btn_install"):
             with st.spinner("Connecting to GitHub API, creating setup branch, and committing workflow..."):
@@ -889,10 +900,10 @@ elif page == "CI/CD & DevOps":
                     if res.get("dry_run"):
                         st.info(f"💡 **Demo / Simulation Mode**: {res.get('message')}")
                     else:
-                        st.success(f"🎉 **Installation Successful!** {res.get('message')}")
+                        st.success(f"🎉 **Live Installation Successful!** {res.get('message')}")
 
                     if res.get("pr_url"):
-                        st.markdown(f"👉 **View Onboarding Pull Request:** [{res.get('pr_url')}]({res.get('pr_url')})")
+                        st.markdown(f"👉 **View Live Pull Request:** [{res.get('pr_url')}]({res.get('pr_url')})")
 
                     with st.expander("📄 View Generated .github/workflows/historyrag.yml"):
                         st.code(res.get("workflow_content", ""), language="yaml")
