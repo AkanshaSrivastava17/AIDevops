@@ -1,0 +1,14 @@
+# Prometheus configuration for History-RAG AI DevOps Platform
+global:
+  scrape_interval: 5s
+  evaluation_interval: 5s
+
+scrape_configs:
+  - job_name: "historyrag"
+    metrics_path: "/metrics"
+    static_configs:
+      # If running locally on host machine:
+      - targets: ["host.docker.internal:8000", "localhost:8000"]
+        labels:
+          app: "historyrag"
+          environment: "production"
