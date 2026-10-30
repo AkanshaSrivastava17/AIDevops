@@ -34,11 +34,14 @@ class PytestExecutor:
         # If files exist, run actual pytest subprocess
         if existing_files:
             import sys
-            cmd = [sys.executable, "-m", "pytest", "-v"] + existing_files
+            cmd = [sys.executable, "-m", "pytest", "-v", "-p", "no:anyio", "-p", "no:arize_phoenix", "-p", "no:langsmith"] + existing_files
+            env = os.environ.copy()
+            env["PYTHONPATH"] = os.path.abspath(self.working_dir)
             try:
                 proc = subprocess.run(
                     cmd,
                     cwd=self.working_dir,
+                    env=env,
                     capture_output=True,
                     text=True,
                     timeout=timeout_sec
