@@ -25,6 +25,7 @@ from app.testing.test_recommender import TestRecommender
 from app.testing.pytest_executor import PytestExecutor
 from app.testing.test_generator import CandidateTestGenerator
 from app.devops.pipeline_gate import AdvancedCIDCGate, DeploymentManager
+from app.devops.github_installer import GitHubWorkflowInstaller, parse_repo_slug
 from app.rag.llm import EvidenceGroundedLLM
 
 st.set_page_config(
@@ -50,9 +51,10 @@ def get_services():
     cand_gen = CandidateTestGenerator()
     gate = AdvancedCIDCGate()
     deploy_mgr = DeploymentManager()
-    return sqlite, chroma, retriever, scorer, recommender, llm, executor, cand_gen, gate, deploy_mgr
+    installer = GitHubWorkflowInstaller()
+    return sqlite, chroma, retriever, scorer, recommender, llm, executor, cand_gen, gate, deploy_mgr, installer
 
-sqlite_store, chroma_store, retriever, scoring_engine, test_recommender, llm, pytest_executor, candidate_generator, pipeline_gate, deployment_manager = get_services()
+sqlite_store, chroma_store, retriever, scoring_engine, test_recommender, llm, pytest_executor, candidate_generator, pipeline_gate, deployment_manager, workflow_installer = get_services()
 
 # Navigation Sidebar
 st.sidebar.title("🧠 History-RAG")
@@ -214,6 +216,72 @@ if page == "Repository":
                     st.success(f"Successfully cloned and indexed '{derived_id}'! Indexed {res['total_documents_indexed']} documents (Mode: {res['profile']['analysis_mode']}).")
                     time.sleep(1)
                     st.rerun()
+
+    # 1-Click Auto-Install GitHub Workflow (SonarCloud / Snyk Style)
+    with st.expander("⚡ **1-Click Auto-Install History-RAG CI/CD to Any GitHub Repo (SonarCloud / Snyk Style)**", expanded=False):
+        st.markdown(
+            "Automatically creates a setup branch and opens an onboarding Pull Request titled `Setup History-RAG AI CI/CD` "
+            "directly into any target GitHub repository, installing `.github/workflows/historyrag.yml` with zero terminal commands."
+        )
+        inst_c1, inst_c2 = st.columns([2, 1])
+        with inst_c1:
+            default_target_url = config.repository_url if config.repository_url and config.repository_url.startswith("http") else "https://github.com/Radhikag19/PyCalculator"
+            inst_target_url = st.text_input(
+                "Target Repository URL or Slug",
+                value=default_target_url,
+                help="e.g. Radhikag19/PyCalculator or https://github.com/Radhikag19/PyCalculator",
+                key="inst_repo_url_p1"
+            )
+        with inst_c2:
+            inst_gh_token = st.text_input(
+                "GitHub Personal Access Token (PAT)",
+                type="password",
+                placeholder="ghp_... (or leave blank for Demo simulation)",
+                help="Needs 'repo' or 'contents:write' + 'pull_requests:write' scope. Leave blank for Simulation mode.",
+                key="inst_gh_token_p1"
+            )
+
+        inst_opt1, inst_opt2 = st.columns(2)
+        with inst_opt1:
+            inst_mode = st.radio(
+                "Install Mode",
+                ["Create Onboarding Pull Request (Recommended)", "Direct Commit to Default Branch"],
+                index=0,
+                key="inst_mode_radio_p1"
+            )
+        with inst_opt2:
+            inst_branch = st.text_input(
+                "Setup Branch Name",
+                value="historyrag-setup-cicd",
+                key="inst_branch_name_p1"
+            )
+
+        if st.button("🚀 1-Click Install CI/CD into Repository", type="primary", key="btn_install_workflow_p1"):
+            with st.spinner("Connecting to GitHub API, creating setup branch, and committing workflow..."):
+                try:
+                    direct_commit = (inst_mode == "Direct Commit to Default Branch")
+                    res = workflow_installer.install(
+                        repo_url_or_slug=inst_target_url,
+                        token=inst_gh_token,
+                        branch_name=inst_branch,
+                        commit_to_main=direct_commit,
+                        custom_workflow=workflow_installer.generate_workflow_yaml(
+                            repo_name=selected_repo_id,
+                            components=profile.discovered_components
+                        )
+                    )
+                    if res.get("dry_run"):
+                        st.info(f"💡 **Demo / Simulation Mode**: {res.get('message')}")
+                    else:
+                        st.success(f"🎉 **Installation Successful!** {res.get('message')}")
+
+                    if res.get("pr_url"):
+                        st.markdown(f"👉 **View Onboarding Pull Request:** [{res.get('pr_url')}]({res.get('pr_url')})")
+
+                    with st.expander("📄 View Generated .github/workflows/historyrag.yml"):
+                        st.code(res.get("workflow_content", ""), language="yaml")
+                except Exception as e:
+                    st.error(f"Installation failed: {str(e)}")
 
     st.divider()
 
@@ -774,6 +842,64 @@ elif page == "CI/CD & DevOps":
         "Demonstrates how the **History-RAG** analysis connects to an automated developer workflow:\n"
         "**PR Opened ➔ Lint + Baseline Tests ➔ AI Change Analysis ➔ Recommended-Test Selection ➔ Pytest Execution ➔ Docker Build ➔ QA Deploy ➔ QA Health Check**"
     )
+
+    with st.expander("🤖 **1-Click Auto-Install CI/CD to GitHub Repo (SonarCloud / Snyk Style)**", expanded=False):
+        st.markdown(
+            "Connect any GitHub repository to History-RAG. Automatically creates a setup branch and opens "
+            "an onboarding Pull Request containing `.github/workflows/historyrag.yml`."
+        )
+        p5_c1, p5_c2 = st.columns([2, 1])
+        with p5_c1:
+            p5_url = st.text_input(
+                "GitHub Repository URL or Slug",
+                value=config.repository_url if config.repository_url and config.repository_url.startswith("http") else "https://github.com/Radhikag19/PyCalculator",
+                key="p5_inst_url"
+            )
+        with p5_c2:
+            p5_tok = st.text_input(
+                "GitHub Personal Access Token (PAT)",
+                type="password",
+                placeholder="ghp_... (or leave blank for Demo simulation)",
+                key="p5_inst_tok"
+            )
+        p5_m1, p5_m2 = st.columns(2)
+        with p5_m1:
+            p5_mode = st.radio(
+                "Install Mode",
+                ["Create Onboarding Pull Request (Recommended)", "Direct Commit to Default Branch"],
+                index=0,
+                key="p5_inst_mode"
+            )
+        with p5_m2:
+            p5_branch = st.text_input("Setup Branch Name", value="historyrag-setup-cicd", key="p5_inst_branch")
+
+        if st.button("🚀 1-Click Install CI/CD into Repository", type="primary", key="p5_btn_install"):
+            with st.spinner("Connecting to GitHub API, creating setup branch, and committing workflow..."):
+                try:
+                    res = workflow_installer.install(
+                        repo_url_or_slug=p5_url,
+                        token=p5_tok,
+                        branch_name=p5_branch,
+                        commit_to_main=(p5_mode == "Direct Commit to Default Branch"),
+                        custom_workflow=workflow_installer.generate_workflow_yaml(
+                            repo_name=selected_repo_id,
+                            components=profile.discovered_components
+                        )
+                    )
+                    if res.get("dry_run"):
+                        st.info(f"💡 **Demo / Simulation Mode**: {res.get('message')}")
+                    else:
+                        st.success(f"🎉 **Installation Successful!** {res.get('message')}")
+
+                    if res.get("pr_url"):
+                        st.markdown(f"👉 **View Onboarding Pull Request:** [{res.get('pr_url')}]({res.get('pr_url')})")
+
+                    with st.expander("📄 View Generated .github/workflows/historyrag.yml"):
+                        st.code(res.get("workflow_content", ""), language="yaml")
+                except Exception as e:
+                    st.error(f"Installation failed: {str(e)}")
+
+    st.divider()
 
     st.subheader(f"Simulate Pull Request Event ({config.name or selected_repo_id})")
 

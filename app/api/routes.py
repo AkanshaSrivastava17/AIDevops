@@ -19,6 +19,7 @@ from app.impact.scoring_engine import ImpactScoringEngine
 from app.testing.test_recommender import TestRecommender
 from app.testing.test_generator import CandidateTestGenerator
 from app.devops.pipeline_gate import AdvancedCIDCGate, DeploymentManager
+from app.devops.github_installer import GitHubWorkflowInstaller
 from app.monitoring.metrics import MetricsManager, CONTENT_TYPE_LATEST
 from app.rag.llm import EvidenceGroundedLLM
 
@@ -53,6 +54,14 @@ class RollbackRequest(BaseModel):
     failed_image: str = "historyrag:candidate"
     reason: str = "QA Health Check Failure"
     environment: str = "qa"
+
+
+class WorkflowInstallRequest(BaseModel):
+    repository_url_or_slug: str = Field(..., description="GitHub URL (https://github.com/owner/repo) or 'owner/repo'")
+    github_token: Optional[str] = Field(None, description="GitHub Personal Access Token (or 'demo'/'mock' for dry-run)")
+    branch_name: str = "historyrag-setup-cicd"
+    commit_to_main: bool = False
+    dry_run: bool = False
 
 
 # Request / Response Models
@@ -421,6 +430,23 @@ def index_zip_repository(req: IndexZipRequest):
         "repository_id": cfg.repository_id
     }
     return result
+
+
+@app.post("/devops/install-workflow")
+def install_workflow_endpoint(req: WorkflowInstallRequest):
+    """1-Click installs History-RAG CI/CD workflow into any GitHub repository via PR or direct commit."""
+    installer = GitHubWorkflowInstaller()
+    try:
+        res = installer.install(
+            repo_url_or_slug=req.repository_url_or_slug,
+            token=req.github_token,
+            branch_name=req.branch_name,
+            commit_to_main=req.commit_to_main,
+            dry_run=req.dry_run
+        )
+        return res
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 
 @app.get("/repositories")
