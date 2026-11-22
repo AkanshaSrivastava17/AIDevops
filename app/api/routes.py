@@ -6,7 +6,7 @@ import os
 import yaml
 from datetime import datetime, timezone
 from typing import List, Dict, Optional, Any
-from fastapi import FastAPI, HTTPException, Query, Response
+from fastapi import FastAPI, HTTPException, Query, Response, UploadFile, File, Form
 from pydantic import BaseModel, Field
 
 from app.repository.models import RepositoryConfig, AnalysisMode
@@ -263,11 +263,19 @@ def analyze_change(req: AnalyzeChangeRequest):
         ranked_tests=recommended_tests
     )
 
-    all_evidence = (
-        evidence_pack.commit_evidence
-        + evidence_pack.issue_evidence
-        + evidence_pack.pr_evidence
-    )
+    all_evidence = []
+    for c in evidence_pack.commit_evidence:
+        item = dict(c) if isinstance(c, dict) else (c.model_dump() if hasattr(c, "model_dump") else c.__dict__.copy())
+        item["source_type"] = "commit"
+        all_evidence.append(item)
+    for i in evidence_pack.issue_evidence:
+        item = dict(i) if isinstance(i, dict) else (i.model_dump() if hasattr(i, "model_dump") else i.__dict__.copy())
+        item["source_type"] = "issue"
+        all_evidence.append(item)
+    for p in evidence_pack.pr_evidence:
+        item = dict(p) if isinstance(p, dict) else (p.model_dump() if hasattr(p, "model_dump") else p.__dict__.copy())
+        item["source_type"] = "pr"
+        all_evidence.append(item)
 
     # 5. Optional AI-Generated Candidate Tests (Section 33 Enhancement #2)
     candidates = []
@@ -354,6 +362,17 @@ def evaluate_gate(req: GateEvaluationRequest):
         test_results=req.test_results,
         qa_health_status=req.qa_health_status
     )
+    result["violations"] = result.get("blocking_reasons", [])
+    result["recommendations"] = result.get("warnings", [])
+    result["summary"] = (
+        "All policy gate criteria satisfied. Merge approved."
+        if result["decision"] == "APPROVED"
+        else "Policy gate blocked merge due to critical failures or policy violations."
+        if result["decision"] == "BLOCKED"
+        else "Policy gate passed with warnings. Manual verification recommended."
+    )
+    result["risk_level"] = result.get("impact_level", "LOW")
+    result["timestamp"] = result.get("evaluated_at")
     MetricsManager.record_gate_decision(result["decision"])
     return result
 
@@ -432,6 +451,102 @@ def index_zip_repository(req: IndexZipRequest):
     return result
 
 
+@app.post("/upload-repository")
+async def upload_repository_zip(
+    file: UploadFile = File(...),
+    repository_id: Optional[str] = Form(None)
+):
+    """
+    Direct Browser ZIP Ingestion for Enterprise Codebases.
+    Unpacks archive, profiles polyglot AST with Tree-Sitter, extracts metadata,
+    and indexes into vector and graph databases.
+    """
+    os.makedirs(os.path.join("data", "uploads"), exist_ok=True)
+    temp_zip_path = os.path.join("data", "uploads", file.filename)
+    with open(temp_zip_path, "wb") as buffer:
+        content = await file.read()
+        buffer.write(content)
+
+    from app.repository.adapter import ingest_zip_archive
+    cfg, target_dir = ingest_zip_archive(temp_zip_path, repository_id)
+    pipeline = IngestionPipeline(
+        config=cfg,
+        sqlite_store=sqlite_store,
+        chroma_store=chroma_store
+    )
+    result = pipeline.run()
+    adapter = RepositoryAdapter(cfg)
+    profile = adapter.get_profile()
+    stats = sqlite_store.get_repository_stats(cfg.repository_id)
+
+    return {
+        "status": "success",
+        "repository_id": cfg.repository_id,
+        "name": cfg.name,
+        "target_directory": target_dir,
+        "profile": profile.model_dump(),
+        "stats": stats,
+        "pipeline_result": result
+    }
+
+
+@app.get("/repository-files")
+def list_repository_files(repository_id: str = Query("netbox")):
+    """List code files in the repository for browsing and selection."""
+    config = _get_repo_config(repository_id)
+    repo_dir = os.path.join("data", "raw", config.repository_id)
+    if not os.path.exists(repo_dir):
+        return {"repository_id": repository_id, "files": []}
+
+    code_extensions = (
+        ".py", ".js", ".ts", ".jsx", ".tsx", ".go", ".java", ".json", ".yaml", ".yml", ".md", ".txt"
+    )
+    ignored_dirs = {".git", ".github", "node_modules", "venv", ".venv", "__pycache__", "build", "dist"}
+
+    file_list = []
+    for root, dirs, files in os.walk(repo_dir):
+        dirs[:] = [d for d in dirs if d not in ignored_dirs]
+        for f in files:
+            if f.endswith(code_extensions) and f not in ("commits.json", "issues.json", "prs.json", "metadata.db"):
+                full_path = os.path.join(root, f)
+                rel_path = os.path.relpath(full_path, repo_dir).replace("\\", "/")
+                file_list.append({
+                    "path": rel_path,
+                    "name": f,
+                    "extension": os.path.splitext(f)[1],
+                    "size_bytes": os.path.getsize(full_path)
+                })
+
+    return {
+        "repository_id": repository_id,
+        "count": len(file_list),
+        "files": sorted(file_list, key=lambda x: x["path"])[:150]
+    }
+
+
+@app.get("/repository-file-content")
+def get_repository_file_content(repository_id: str = Query(...), file_path: str = Query(...)):
+    """Retrieve raw content of a source file."""
+    config = _get_repo_config(repository_id)
+    repo_dir = os.path.join("data", "raw", config.repository_id)
+    full_path = os.path.normpath(os.path.join(repo_dir, file_path))
+    # Security check: must stay within repo_dir
+    if not os.path.abspath(full_path).startswith(os.path.abspath(repo_dir)):
+        raise HTTPException(status_code=403, detail="Access denied: Path traversal detected.")
+    if not os.path.exists(full_path) or not os.path.isfile(full_path):
+        raise HTTPException(status_code=404, detail="File not found.")
+
+    with open(full_path, "r", encoding="utf-8", errors="ignore") as f:
+        content = f.read()
+
+    return {
+        "repository_id": repository_id,
+        "file_path": file_path,
+        "content": content[:20000]
+    }
+
+
+
 @app.post("/devops/install-workflow")
 def install_workflow_endpoint(req: WorkflowInstallRequest):
     """1-Click installs History-RAG CI/CD workflow into any GitHub repository via PR or direct commit."""
@@ -500,3 +615,20 @@ def repository_status(repository_id: str = Query("netbox")):
             "import_analysis": profile.import_analysis
         }
     }
+
+
+# Mount Modern React Web Dashboard (Static Assets)
+_frontend_dist = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "frontend", "dist")
+if not os.path.exists(_frontend_dist):
+    _frontend_dist = os.path.join("frontend", "dist")
+
+if os.path.exists(_frontend_dist):
+    from fastapi.staticfiles import StaticFiles
+    from starlette.responses import RedirectResponse
+
+    app.mount("/dashboard", StaticFiles(directory=_frontend_dist, html=True), name="dashboard")
+
+    @app.get("/app", include_in_schema=False)
+    def redirect_to_dashboard():
+        return RedirectResponse(url="/dashboard/")
+

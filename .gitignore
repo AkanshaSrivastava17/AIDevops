@@ -16,3 +16,9 @@ data/raw/*
 !data/raw/netbox/
 !data/raw/fastapi_demo/
 !data/raw/requests_demo/
+
+# Frontend builds and dependencies
+node_modules/
+frontend/node_modules/
+frontend/dist/
+

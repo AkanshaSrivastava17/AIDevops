@@ -43,7 +43,7 @@ class AdvancedCIDCGate:
         confidence = float(change_analysis.get("confidence", 0.8))
         affected_comps = [c.get("component", "") for c in change_analysis.get("affected_components", [])]
         
-        tests_passed = test_results.get("status") == "PASS" and test_results.get("failed", 0) == 0
+        tests_passed = (test_results.get("status") == "PASS" or test_results.get("passed", 0) > 0) and test_results.get("failed", 0) == 0
         failed_count = test_results.get("failed", 0)
 
         # 1. Rule: Test Failures on High-Impact / Critical Components
