@@ -7,6 +7,7 @@ import logging
 from typing import Dict, Any, List
 from app.repository.adapter import RepositoryAdapter
 from app.repository.models import RepositoryConfig, AnalysisMode
+from app.ingestion.universal_adapter import UniversalASTAdapter
 from app.ingestion.python_adapter import PythonASTAdapter
 from app.ingestion.generic_fallback import GenericFallbackAdapter
 from app.ingestion.sqlite_store import SQLiteMetadataStore
@@ -27,7 +28,8 @@ class IngestionPipeline:
         self.adapter = RepositoryAdapter(config)
         self.sqlite_store = sqlite_store or SQLiteMetadataStore()
         self.chroma_store = chroma_store or ChromaVectorStore()
-        self.python_ast = PythonASTAdapter(self.adapter.map_file_to_component)
+        self.universal_ast = UniversalASTAdapter(self.adapter.map_file_to_component)
+        self.python_ast = self.universal_ast
         self.fallback = GenericFallbackAdapter()
 
     def run(self) -> Dict[str, Any]:
@@ -38,25 +40,26 @@ class IngestionPipeline:
 
         # 2. Profile repository
         profile = self.adapter.get_profile()
-        self.python_ast = PythonASTAdapter(
+        self.universal_ast = UniversalASTAdapter(
             self.adapter.map_file_to_component,
             candidate_components=profile.discovered_components
         )
+        self.python_ast = self.universal_ast
         
         # 3. Extract base documents (commits, issues, PRs, files)
         base_documents = self.adapter.extract_normalized_documents()
         
-        # 3. Process code files: enhanced Python AST or generic fallback
+        # 3. Process code files: enhanced Universal AST (Tree-sitter) or generic fallback
         processed_documents: List[NormalizedDocument] = []
         all_dependencies = []
 
         for doc in base_documents:
             processed_documents.append(doc)
             
-            # If doc is a Python code file, parse AST chunks and dependencies
-            if doc.type == DocumentType.CODE and doc.path and doc.path.endswith(".py"):
+            # If doc is a code file supported by Tree-sitter (Python, JS, TS, Go, Java)
+            if doc.type == DocumentType.CODE and doc.path and self.universal_ast.is_supported_file(doc.path):
                 if profile.analysis_mode == AnalysisMode.ENHANCED and profile.python_ast:
-                    ast_chunks, deps = self.python_ast.parse_file(
+                    ast_chunks, deps = self.universal_ast.parse_file(
                         file_path=doc.path,
                         code=doc.content,
                         repo_id=self.config.repository_id,

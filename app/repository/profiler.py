@@ -39,11 +39,11 @@ class RepositoryProfiler:
         # 4. Detect tests and test framework
         tests_found, test_framework, test_files = self._detect_tests(repo_path)
         
-        # 5. Check Python AST & import parsing capability
+        # 5. Check Universal / Polyglot AST & import parsing capability (Tree-sitter)
         python_ast = False
         import_analysis = False
-        if language == "Python" and has_source:
-            python_ast, import_analysis = self._verify_python_ast(source_files)
+        if has_source:
+            python_ast, import_analysis = self._verify_ast(source_files)
 
         # 6. Check issues and PRs availability
         issues_available = issue_count > 0
@@ -139,6 +139,31 @@ class RepositoryProfiler:
         has_tests = len(test_files) > 0
         framework = "pytest" if is_pytest or has_tests else None
         return has_tests, framework, test_files
+
+    def _verify_ast(self, source_files: List[str]) -> Tuple[bool, bool]:
+        """Verifies AST and import extraction capability across polyglot source files."""
+        try:
+            from app.ingestion.universal_adapter import UniversalASTAdapter
+            adapter = UniversalASTAdapter()
+            parsed = 0
+            imported = 0
+            sample = source_files[:20]
+            for f in sample:
+                if not adapter.is_supported_file(f):
+                    continue
+                try:
+                    with open(f, "r", encoding="utf-8", errors="ignore") as fp:
+                        code = fp.read()
+                    chunks, deps = adapter.parse_file(f, code, "repo", "now")
+                    if chunks:
+                        parsed += 1
+                    if deps:
+                        imported += 1
+                except Exception:
+                    continue
+            return parsed > 0, (imported > 0 or parsed > 0)
+        except Exception:
+            return self._verify_python_ast(source_files)
 
     def _verify_python_ast(self, source_files: List[str]) -> Tuple[bool, bool]:
         parsed = 0
