@@ -211,7 +211,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
                     Discovered Architecture Modules ({status.profile.discovered_components.length}):
                   </span>
                   <div className="flex flex-wrap gap-1.5">
-                    {status.profile.discovered_components.slice(0, 8).map((comp) => (
+                    {status.profile.discovered_components.slice(0, 8).map((comp: string) => (
                       <span
                         key={comp}
                         className="px-2 py-0.5 rounded bg-slate-100 text-slate-700 text-[11px] font-mono border border-slate-200"

@@ -7,6 +7,7 @@ import yaml
 from datetime import datetime, timezone
 from typing import List, Dict, Optional, Any
 from fastapi import FastAPI, HTTPException, Query, Response, UploadFile, File, Form
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
 from app.repository.models import RepositoryConfig, AnalysisMode
@@ -22,12 +23,27 @@ from app.devops.pipeline_gate import AdvancedCIDCGate, DeploymentManager
 from app.devops.github_installer import GitHubWorkflowInstaller
 from app.monitoring.metrics import MetricsManager, CONTENT_TYPE_LATEST
 from app.rag.llm import EvidenceGroundedLLM
+from app.api.workflow_routes import router as workflow_router
 
 app = FastAPI(
     title="History-Aware Repository Intelligence API",
     description="Evidence-based change-impact analysis and test recommendation backend.",
     version="1.0.0"
 )
+
+# Enable CORS for local dev and decoupled frontends
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Mount workflow lifecycle endpoints
+app.include_router(workflow_router)
+app.include_router(workflow_router, prefix="/api")
+app.include_router(workflow_router, prefix="/workflow")
 
 # Global singletons
 sqlite_store = SQLiteMetadataStore()

@@ -339,7 +339,7 @@ export const PolicyGateView: React.FC = () => {
                         Policy Violations ({(gateResult.violations || gateResult.blocking_reasons || []).length})
                       </span>
                       <ul className="space-y-1">
-                        {(gateResult.violations || gateResult.blocking_reasons || []).map((v, i) => (
+                        {(gateResult.violations || gateResult.blocking_reasons || []).map((v: any, i: number) => (
                           <li
                             key={i}
                             className="p-2 rounded bg-rose-50 text-rose-800 text-xs font-mono flex items-center gap-2"
@@ -359,7 +359,7 @@ export const PolicyGateView: React.FC = () => {
                         Recommendations &amp; Warnings
                       </span>
                       <ul className="space-y-1">
-                        {(gateResult.recommendations || gateResult.warnings || []).map((r, i) => (
+                        {(gateResult.recommendations || gateResult.warnings || []).map((r: any, i: number) => (
                           <li
                             key={i}
                             className="p-2 rounded bg-slate-50 text-slate-700 text-xs flex items-center gap-2"

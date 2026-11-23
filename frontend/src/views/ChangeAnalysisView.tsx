@@ -345,7 +345,7 @@ export const ChangeAnalysisView: React.FC<ChangeAnalysisViewProps> = ({
                   </tr>
                 </thead>
                 <tbody>
-                  {(result.affected_components || []).map((c, idx) => (
+                  {(result.affected_components || []).map((c: any, idx: number) => (
                     <tr key={c.component || idx}>
                       <td>
                         <span className="font-semibold text-slate-900 font-mono text-xs">
@@ -395,7 +395,7 @@ export const ChangeAnalysisView: React.FC<ChangeAnalysisViewProps> = ({
                     </tr>
                   </thead>
                   <tbody>
-                    {(result.recommended_tests || []).map((t, idx) => (
+                    {(result.recommended_tests || []).map((t: any, idx: number) => (
                       <tr key={idx}>
                         <td className="font-mono text-xs text-slate-900 font-semibold">
                           {t.test_file}
@@ -433,7 +433,7 @@ export const ChangeAnalysisView: React.FC<ChangeAnalysisViewProps> = ({
                 subtitle="Automatically generated unit test snippets to fill coverage gaps for modified scenarios"
               />
               <CardContent className="space-y-4">
-                {result.candidate_tests.map((ct, idx) => (
+                {result.candidate_tests.map((ct: any, idx: number) => (
                   <div key={idx} className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2">
                     <div className="flex items-center justify-between text-xs">
                       <span className="font-mono font-bold text-slate-900 flex items-center gap-1.5">
@@ -477,7 +477,7 @@ export const ChangeAnalysisView: React.FC<ChangeAnalysisViewProps> = ({
 
             {expandedEvidence && (
               <div className="divide-y divide-slate-100">
-                {(result.historical_evidence || []).map((ev, idx) => (
+                {(result.historical_evidence || []).map((ev: any, idx: number) => (
                   <div key={idx} className="p-4 flex items-start gap-3 hover:bg-slate-50/50 transition-colors">
                     <div className="p-1.5 rounded-md bg-indigo-50 text-indigo-600 flex-shrink-0 mt-0.5">
                       <GitCommit className="w-3.5 h-3.5" />

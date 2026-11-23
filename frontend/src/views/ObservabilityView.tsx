@@ -121,7 +121,7 @@ export const ObservabilityView: React.FC = () => {
             </div>
             <div className="text-2xl font-bold font-mono text-emerald-600 mt-2">
               {metrics && metrics.gateDecisions.length > 0
-                ? `${metrics.gateDecisions.find((g) => g.decision === 'APPROVED')?.count || 0}`
+                ? `${metrics.gateDecisions.find((g: any) => g.decision === 'APPROVED')?.count || 0}`
                 : '—'}
             </div>
             <span className="text-[11px] text-slate-400 mt-1 block">Merge authorizations</span>
@@ -152,7 +152,7 @@ export const ObservabilityView: React.FC = () => {
           />
           <CardContent className="space-y-3">
             {metrics && metrics.analysesByMode.length > 0 ? (
-              metrics.analysesByMode.map((item) => (
+              metrics.analysesByMode.map((item: any) => (
                 <div key={item.mode}>
                   <div className="flex justify-between text-xs text-slate-600 mb-1">
                     <span className="font-medium truncate">{item.mode}</span>
@@ -184,7 +184,7 @@ export const ObservabilityView: React.FC = () => {
           />
           <CardContent className="space-y-3">
             {metrics && metrics.analysesBySeverity.length > 0 ? (
-              metrics.analysesBySeverity.map((item) => {
+              metrics.analysesBySeverity.map((item: any) => {
                 const color =
                   item.severity === 'HIGH'
                     ? 'bg-rose-500'

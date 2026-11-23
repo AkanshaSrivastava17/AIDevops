@@ -139,7 +139,7 @@ export const ExplorerView: React.FC<ExplorerViewProps> = ({ activeRepo }) => {
                         <span className="truncate">{file.path}</span>
                       </span>
                       <span className="text-[10px] text-slate-400 flex-shrink-0 font-normal">
-                        {(file.size_bytes / 1024).toFixed(1)}k
+                        {(((file.size_bytes || file.size || 0)) / 1024).toFixed(1)}k
                       </span>
                     </button>
                   )
