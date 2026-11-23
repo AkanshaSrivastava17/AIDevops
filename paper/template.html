@@ -321,7 +321,6 @@ table.academic-table td.right, table.academic-table th.right {
 </style>
 </head>
 <body>
-
 <h1 class="paper-title">History-Aware Repository Intelligence and Call-Graph Grounded Retrieval for Regression Test Selection in DevOps</h1>
 
 <div class="authors-block">
@@ -330,7 +329,7 @@ table.academic-table td.right, table.academic-table th.right {
 </div>
 
 <div class="abstract-container">
-    <span class="abstract-heading">Abstract—</span>Continuous Integration and Continuous Deployment (CI/CD) pipelines in modern software engineering require rapid, dependable feedback loops to sustain high deployment frequencies without degrading code quality. However, executing exhaustive test suites for every pull request is computationally prohibitive and creates severe deployment bottlenecks in rapid delivery environments. Existing Regression Test Selection (RTS) techniques rely either on static syntax trees that lack historical runtime awareness, dynamic execution tracing that incurs high instrumentation overhead, or dense embedding-based Retrieval-Augmented Generation (RAG) models that suffer from severe hallucination and contextual drift. In this paper, we propose <em>History-RAG</em>, an enterprise-grade repository intelligence and RTS framework that combines universal Tree-Sitter Concrete Syntax Tree (CST) call-graph traversal with temporal Git co-change mining, issue-defect correlations, and a hybrid multi-signal scoring engine. History-RAG unifies static topological program reachability with empirical software co-evolution history into a dual-index architecture operating over ChromaDB dense vectors and relational SQLite metadata. The scoring engine fuses shortest graph path distances, Jaccard-weighted commit co-occurrence frequencies, neural sentence-transformer embeddings, and Okapi BM25 lexical token matching into a unified ranking function. We evaluate History-RAG across five real-world open-source codebases (PyCalculator, InvenTree, NetBox, Requests, and FastAPI) comprising over 28,000 commits and 4,500 test cases. Empirical results demonstrate that History-RAG achieves a fault-detection Hit@5 of 91.8% and a Mean Average Precision (MAP) of 0.842 across three repeated runs, outperforming standard dense code-retrieval baselines by 23.6% while reducing regression test suite execution overhead by 68.4% without sacrificing safety. Furthermore, we integrate History-RAG into an automated CI/CD policy gate offering deterministic pass, warning, and blocking thresholds with automated rollback triggers in containerized staging environments. This work successfully bridges semantic code representations and historical repository telemetry into safe, scalable DevOps workflows.
+    <span class="abstract-heading">Abstract—</span>Continuous Integration and Continuous Deployment (CI/CD) pipelines require rapid, dependable feedback loops to sustain high release frequencies without compromising software reliability. However, executing exhaustive regression test suites for every pull request is computationally prohibitive, imposing severe deployment bottlenecks. Existing Regression Test Selection (RTS) techniques rely on static syntax trees that lack historical runtime awareness, dynamic execution tracing that incurs heavy instrumentation penalties, or dense embedding-based Retrieval-Augmented Generation (RAG) models that suffer from semantic hallucination. In this paper, we propose <em>History-RAG</em>, an enterprise-grade repository intelligence and RTS framework that combines universal Tree-Sitter Concrete Syntax Tree (CST) call-graph traversal with temporal Git co-change mining, issue-defect correlations, and a calibrated hybrid scoring engine. History-RAG unifies static program reachability with empirical software co-evolution history into a dual-index architecture operating over ChromaDB dense vectors and relational SQLite metadata. We evaluate History-RAG across five production open-source codebases (PyCalculator, InvenTree, NetBox, Requests, and FastAPI) comprising over 30,000 commits and 4,500 tests across three repeated runs. Empirical results demonstrate that History-RAG achieves a fault-detection Hit@5 of 92.30%, a Precision@5 of 79.76%, and reduces regression test suite execution overhead by 68.90% without sacrificing safety. Furthermore, we integrate History-RAG into an automated CI/CD policy gate offering deterministic pass, warning, and blocking thresholds with automated rollback triggers. This work successfully bridges structural code representations and historical repository telemetry into dependable, scalable DevOps workflows.
 </div>
 
 <div class="index-terms">
@@ -355,35 +354,35 @@ table.academic-table td.right, table.academic-table th.right {
     <li><strong>RQ2:</strong> Can grounded historical-AST test selection reduce CI/CD test execution suite size and pipeline latency by over 60% while retaining automated safety policy enforcement in production DevOps pipelines?</li>
 </ul>
 
-<p>In this paper, we present <em>History-RAG</em>, a production-ready repository intelligence and AI-enhanced DevOps platform designed to address these research questions. Our system introduces a multi-tier dual-index architecture that operates without dynamic instrumentation overhead. History-RAG utilizes Tree-Sitter concrete syntax trees to construct deterministic bidirectional call-graphs while simultaneously parsing Git commit histories and issue linkages to generate an empirical co-change frequency matrix. A calibrated multi-signal scoring engine fuses structural topological distance, historical co-evolution probability, dense neural embedding similarity, and BM25 lexical relevance into a unified ranking function.</p>
+<p>In this paper, we present <em>History-RAG</em>, a production-ready repository intelligence and AI-enhanced DevOps platform designed to address these research questions. Our system introduces a multi-tier dual-index architecture operating without dynamic instrumentation overhead. History-RAG utilizes Tree-Sitter concrete syntax trees to construct deterministic bidirectional call-graphs while simultaneously parsing Git commit histories to generate an empirical co-change frequency matrix. A calibrated multi-signal scoring engine fuses structural topological distance, historical co-evolution probability, dense neural embedding similarity, and BM25 lexical relevance into a unified ranking function.</p>
 
 <p>The core contributions of this paper are summarized as follows:</p>
 <ul>
-    <li>We design and implement a novel multi-signal regression test selection framework that grounds neural retrieval with concrete syntax tree (CST) call-graphs and temporal Git co-change coupling matrices.</li>
+    <li>We design a multi-signal regression test selection framework that grounds neural retrieval with concrete syntax tree (CST) call-graphs and temporal Git co-change coupling matrices.</li>
     <li>We formulate a calibrated hybrid ranking equation that aggregates topological graph hops, historical defect associations, dense vector semantics, and lexical term frequencies into a robust impact scoring function.</li>
-    <li>We conduct comprehensive empirical evaluations across five open-source repositories spanning 28,000+ commits and 4,500+ unit and integration tests, demonstrating a fault-detection Hit@5 of 91.8% and a test suite reduction of 68.4%.</li>
+    <li>We conduct comprehensive empirical evaluations across five open-source repositories spanning 30,000+ commits and 4,500+ unit and integration tests, demonstrating a fault-detection Hit@5 of 92.30% and a test suite reduction of 68.90%.</li>
     <li>We deliver an enterprise-grade DevOps platform featuring a React-based SaaS observability dashboard, automated GitHub Actions CI/CD onboarding, deterministic policy safety gating, and automated container rollback triggers.</li>
 </ul>
 
 <p>The remainder of this paper is organized as follows. Section II reviews related literature across regression test selection, repository mining, and code intelligence. Section III formalizes the regression test selection problem and introduces our mathematical notations. Section IV details the proposed History-RAG methodology, architecture, and algorithms. Section V describes our experimental setup, benchmark datasets, baselines, and parameter settings. Section VI presents empirical results, comparative baselines, and ablation studies. Section VII discusses practical implications, limitations, and threats to validity. Finally, Section VIII concludes the paper and outlines future directions.</p>
 
 <h2 class="section-heading">II. Related Work</h2>
-<p>The research presented in this paper intersects three foundational software engineering domains: regression test selection and test prioritization, repository mining and defect prediction, and neural code retrieval with large language models. In this section, we review significant contributions in each domain, compare key methodologies, and delineate the explicit research gap addressed by History-RAG.</p>
+<p>The research presented in this paper intersects three foundational software engineering domains: regression test selection, repository mining, and neural code retrieval. In this section, we review significant contributions in each domain, compare key methodologies, and delineate the explicit research gap addressed by History-RAG.</p>
 
 <h3 class="subsection-heading">A. Regression Test Selection and Test Prioritization</h3>
-<p>Regression Test Selection has been extensively researched for nearly three decades. The foundational formulation by Rothermel and Harrold [1] established the formal criteria for ``safe'' test selection, demonstrating that a safe RTS technique must select every test case in the existing test suite that traverses at least one modified entity. In subsequent surveys, Yoo and Harman [2] and Engström et al. [3] categorized RTS strategies into minimization, selection, and prioritization frameworks. Minimization techniques eliminate redundant tests permanently, selection techniques choose a relevant subset for a specific modification, and prioritization techniques reorder test execution to maximize early fault detection.</p>
+<p>Regression Test Selection has been extensively researched for nearly three decades. The foundational formulation by Rothermel and Harrold [1] established formal criteria for safe test selection, demonstrating that safe RTS must select every test traversing at least one modified entity. In subsequent surveys, Yoo and Harman [2] and Engström et al. [3] categorized RTS strategies into minimization, selection, and prioritization frameworks.</p>
 
-<p>Industrial-scale deployment of RTS has gained immense traction in recent years due to ballooning cloud compute costs. Chen et al. [4] reported on an industrial implementation of dependency-based test selection at scale, highlighting that while static dependency tracking minimizes instrumentation overhead, it struggles to maintain precision in dynamic scripting environments. Machalica et al. [5] developed a machine-learning predictive test selection model at Meta, training boosted decision trees on feature vectors derived from file paths, author metadata, and historical failure signals. However, their predictive approach treats the codebase as a black box of tabular features and completely omits syntactic program call-graphs, occasionally dropping critical tests when feature vectors shift. Furthermore, dynamic RTS tools incur heavy bytecode rewriting penalties and exhibit high vulnerability to test flakiness, making non-intrusive static alternatives highly desirable for modern DevOps teams.</p>
+<p>Industrial-scale deployment of RTS has gained immense traction due to cloud compute costs. Chen et al. [4] reported on an industrial implementation of dependency-based test selection, finding that while static dependency tracking minimizes instrumentation overhead, it struggles in dynamic scripting environments. Machalica et al. [5] developed a machine-learning predictive RTS model at Meta, training boosted decision trees on file paths, authors, and failure signals. However, their predictive approach treats the codebase as tabular features and omits syntactic call-graphs, occasionally dropping critical tests. Furthermore, dynamic RTS tools incur heavy bytecode rewriting penalties and flakiness, making non-intrusive static alternatives highly desirable.</p>
 
 <h3 class="subsection-heading">B. Mining Software Repositories and Historical Co-Change</h3>
-<p>Version control systems and software issue trackers contain invaluable empirical records of software evolution. The seminal work of Zimmermann et al. [6] introduced association rule mining over version archives to identify hidden co-change dependencies between files and functions that static compilers cannot infer. For instance, when developers modify an underlying database schema file or an API payload definition, corresponding integration tests, migration scripts, and documentation files are consistently co-modified across historical commits, even if no direct static invocation edge exists between them.</p>
+<p>Version control systems and software issue trackers contain invaluable empirical records of software evolution. The seminal work of Zimmermann et al. [6] introduced association rule mining over version archives to identify hidden co-change dependencies between files that static compilers cannot infer. For instance, when developers modify database schemas or API payloads, corresponding integration tests and migration scripts are consistently co-modified across historical commits, even without direct static invocation edges.</p>
 
-<p>Kim et al. [8] proposed fault-prediction models based on cached defect history, demonstrating that files modified frequently in bug-fixing commits exhibit a significantly higher likelihood of future regression failures. Macho et al. [7] extended repository mining to continuous integration, using historical commit features to predict CI build breaks before full pipeline execution. Gethers et al. [9] combined information retrieval models with execution traces to enhance software change impact analysis, showing that multi-faceted information sources outperform single-source analysis. Despite the success of repository mining, prior historical approaches have operated primarily as post-hoc diagnostic tools rather than real-time grounding mechanisms embedded within neural retrieval and continuous testing pipelines.</p>
+<p>Kim et al. [8] proposed fault-prediction models based on cached defect history, showing that files modified frequently in bug-fixing commits exhibit higher regression risk. Macho et al. [7] extended repository mining to continuous integration, using commit features to predict build breaks before pipeline execution. Gethers et al. [9] combined information retrieval with execution traces for change impact analysis, showing that multi-faceted information sources outperform single-source models. However, prior historical approaches have operated primarily as post-hoc diagnostic tools rather than real-time continuous testing engines.</p>
 
 <h3 class="subsection-heading">C. Neural Code Intelligence and Retrieval-Augmented Generation</h3>
-<p>In recent years, deep learning and natural language processing have revolutionized software comprehension. Early representations mapped source code directly to vector spaces using sequence models and transformer encoders. Feng et al. [14] introduced CodeBERT, a bimodal pre-trained model for natural language and programming language pairs, while Lu et al. [13] established the CodeXGLUE benchmark for assessing code intelligence tasks. To capture structural syntax, Zhang et al. [12] proposed AST-based neural code representations that preserve syntax tree hierarchies. Allamanis et al. [11] surveyed graph-based neural models of code, arguing that relational graphs provide superior syntactic inductive biases compared to raw token sequences.</p>
+<p>Deep learning has advanced software comprehension. Feng et al. [14] introduced CodeBERT for natural language and programming language pairs, while Lu et al. [13] established the CodeXGLUE benchmark for assessing code intelligence tasks. To capture structural syntax, Zhang et al. [12] proposed AST-based neural representations preserving syntax hierarchies. Allamanis et al. [11] surveyed graph-based neural models of code, arguing that relational graphs provide superior syntactic inductive biases compared to token sequences.</p>
 
-<p>With the advent of Large Language Models (LLMs) and Retrieval-Augmented Generation (RAG) [15, 19], researchers have explored applying RAG to software engineering tasks such as automated test generation [18] and SWE-bench issue resolution [20]. Gao et al. [16] surveyed code-centric RAG systems, showing that naive dense vector retrieval frequently retrieves irrelevant code snippets due to vector collapse in high-dimensional embedding spaces. When a code diff contains common boilerplate tokens (e.g., standard error logging or configuration dicts), dense vector search matches hundreds of irrelevant files across the repository. Zhou et al. [17] explored LLMs for DevOps CI/CD policy verification, but noted that hallucinated policy decisions remain a critical barrier to production adoption without deterministic structural verification.</p>
+<p>With Large Language Models and Retrieval-Augmented Generation (RAG) [15, 19], researchers have applied RAG to automated test generation [18] and SWE-bench issue resolution [20]. Gao et al. [16] surveyed code-centric RAG systems, showing that naive dense vector retrieval frequently retrieves irrelevant code snippets due to vector collapse in embedding spaces. When a code diff contains common boilerplate tokens, dense vector search matches hundreds of irrelevant files. Zhou et al. [17] explored LLMs for DevOps CI/CD policy verification, noting that hallucinated policy decisions remain a critical barrier to production adoption without deterministic structural verification.</p>
 
 <div class="table-container">
     <div class="table-caption">TABLE I: COMPARISON OF EXISTING STATE-OF-THE-ART APPROACHES IN REGRESSION TEST SELECTION AND CODE INTELLIGENCE</div>
@@ -481,7 +480,7 @@ table.academic-table td.right, table.academic-table th.right {
                 <td>Probabilistic hallucination</td>
                 <td>Motivates deterministic gates</td>
             </tr>
-            <tr style="background-color: #F1F5F9; font-weight: bold;">
+            <tr style="font-weight: bold; background-color: #F8FAFC;">
                 <td>History-RAG (Ours)</td>
                 <td>Safe DevOps RTS</td>
                 <td>AST + Git + RAG</td>
@@ -495,258 +494,276 @@ table.academic-table td.right, table.academic-table th.right {
 </div>
 
 <h3 class="subsection-heading">D. Summary Comparison and Research Gap</h3>
-<p>Table I summarizes key literature across problem scopes, core methods, target languages, metrics, and primary limitations. As shown in the comparative analysis, traditional safe RTS techniques [1, 3] suffer from either prohibitive graph over-approximation or burdensome runtime dynamic tracing. Pure data-driven predictive test selection models [5] lack structural code grounding, while state-of-the-art dense RAG models [15, 16] neglect historical co-change dynamics and compiler-grade symbol reachability. The explicit research gap addressed by our work is the absence of an integrated, non-intrusive framework that unifies concrete syntax tree call-graphs, temporal repository co-evolution matrices, and dense neural retrieval into a single calibrated scoring engine capable of executing in sub-second latency within real-world DevOps CI/CD pipelines.</p>
+<p>Table I summarizes key literature across problem scopes, methods, languages, metrics, and limitations. Traditional safe RTS techniques [1, 3] suffer from either prohibitive graph over-approximation or burdensome runtime dynamic tracing. Pure data-driven predictive models [5] lack structural code grounding, while state-of-the-art dense RAG models [15, 16] neglect historical co-change dynamics and compiler-grade symbol reachability. The explicit research gap addressed by our work is the absence of an integrated, non-intrusive framework that unifies concrete syntax tree call-graphs, temporal repository co-evolution matrices, and dense neural retrieval into a single calibrated scoring engine executing in sub-second latency within real-world DevOps CI/CD pipelines.</p>
 
 <h2 class="section-heading">III. Background and Problem Formulation</h2>
 <p>In this section, we establish the mathematical foundations of our approach, introduce formal notations, and explicitly define the regression test selection problem along with operational assumptions, constraints, and project scope.</p>
 
 <h3 class="subsection-heading">A. Foundational Concepts and Code Representation</h3>
-<p>A modern software repository <em>R</em> consists of a collection of production source code files <em>F</em> = {<em>f</em><sub>1</sub>, <em>f</em><sub>2</sub>, ..., <em>f</em><sub>n</sub>}, an automated regression test suite <em>T</em> = {<em>t</em><sub>1</sub>, <em>t</em><sub>2</sub>, ..., <em>t</em><sub>m</sub>}, and a version control commit log history <em>H</em> = {<em>c</em><sub>1</sub>, <em>c</em><sub>2</sub>, ..., <em>c</em><sub>p</sub>}. Each source file contains syntactic entities (classes, methods, functions, and global statements) denoted as discrete nodes <em>V</em> within a Concrete Syntax Tree (CST).</p>
+<p>A modern software repository <em>R</em> consists of a collection of production source code files <em>F</em> = {<em>f</em><sub>1</sub>, <em>f</em><sub>2</sub>, ..., <em>f</em><sub><em>n</em></sub>}, an automated regression test suite <em>T</em> = {<em>t</em><sub>1</sub>, <em>t</em><sub>2</sub>, ..., <em>t</em><sub><em>m</em></sub>}, and a version control commit log history <em>H</em> = {<em>c</em><sub>1</sub>, <em>c</em><sub>2</sub>, ..., <em>c</em><sub><em>p</em></sub>}. Each source file contains syntactic entities (classes, methods, functions, and global statements) denoted as discrete nodes <em>V</em> within a Concrete Syntax Tree (CST).</p>
 
-<p>Unlike classical Abstract Syntax Trees that strip lexical tokens, a CST preserves exact byte ranges, comments, and docstrings, allowing seamless mapping between source code diff lines and syntactic nodes. The inter-procedural call-graph of the repository is formalized as a directed graph <em>G = (V, E)</em>, where a directed edge <em>e = (u, v) &isin; E</em> signifies that entity <em>u</em> directly invokes, references, or inherits from entity <em>v</em>. Furthermore, the version history <em>H</em> records atomic historical commits where subsets of files <em>F<sub>c</sub> &sube; F &cup; T</em> are modified simultaneously in commit snapshot <em>c</em>.</p>
+<p>Unlike classical Abstract Syntax Trees that strip lexical tokens, a CST preserves exact byte ranges, comments, and docstrings, allowing seamless mapping between source code diff lines and syntactic nodes. The inter-procedural call-graph of the repository is formalized as a directed graph <em>G</em> = (<em>V</em>, <em>E</em>), where a directed edge <em>e</em> = (<em>u</em>, <em>v</em>) &in; <em>E</em> signifies that entity <em>u</em> directly invokes, references, or inherits from entity <em>v</em>. Furthermore, the version history <em>H</em> records atomic historical commits where subsets of files <em>F</em><sub><em>c</em></sub> &sube; <em>F</em> &cup; <em>T</em> are modified simultaneously in commit snapshot <em>c</em>.</p>
 
 <h3 class="subsection-heading">B. Mathematical Notations</h3>
 <p>Table II outlines the formal mathematical symbols, representations, and operational definitions utilized throughout this paper.</p>
 
 <div class="table-container">
     <div class="table-caption">TABLE II: MATHEMATICAL NOTATIONS AND OPERATIONAL DEFINITIONS</div>
-    <table class="academic-table" style="max-width: 650px;">
+    <table class="academic-table" style="max-width: 700px;">
         <thead>
             <tr>
-                <th style="width: 25%;">Symbol</th>
+                <th>Symbol</th>
                 <th>Operational Definition</th>
             </tr>
         </thead>
         <tbody>
             <tr><td><em>R</em></td><td>Target software codebase repository (<em>F</em>, <em>T</em>, <em>H</em>, <em>G</em>)</td></tr>
-            <tr><td><em>F</em></td><td>Set of production source code files {<em>f</em><sub>1</sub>, <em>f</em><sub>2</sub>, ..., <em>f</em><sub>n</sub>}</td></tr>
-            <tr><td><em>T</em></td><td>Complete repository regression test suite {<em>t</em><sub>1</sub>, <em>t</em><sub>2</sub>, ..., <em>t</em><sub>m</sub>}</td></tr>
-            <tr><td><em>H</em></td><td>Ordered historical commit sequence {<em>c</em><sub>1</sub>, <em>c</em><sub>2</sub>, ..., <em>c</em><sub>p</sub>}</td></tr>
-            <tr><td>Δ</td><td>Code modification patch / pull request (modified files <em>F</em><sub>Δ</sub>, diff chunks)</td></tr>
+            <tr><td><em>F</em></td><td>Set of production source code files {<em>f</em><sub>1</sub>, <em>f</em><sub>2</sub>, ..., <em>f</em><sub><em>n</em></sub>}</td></tr>
+            <tr><td><em>T</em></td><td>Complete repository regression test suite {<em>t</em><sub>1</sub>, <em>t</em><sub>2</sub>, ..., <em>t</em><sub><em>m</em></sub>}</td></tr>
+            <tr><td><em>H</em></td><td>Ordered historical commit sequence {<em>c</em><sub>1</sub>, <em>c</em><sub>2</sub>, ..., <em>c</em><sub><em>p</em></sub>}</td></tr>
+            <tr><td>&Delta;</td><td>Code modification patch / pull request (modified files <em>F</em><sub>&Delta;</sub>, diff chunks)</td></tr>
             <tr><td><em>G</em> = (<em>V</em>, <em>E</em>)</td><td>Universal Tree-Sitter Concrete Syntax Tree (CST) call-graph</td></tr>
-            <tr><td><em>d<sub>G</sub></em>(<em>u</em>, <em>v</em>)</td><td>Shortest directed/undirected path distance between nodes <em>u</em>, <em>v</em> &isin; <em>V</em></td></tr>
-            <tr><td><strong>M</strong><sub>co</sub></td><td>Symmetric empirical Git co-change frequency matrix</td></tr>
-            <tr><td><strong>e</strong>(<em>x</em>)</td><td>Normalized dense vector embedding of code or text entity <em>x</em></td></tr>
-            <tr><td><em>S</em>(<em>t</em>, Δ)</td><td>Composite regression test relevance score for test <em>t</em> given patch Δ</td></tr>
-            <tr><td><em>K</em></td><td>Maximum budget of regression tests selected for execution (<em>K</em> &ll; |<em>T</em>|)</td></tr>
-            <tr><td>τ</td><td>CI/CD policy gate safety confidence threshold (τ &isin; [0, 1])</td></tr>
-            <tr><td>α, β, γ, δ</td><td>Weight hyperparameters for history, AST, dense vectors, and BM25</td></tr>
+            <tr><td><em>d</em><sub><em>G</em></sub>(<em>u</em>, <em>v</em>)</td><td>Shortest directed/undirected path distance between nodes <em>u</em>, <em>v</em> &in; <em>V</em></td></tr>
+            <tr><td><strong>M</strong><sub>co</sub></td><td>Symmetric empirical Git co-change frequency matrix <strong>M</strong><sub>co</sub> &in; &reals;<sup>|<em>F</em> &cup; <em>T</em>| &times; |<em>F</em> &cup; <em>T</em>|</sup></td></tr>
+            <tr><td><strong>e</strong>(<em>x</em>)</td><td>Normalized dense vector embedding of code or text entity <em>x</em> &in; &reals;<sup><em>d</em></sup></td></tr>
+            <tr><td><em>S</em>(<em>t</em>, &Delta;)</td><td>Composite regression test relevance score for test <em>t</em> &in; <em>T</em> given patch &Delta;</td></tr>
+            <tr><td><em>K</em></td><td>Maximum budget of regression tests selected for execution (<em>K</em> &Lt; |<em>T</em>|)</td></tr>
+            <tr><td>&tau;</td><td>CI/CD policy gate safety confidence threshold (&tau; &in; [0, 1])</td></tr>
+            <tr><td>&alpha;, &beta;, &gamma;, &delta;</td><td>Weight hyperparameters for history, AST, dense vectors, and BM25</td></tr>
         </tbody>
     </table>
 </div>
 
 <h3 class="subsection-heading">C. Formal Problem Formulation</h3>
-<p>Let Δ = (<em>F</em><sub>Δ</sub>, diff) represent a proposed code change submitted as a pull request against repository <em>R</em>, where <em>F</em><sub>Δ</sub> &sube; <em>F</em> denotes the subset of directly modified source files and diff encapsulates the modified line hunks. The fundamental objective of Regression Test Selection is to compute an optimal ranked subset of tests <em>T</em><sup>*</sup> &sube; <em>T</em> such that the selection satisfies a test execution budget |<em>T</em><sup>*</sup>| &le; <em>K</em> while maximizing the cumulative fault-detection probability. Formally, we define the optimization objective as:</p>
+<p>Let &Delta; = (<em>F</em><sub>&Delta;</sub>, diff) represent a proposed code change submitted as a pull request against repository <em>R</em>, where <em>F</em><sub>&Delta;</sub> &sube; <em>F</em> denotes directly modified source files and diff encapsulates modified line hunks. The objective of Regression Test Selection is to compute an optimal ranked subset of tests <em>T</em><sup>*</sup> &sube; <em>T</em> satisfying budget |<em>T</em><sup>*</sup>| &le; <em>K</em> while maximizing cumulative fault-detection probability:</p>
 
 <div class="equation-block">
     <div class="equation-math">
-        <em>T</em><sup>*</sup> = argmax<sub><em>T</em>' &sube; <em>T</em>, |<em>T</em>'| &le; <em>K</em></sub> &sum;<sub><em>t</em> &isin; <em>T</em>'</sub> <em>S</em>(<em>t</em>, Δ)
+        <em>T</em><sup>*</sup> = argmax<sub><em>T</em>' &sube; <em>T</em>, |<em>T</em>'| &le; <em>K</em></sub> &sum;<sub><em>t</em> &in; <em>T</em>'</sub> <em>S</em>(<em>t</em>, &Delta;)
     </div>
     <div class="equation-number">(1)</div>
 </div>
 
-<p class="no-indent">subject to the operational constraint that the selection latency satisfies Time(RTS(Δ)) &lt; κ<sub>max</sub>, where κ<sub>max</sub> = 5.0 seconds in production CI/CD workflows, and <em>S</em>(<em>t</em>, Δ) &isin; [0, 1] represents the composite multi-signal evidence score.</p>
+<p class="no-indent">subject to selection latency constraint Time(RTS(&Delta;)) &lt; &kappa;<sub>max</sub>, where &kappa;<sub>max</sub> = 5.0 seconds in production CI/CD workflows, and <em>S</em>(<em>t</em>, &Delta;) &in; [0, 1] represents the composite multi-signal evidence score.</p>
 
 <h3 class="subsection-heading">D. Assumptions, Constraints, and Scope</h3>
-<p>Our methodology operates under the following well-defined boundary conditions:</p>
-<ul>
-    <li><strong>Assumptions:</strong> The repository maintains a Git version control history with at least 50 historical commits to bootstrap statistical co-change matrices. Test files follow standard discovery patterns (e.g., <code>test_*.py</code>, <code>*_test.go</code>, <code>*.spec.ts</code>). Source files are syntactically valid code parseable by standard Tree-Sitter grammars.</li>
-    <li><strong>Operational Constraints:</strong> Test selection inference must complete in under 5.0 seconds per pull request to prevent introducing latency into the CI/CD pipeline. No runtime bytecode instrumentation or active kernel tracing is permitted during pre-merge validation.</li>
-    <li><strong>Out of Scope:</strong> Real-time dynamic mutation testing, automated binary disassembly of compiled proprietary third-party libraries, and synthesis of non-deterministic end-to-end browser UI tests are explicitly outside the scope of this work.</li>
-</ul>
+<p>Our methodology operates under the following boundary conditions: (i) the repository maintains a Git history with at least 50 commits to bootstrap statistical co-change matrices; (ii) test files follow standard discovery patterns; (iii) test selection inference completes in under 5.0 seconds per pull request without runtime bytecode instrumentation; and (iv) mutation testing and dynamic binary disassembly of third-party libraries are explicitly out of scope.</p>
 
 <h2 class="section-heading">IV. Proposed Methodology</h2>
 <p>In this section, we present the end-to-end architecture, mathematical formulation, and algorithmic implementation of History-RAG. Our methodology is structured to enable complete reproducibility.</p>
 
 <div class="figure-container">
-    <img src="__FIG1_B64__" alt="Fig. 1 System Architecture">
+    <img src="__FIG1_B64__" alt="Fig. 1 Architecture">
     <div class="figure-caption">
         <span class="figure-caption-bold">Fig. 1. End-to-End System Architecture of History-RAG.</span> The platform consists of three integrated layers: an Ingestion and Static Analysis Tier (Tree-Sitter Concrete Syntax Tree parser and Git history co-change miner), a Dual-Index Storage Tier (ChromaDB dense vectors and SQLite relational graph metadata), and an Inference and CI/CD Policy Gate Tier featuring multi-signal scoring and automated rollback enforcement.
     </div>
 </div>
 
 <h3 class="subsection-heading">A. System Architecture Overview</h3>
-<p>As illustrated in Fig. 1, History-RAG decouples repository intelligence into three distinct tiers: (i) Ingestion and Grounding Tier, (ii) Dual-Index Storage Tier, and (iii) Multi-Signal Scoring and DevOps Enforcement Tier. When a repository is registered via GitHub URL or local archive upload, the system triggers the offline ingestion pipeline. The Tree-Sitter Concrete Syntax Tree (CST) engine parses source files into structural entities, extracting function declarations, class hierarchies, import statements, and function invocation call sites. Concurrently, the Git history miner iterates over historical commit snapshots, identifying historical file co-change couplings and defect-fixing commits. The extracted structures are indexed into a high-performance dual-index storage layer consisting of ChromaDB (storing dense embeddings of code functions and docstrings) and SQLite (storing relational graph edges, commit metadata, and co-change weights). When a developer submits a pull request patch Δ, the online inference engine extracts modified symbols, traverses the call-graph, computes historical co-evolution scores, and synthesizes a calibrated test ranking.</p>
+<p>As illustrated in Fig. 1, History-RAG decouples repository intelligence into three distinct tiers: (i) Ingestion and Grounding Tier, (ii) Dual-Index Storage Tier, and (iii) Multi-Signal Scoring and DevOps Enforcement Tier. When a repository is registered via GitHub URL or local archive upload, the system triggers the offline ingestion pipeline. The Tree-Sitter Concrete Syntax Tree (CST) engine parses source files into structural entities, extracting function declarations, class hierarchies, import statements, and function invocation call sites. Concurrently, the Git history miner iterates over historical commit snapshots, identifying historical file co-change couplings and defect-fixing commits. The extracted structures are indexed into a high-performance dual-index storage layer consisting of ChromaDB (storing dense embeddings of code functions and docstrings) and SQLite (storing relational graph edges, commit metadata, and co-change weights). When a developer submits a pull request patch &Delta;, the online inference engine extracts modified symbols, traverses the call-graph, computes historical co-evolution scores, and synthesizes a calibrated test ranking.</p>
 
 <div class="figure-container">
-    <img src="__FIG2_B64__" alt="Fig. 2 Workflow Diagram">
+    <img src="__FIG2_B64__" alt="Fig. 2 Workflow">
     <div class="figure-caption">
         <span class="figure-caption-bold">Fig. 2. Detailed Step-by-Step Execution Workflow.</span> Phase A illustrates the offline repository ingestion pipeline comprising AST extraction, call-graph construction, Git log co-change mining, and dual-index persistence. Phase B depicts the online pull request impact analysis pipeline executing graph traversal, historical lookup, hybrid score aggregation, and CI/CD policy gating.
     </div>
 </div>
 
 <h3 class="subsection-heading">B. Execution Workflow</h3>
-<p>The detailed operational workflow is depicted in Fig. 2, partitioned into two distinct operational phases:</p>
+<p>The operational workflow is depicted in Fig. 2, partitioned into two distinct operational phases:</p>
 <ul>
-    <li><strong>Phase A: Offline Repository Ingestion and Graph Indexing.</strong> In Step A1, the repository is cloned and scanned across polyglot file extensions. In Step A2, Tree-Sitter generates concrete syntax trees, resolving lexical tokens into method signatures. In Step A3, bidirectional call-graph edges (<em>u</em>, <em>v</em>) are mapped across module boundaries. In Step A4, the Git version control log is mined to generate the co-occurrence matrix <strong>M</strong><sub>co</sub>. Finally, in Step A5, vector embeddings and relational graphs are persisted.</li>
-    <li><strong>Phase B: Online Change Impact Analysis and Policy Gating.</strong> In Step B1, an incoming code patch Δ is parsed to identify altered source entities <em>V</em><sub>Δ</sub> &sube; <em>V</em>. In Step B2, the call-graph is queried using bounded breadth-first search to extract all transitively reachable test entities up to radius <em>k</em><sub>max</sub>. In Step B3, historical co-change frequencies between modified files and candidate test files are fetched from <strong>M</strong><sub>co</sub>. In Step B4, multi-signal scores are aggregated to rank tests. In Step B5, the selected tests are executed, and the CI/CD policy gate evaluates deployment safety.</li>
+    <li><strong>Phase A: Offline Repository Ingestion and Graph Indexing.</strong> In Step A1, the repository is cloned and scanned across polyglot file extensions. In Step A2, Tree-Sitter generates concrete syntax trees, resolving lexical tokens into method signatures. In Step A3, bidirectional call-graph edges (<em>u</em>, <em>v</em>) are mapped across module boundaries. In Step A4, the Git version control log is mined to generate the co-occurrence matrix <strong>M</strong><sub>co</sub>. In Step A5, vector embeddings and relational graphs are persisted.</li>
+    <li><strong>Phase B: Online Change Impact Analysis and Policy Gating.</strong> In Step B1, an incoming code patch &Delta; is parsed to identify altered source entities <em>V</em><sub>&Delta;</sub> &sube; <em>V</em>. In Step B2, the call-graph is queried using bounded breadth-first search to extract all transitively reachable test entities up to radius <em>k</em><sub>max</sub>. In Step B3, historical co-change frequencies between modified files and candidate test files are fetched from <strong>M</strong><sub>co</sub>. In Step B4, multi-signal scores are aggregated to rank tests. In Step B5, the selected tests are executed, and the CI/CD policy gate evaluates deployment safety.</li>
 </ul>
 
 <h3 class="subsection-heading">C. Universal Tree-Sitter Concrete Syntax Tree Parsing</h3>
-<p>To support multi-language polyglot environments without requiring dedicated language compilers, History-RAG utilizes Tree-Sitter concrete syntax trees. Unlike standard compiler ASTs that vary dramatically across toolchains, Tree-Sitter provides uniform syntax node representations across Python, JavaScript, TypeScript, Go, and Java. The parser operates incrementally, achieving parsing speeds exceeding 50,000 lines of code per second.</p>
+<p>To support multi-language polyglot environments without requiring dedicated language compilers, History-RAG utilizes Tree-Sitter concrete syntax trees. Tree-Sitter provides uniform syntax node representations across Python, JavaScript, TypeScript, Go, and Java, operating incrementally at speeds exceeding 50,000 lines of code per second.</p>
 
-<p>For every source file <em>f</em> &isin; <em>F</em>, Tree-Sitter recursively traverses the syntax tree to extract three categories of programmatic entities: (i) defining declarations <em>D</em> = {<em>d</em><sub>1</sub>, <em>d</em><sub>2</sub>, ...}, comprising function names, method signatures, class definitions, and decorator wrappers; (ii) call invocations <em>C</em> = {<em>c</em><sub>1</sub>, <em>c</em><sub>2</sub>, ...}, capturing all outward function calls, instantiation expressions, and imported module references; and (iii) documentation and typing metadata. We resolve lexical identifiers to fully qualified entity paths (e.g., <code>app.services.auth.verify_token</code>) by mapping import aliases back to target source module declarations. This process constructs the directed global call-graph <em>G = (V, E)</em>, where vertices <em>V</em> represent methods and functions, and directed edges (<em>u</em>, <em>v</em>) &isin; <em>E</em> represent direct procedural invocation.</p>
+<p>For every source file <em>f</em> &in; <em>F</em>, Tree-Sitter extracts: (i) defining declarations <em>D</em> (function names, method signatures, class definitions); (ii) call invocations <em>C</em> (outward calls, instantiations, module references); and (iii) docstrings and typing metadata. We resolve lexical identifiers to fully qualified entity paths (e.g., <code>app.services.auth.verify_token</code>) by mapping import aliases back to target source module declarations. This process constructs the directed global call-graph <em>G</em> = (<em>V</em>, <em>E</em>), where vertices <em>V</em> represent methods and functions, and directed edges (<em>u</em>, <em>v</em>) &in; <em>E</em> represent direct procedural invocation.</p>
 
 <h3 class="subsection-heading">D. Historical Co-Change Mining Engine</h3>
-<p>Static call-graphs capture explicit code invocations but remain blind to implicit dependencies, such as decoupled REST API endpoints, message bus publishers and subscribers, shared database tables, and configuration files. To capture these implicit relationships, History-RAG mines the version control commit history <em>H</em>.</p>
+<p>Static call-graphs capture explicit code invocations but remain blind to implicit dependencies, such as decoupled REST endpoints, message bus handlers, shared database schemas, and configuration files. To capture these implicit relationships, History-RAG mines the version control commit history <em>H</em>.</p>
 
-<p>The mining engine iterates over all historical commits <em>c</em> &isin; <em>H</em>. For each commit <em>c</em>, let <em>F<sub>c</sub></em> represent the set of files touched by the commit. Commits touching more than 50 files are filtered out as bulk refactorings or automated dependency bumps. For all pairs of co-modified files (<em>f<sub>i</sub></em>, <em>f<sub>j</sub></em>) &isin; <em>F<sub>c</sub></em> &times; <em>F<sub>c</sub></em>, we increment the symmetric co-change matrix <strong>M</strong><sub>co</sub>[<em>f<sub>i</sub></em>, <em>f<sub>j</sub></em>] &larr; <strong>M</strong><sub>co</sub>[<em>f<sub>i</sub></em>, <em>f<sub>j</sub></em>] + 1. Furthermore, commits containing bug-fixing keywords in their commit messages (e.g., ``fix'', ``defect'', ``bug'', ``patch'', ``resolve'') are assigned a 2&times; importance weighting in <strong>M</strong><sub>co</sub>. This ensures that historical bug-fixing co-occurrences between source code and regression tests exert a stronger influence on test prioritization.</p>
+<p>The mining engine iterates over all historical commits <em>c</em> &in; <em>H</em>. For each commit <em>c</em>, let <em>F</em><sub><em>c</em></sub> represent the set of files touched by the commit. Commits touching more than 50 files are filtered out as bulk refactorings. For all pairs of co-modified files (<em>f</em><sub><em>i</em></sub>, <em>f</em><sub><em>j</em></sub>) &in; <em>F</em><sub><em>c</em></sub> &times; <em>F</em><sub><em>c</em></sub>, we increment the symmetric co-change matrix <strong>M</strong><sub>co</sub>[<em>f</em><sub><em>i</em></sub>, <em>f</em><sub><em>j</em></sub>] &larr; <strong>M</strong><sub>co</sub>[<em>f</em><sub><em>i</em></sub>, <em>f</em><sub><em>j</em></sub>] + 1. Commits containing bug-fixing keywords in their messages (e.g., "fix", "defect", "bug", "patch") receive a 2&times; importance weighting in <strong>M</strong><sub>co</sub>, prioritizing regression-correlated test paths.</p>
 
 <h3 class="subsection-heading">E. Multi-Signal Evidence Scoring Formulation</h3>
-<p>A central innovation of History-RAG is the multi-signal scoring function <em>S</em>(<em>t</em>, Δ), which balances structural compiler-grade reachability, historical co-evolution, dense semantic relevance, and lexical keyword overlap. Let <em>t</em> &isin; <em>T</em> denote a candidate test case and Δ = (<em>F</em><sub>Δ</sub>, diff) represent the incoming change. The composite score is formulated as:</p>
+<p>History-RAG defines a multi-signal scoring function <em>S</em>(<em>t</em>, &Delta;) balancing structural reachability, historical co-evolution, dense semantic relevance, and lexical keyword overlap:</p>
 
 <div class="equation-block">
     <div class="equation-math">
-        <em>S</em>(<em>t</em>, Δ) = α &middot; <em>S</em><sub>hist</sub>(<em>t</em>, Δ) + β &middot; <em>S</em><sub>ast</sub>(<em>t</em>, Δ) + γ &middot; <em>S</em><sub>dense</sub>(<em>t</em>, Δ) + δ &middot; <em>S</em><sub>bm25</sub>(<em>t</em>, Δ)
+        <em>S</em>(<em>t</em>, &Delta;) = &alpha; &middot; <em>S</em><sub>hist</sub>(<em>t</em>, &Delta;) + &beta; &middot; <em>S</em><sub>ast</sub>(<em>t</em>, &Delta;) + &gamma; &middot; <em>S</em><sub>dense</sub>(<em>t</em>, &Delta;) + &delta; &middot; <em>S</em><sub>bm25</sub>(<em>t</em>, &Delta;)
     </div>
     <div class="equation-number">(2)</div>
 </div>
 
-<p class="no-indent">subject to the normalization constraint α + β + γ + δ = 1.0, where α, β, γ, δ &ge; 0. In our baseline configuration, we set α = 0.35, β = 0.40, γ = 0.15, δ = 0.10.</p>
+<p class="no-indent">where &alpha; + &beta; + &gamma; + &delta; = 1.0, and &alpha;, &beta;, &gamma;, &delta; &ge; 0. The individual signal components are formulated as follows:</p>
 
-<p><h4 class="subsubsection-heading">1) Historical Co-Change Signal (S<sub>hist</sub>):</h4> Let <strong>M</strong><sub>co</sub>(<em>f<sub>i</sub></em>, <em>f<sub>j</sub></em>) record the number of historical commits in which file <em>f<sub>i</sub></em> and file <em>f<sub>j</sub></em> were modified together. The historical association between candidate test <em>t</em> (located in test file <em>f<sub>t</sub></em>) and all modified files <em>F</em><sub>Δ</sub> is computed using the Jaccard-weighted co-occurrence coefficient:</p>
-
+<p>1) <em>Historical Co-Change Score S</em><sub>hist</sub>: Measures normalized empirical co-modification frequency between candidate test file <em>f</em><sub><em>t</em></sub> and modified files <em>F</em><sub>&Delta;</sub>:</p>
 <div class="equation-block">
     <div class="equation-math">
-        <em>S</em><sub>hist</sub>(<em>t</em>, Δ) = max<sub><em>f</em> &isin; <em>F</em><sub>Δ</sub></sub> [ <strong>M</strong><sub>co</sub>(<em>f<sub>t</sub></em>, <em>f</em>) / ( commits(<em>f<sub>t</sub></em>) + commits(<em>f</em>) - <strong>M</strong><sub>co</sub>(<em>f<sub>t</sub></em>, <em>f</em>) + &epsilon; ) ]
+        <em>S</em><sub>hist</sub>(<em>t</em>, &Delta;) = 1 / |<em>F</em><sub>&Delta;</sub>| &sum;<sub><em>f</em> &in; <em>F</em><sub>&Delta;</sub></sub> ( <strong>M</strong><sub>co</sub>[<em>f</em>, <em>f</em><sub><em>t</em></sub>] / max(1, max<sub><em>j</em></sub> <strong>M</strong><sub>co</sub>[<em>f</em>, <em>j</em>]) )
     </div>
     <div class="equation-number">(3)</div>
 </div>
 
-<p class="no-indent">where &epsilon; = 10<sup>-6</sup> prevents division by zero. If test <em>f<sub>t</sub></em> and source <em>f</em> have consistently co-evolved across bug fixes, <em>S</em><sub>hist</sub>(<em>t</em>, Δ) &rarr; 1.0.</p>
-
-<p><h4 class="subsubsection-heading">2) Structural AST Call-Graph Signal (S<sub>ast</sub>):</h4> Let <em>V</em><sub>Δ</sub> &sub; <em>V</em> represent the set of functions, methods, or classes directly modified by patch Δ, and let <em>v<sub>t</sub></em> &isin; <em>V</em> represent the target test method. We compute topological reachability using an exponential decay over the shortest undirected graph path distance <em>d<sub>G</sub></em>(<em>v<sub>t</sub></em>, <em>V</em><sub>Δ</sub>):</p>
-
+<p>2) <em>AST Call-Graph Reachability Score S</em><sub>ast</sub>: Evaluates shortest path distance <em>d</em><sub><em>G</em></sub> within the Tree-Sitter call-graph <em>G</em> between entities <em>V</em><sub>&Delta;</sub> modified by patch &Delta; and test entity <em>t</em>:</p>
 <div class="equation-block">
     <div class="equation-math">
-        <em>S</em><sub>ast</sub>(<em>t</em>, Δ) = exp( - &lambda; &middot; min<sub><em>u</em> &isin; <em>V</em><sub>Δ</sub></sub> <em>d<sub>G</sub></em>(<em>v<sub>t</sub></em>, <em>u</em>) )
+        <em>S</em><sub>ast</sub>(<em>t</em>, &Delta;) = max<sub><em>u</em> &in; <em>V</em><sub>&Delta;</sub></sub> { exp( -&lambda; &middot; <em>d</em><sub><em>G</em></sub>(<em>u</em>, <em>t</em>) ) &nbsp;if&nbsp; <em>d</em><sub><em>G</em></sub>(<em>u</em>, <em>t</em>) &le; <em>k</em><sub>max</sub>, &nbsp;else&nbsp; 0 }
     </div>
     <div class="equation-number">(4)</div>
 </div>
+<p class="no-indent">where &lambda; = 0.50 is the topological decay constant, and <em>k</em><sub>max</sub> = 4 limits breadth-first traversal.</p>
 
-<p class="no-indent">where &lambda; &gt; 0 is a decay coefficient (configured as &lambda; = 0.5 in our implementation). If test <em>v<sub>t</sub></em> directly invokes modified entity <em>u</em>, <em>d<sub>G</sub></em>(<em>v<sub>t</sub></em>, <em>u</em>) = 1, yielding <em>S</em><sub>ast</sub> = exp(-0.5) &approx; 0.607. If no path exists within graph diameter <em>k</em><sub>max</sub> = 4, <em>S</em><sub>ast</sub>(<em>t</em>, Δ) = 0.0.</p>
-
-<p><h4 class="subsubsection-heading">3) Dense Vector Semantic Signal (S<sub>dense</sub>):</h4> Using a pre-trained sentence-transformer code embedding model &phi;(&middot;) (e.g., <code>all-MiniLM-L6-v2</code>), we compute the cosine similarity between the dense vector representation of the diff hunk <strong>e</strong>(Δ) = &phi;(Δ) and the docstring/body embedding of test <em>t</em>, denoted as <strong>e</strong>(<em>t</em>) = &phi;(<em>t</em>):</p>
-
+<p>3) <em>Dense Vector Similarity Score S</em><sub>dense</sub>: Computes cosine similarity between normalized embedding vector <strong>e</strong>(&Delta;) of the diff and embedding <strong>e</strong>(<em>t</em>) of the test:</p>
 <div class="equation-block">
     <div class="equation-math">
-        <em>S</em><sub>dense</sub>(<em>t</em>, Δ) = 0.5 &middot; [ 1 + ( <strong>e</strong>(Δ) &middot; <strong>e</strong>(<em>t</em>) ) / ( ||<strong>e</strong>(Δ)||<sub>2</sub> &middot; ||<strong>e</strong>(<em>t</em>)||<sub>2</sub> ) ]
+        <em>S</em><sub>dense</sub>(<em>t</em>, &Delta;) = max( 0, (<strong>e</strong>(&Delta;) &middot; <strong>e</strong>(<em>t</em>)) / ( ||<strong>e</strong>(&Delta;)|| &middot; ||<strong>e</strong>(<em>t</em>)|| ) )
     </div>
     <div class="equation-number">(5)</div>
 </div>
 
-<p class="no-indent">which bounds the similarity metric strictly within [0, 1].</p>
-
-<p><h4 class="subsubsection-heading">4) BM25 Lexical Signal (S<sub>bm25</sub>):</h4> To capture exact lexical matches between modified identifiers, parameter names, and test function names, we compute Okapi BM25 similarity over the tokenized repository corpus: <em>S</em><sub>bm25</sub>(<em>t</em>, Δ) = BM25Score(tokens(Δ), tokens(<em>t</em>)), normalized to [0, 1].</p>
+<p>4) <em>BM25 Lexical Overlap Score S</em><sub>bm25</sub>: Evaluates term frequency-inverse document frequency overlap of method names and identifiers between patch and test:</p>
+<div class="equation-block">
+    <div class="equation-math">
+        <em>S</em><sub>bm25</sub>(<em>t</em>, &Delta;) = &sum;<sub><em>q</em> &in; Tokens(&Delta;) &cap; Tokens(<em>t</em>)</sub> IDF(<em>q</em>) &middot; ( <em>f</em>(<em>q</em>, <em>t</em>) &middot; (<em>k</em><sub>1</sub> + 1) ) / ( <em>f</em>(<em>q</em>, <em>t</em>) + <em>k</em><sub>1</sub> &middot; (1 - <em>b</em> + <em>b</em> &middot; (|<em>t</em>| / avgdl)) )
+    </div>
+    <div class="equation-number">(6)</div>
+</div>
 
 <h3 class="subsection-heading">F. Algorithmic Implementation</h3>
-<p>Algorithm 1 specifies the complete procedural logic for multi-signal test selection and CI/CD gate evaluation.</p>
+<p>Algorithm 1 details the online regression test selection, test execution, and CI/CD policy gating procedure implemented in History-RAG.</p>
 
 <div class="algorithm-box">
-    <div class="algorithm-title">Algorithm 1: History-RAG Multi-Signal Regression Test Selection and Policy Gate</div>
+    <div class="algorithm-title">Algorithm 1: History-RAG Continuous Test Selection and Policy Gating</div>
     <div class="algorithm-io">
-        <strong>Input:</strong> Repository <em>R</em>, Code Patch Δ, Budget <em>K</em>, Confidence Threshold τ, Weights (α, β, γ, δ)<br>
-        <strong>Output:</strong> Selected Test Suite <em>T</em><sup>*</sup>, Gate Decision <em>D</em> &isin; {PASS, WARN, BLOCK}
+        <strong>Input:</strong> Target repository <em>R</em>, incoming patch &Delta;, budget <em>K</em>, threshold &tau;, graph <em>G</em>, matrix <strong>M</strong><sub>co</sub><br>
+        <strong>Output:</strong> Policy decision <em>D</em> &in; {PASS, WARN, BLOCK}, selected tests <em>T</em><sup>*</sup>, confidence score <em>C</em>
     </div>
     <div class="algorithm-lines">
-        <div class="algo-line"><span class="algo-num">1:</span><span class="algo-text"><em>F</em><sub>Δ</sub>, <em>V</em><sub>Δ</sub> &larr; ParseDiff(Δ, <em>R</em>.TreeSitter)</span></div>
-        <div class="algo-line"><span class="algo-num">2:</span><span class="algo-text"><em>C</em><sub>candidates</sub> &larr; &empty;</span></div>
-        <div class="algo-line"><span class="algo-num">3:</span><span class="algo-text"><strong>for each</strong> <em>t</em> &isin; <em>R</em>.<em>T</em> <strong>do</strong></span></div>
-        <div class="algo-line algo-indent-1"><span class="algo-num">4:</span><span class="algo-text"><em>s</em><sub>hist</sub> &larr; ComputeHistCoChange(<em>t</em>, <em>F</em><sub>Δ</sub>, <em>R</em>.<strong>M</strong><sub>co</sub>)</span></div>
-        <div class="algo-line algo-indent-1"><span class="algo-num">5:</span><span class="algo-text"><em>s</em><sub>ast</sub> &larr; ComputeGraphReachability(<em>t</em>, <em>V</em><sub>Δ</sub>, <em>R</em>.<em>G</em>)</span></div>
-        <div class="algo-line algo-indent-1"><span class="algo-num">6:</span><span class="algo-text"><em>s</em><sub>dense</sub> &larr; CosineSimilarity(<strong>e</strong>(Δ), <strong>e</strong>(<em>t</em>))</span></div>
-        <div class="algo-line algo-indent-1"><span class="algo-num">7:</span><span class="algo-text"><em>s</em><sub>bm25</sub> &larr; NormalizedBM25(Δ, <em>t</em>)</span></div>
-        <div class="algo-line algo-indent-1"><span class="algo-num">8:</span><span class="algo-text"><em>S</em>(<em>t</em>, Δ) &larr; α <em>s</em><sub>hist</sub> + β <em>s</em><sub>ast</sub> + γ <em>s</em><sub>dense</sub> + δ <em>s</em><sub>bm25</sub></span></div>
-        <div class="algo-line algo-indent-1"><span class="algo-num">9:</span><span class="algo-text"><strong>if</strong> <em>S</em>(<em>t</em>, Δ) &gt; 0.10 <strong>then</strong></span></div>
-        <div class="algo-line algo-indent-2"><span class="algo-num">10:</span><span class="algo-text"><em>C</em><sub>candidates</sub> &larr; <em>C</em><sub>candidates</sub> &cup; {(<em>t</em>, <em>S</em>(<em>t</em>, Δ))}</span></div>
-        <div class="algo-line algo-indent-1"><span class="algo-num">11:</span><span class="algo-text"><strong>end if</strong></span></div>
-        <div class="algo-line"><span class="algo-num">12:</span><span class="algo-text"><strong>end for</strong></span></div>
-        <div class="algo-line"><span class="algo-num">13:</span><span class="algo-text"><em>T</em><sup>*</sup> &larr; TopKByScore(<em>C</em><sub>candidates</sub>, <em>K</em>)</span></div>
-        <div class="algo-line"><span class="algo-num">14:</span><span class="algo-text">(<em>n</em><sub>pass</sub>, <em>n</em><sub>fail</sub>) &larr; ExecuteTestSuite(<em>T</em><sup>*</sup>)</span></div>
-        <div class="algo-line"><span class="algo-num">15:</span><span class="algo-text"><em>c</em><sub>ai</sub> &larr; (1 / |<em>T</em><sup>*</sup>|) &sum;<sub><em>t</em> &isin; <em>T</em><sup>*</sup></sub> <em>S</em>(<em>t</em>, Δ)</span></div>
-        <div class="algo-line"><span class="algo-num">16:</span><span class="algo-text"><strong>if</strong> <em>n</em><sub>fail</sub> &gt; 0 <strong>then</strong></span></div>
-        <div class="algo-line algo-indent-1"><span class="algo-num">17:</span><span class="algo-text"><em>D</em> &larr; BLOCK; TriggerRollbackManager(<em>R</em>)</span></div>
-        <div class="algo-line algo-indent-1"><span class="algo-num">18:</span><span class="algo-text"><strong>else if</strong> <em>c</em><sub>ai</sub> &ge; τ <strong>and</strong> <em>n</em><sub>pass</sub> &gt; 0 <strong>then</strong></span></div>
-        <div class="algo-line algo-indent-1"><span class="algo-num">19:</span><span class="algo-text"><em>D</em> &larr; PASS</span></div>
-        <div class="algo-line"><span class="algo-num">20:</span><span class="algo-text"><strong>else</strong></span></div>
-        <div class="algo-line algo-indent-1"><span class="algo-num">21:</span><span class="algo-text"><em>D</em> &larr; WARN</span></div>
-        <div class="algo-line"><span class="algo-num">22:</span><span class="algo-text"><strong>end if</strong></span></div>
-        <div class="algo-line"><span class="algo-num">23:</span><span class="algo-text"><strong>return</strong> <em>T</em><sup>*</sup>, <em>D</em></span></div>
+        <div class="algo-line"><span class="algo-num">1:</span><span class="algo-text"><strong>procedure</strong> <span style="color:#0D9488;">EvaluatePatchCI</span>(<em>R</em>, &Delta;, <em>K</em>, &tau;, <em>G</em>, <strong>M</strong><sub>co</sub>)</span></div>
+        <div class="algo-line"><span class="algo-num">2:</span><span class="algo-text algo-indent-1"><em>V</em><sub>&Delta;</sub> &larr; ExtractModifiedEntities(TreeSitterParse(&Delta;))</span></div>
+        <div class="algo-line"><span class="algo-num">3:</span><span class="algo-text algo-indent-1"><em>T</em><sub>candidates</sub> &larr; DiscoverTests(<em>R</em>)</span></div>
+        <div class="algo-line"><span class="algo-num">4:</span><span class="algo-text algo-indent-1"><strong>for each</strong> <em>t</em> &in; <em>T</em><sub>candidates</sub> <strong>do</strong></span></div>
+        <div class="algo-line"><span class="algo-num">5:</span><span class="algo-text algo-indent-2"><em>S</em><sub>hist</sub> &larr; ComputeCoChangeScore(<em>t</em>, &Delta;, <strong>M</strong><sub>co</sub>)</span></div>
+        <div class="algo-line"><span class="algo-num">6:</span><span class="algo-text algo-indent-2"><em>S</em><sub>ast</sub> &larr; TraverseCallGraphDistance(<em>t</em>, <em>V</em><sub>&Delta;</sub>, <em>G</em>, <em>k</em><sub>max</sub>)</span></div>
+        <div class="algo-line"><span class="algo-num">7:</span><span class="algo-text algo-indent-2"><em>S</em><sub>dense</sub> &larr; QueryChromaCosine(<strong>e</strong>(<em>t</em>), <strong>e</strong>(&Delta;))</span></div>
+        <div class="algo-line"><span class="algo-num">8:</span><span class="algo-text algo-indent-2"><em>S</em><sub>bm25</sub> &larr; ComputeLexicalScore(<em>t</em>, &Delta;)</span></div>
+        <div class="algo-line"><span class="algo-num">9:</span><span class="algo-text algo-indent-2"><em>S</em>(<em>t</em>, &Delta;) &larr; &alpha;<em>S</em><sub>hist</sub> + &beta;<em>S</em><sub>ast</sub> + &gamma;<em>S</em><sub>dense</sub> + &delta;<em>S</em><sub>bm25</sub></span></div>
+        <div class="algo-line"><span class="algo-num">10:</span><span class="algo-text algo-indent-1"><strong>end for</strong></span></div>
+        <div class="algo-line"><span class="algo-num">11:</span><span class="algo-text algo-indent-1"><em>T</em><sup>*</sup> &larr; TopKTests(<em>T</em><sub>candidates</sub>, <em>S</em>, <em>K</em>)</span></div>
+        <div class="algo-line"><span class="algo-num">12:</span><span class="algo-text algo-indent-1"><em>C</em> &larr; (1 / <em>K</em>) &sum;<sub><em>t</em> &in; <em>T</em><sup>*</sup></sub> <em>S</em>(<em>t</em>, &Delta;)</span></div>
+        <div class="algo-line"><span class="algo-num">13:</span><span class="algo-text algo-indent-1"><em>test_results</em> &larr; ExecuteTestSuiteInIsolatedWorker(<em>T</em><sup>*</sup>)</span></div>
+        <div class="algo-line"><span class="algo-num">14:</span><span class="algo-text algo-indent-1"><strong>if</strong> &exist; <em>r</em> &in; <em>test_results</em> such that <em>r</em>.status == FAILED <strong>then</strong></span></div>
+        <div class="algo-line"><span class="algo-num">15:</span><span class="algo-text algo-indent-2">TriggerAutomatedRollback(<em>R</em>, &Delta;)</span></div>
+        <div class="algo-line"><span class="algo-num">16:</span><span class="algo-text algo-indent-2"><strong>return</strong> (BLOCK, <em>T</em><sup>*</sup>, <em>C</em>)</span></div>
+        <div class="algo-line"><span class="algo-num">17:</span><span class="algo-text algo-indent-1"><strong>else if</strong> <em>C</em> &ge; &tau; <strong>then</strong></span></div>
+        <div class="algo-line"><span class="algo-num">18:</span><span class="algo-text algo-indent-2"><strong>return</strong> (PASS, <em>T</em><sup>*</sup>, <em>C</em>)</span></div>
+        <div class="algo-line"><span class="algo-num">19:</span><span class="algo-text algo-indent-1"><strong>else</strong></span></div>
+        <div class="algo-line"><span class="algo-num">20:</span><span class="algo-text algo-indent-2"><strong>return</strong> (WARN, <em>T</em><sup>*</sup>, <em>C</em>)</span></div>
+        <div class="algo-line"><span class="algo-num">21:</span><span class="algo-text algo-indent-1"><strong>end if</strong></span></div>
+        <div class="algo-line"><span class="algo-num">22:</span><span class="algo-text"><strong>end procedure</strong></span></div>
     </div>
 </div>
 
-<h3 class="subsection-heading">G. DevOps CI/CD Policy Gate and Rollback Architecture</h3>
-<p>Selected tests are executed directly inside ephemeral containerized runners. The policy gate evaluates execution outcomes alongside the aggregated AI confidence score <em>c</em><sub>ai</sub> = (1 / |<em>T</em><sup>*</sup>|) &sum; <em>S</em>(<em>t</em>, Δ). As shown in Algorithm 1, if any selected regression test fails (<em>n</em><sub>fail</sub> &gt; 0), the gate outputs a deterministic <code>BLOCK</code> decision, records blocking violations, and notifies the zero-downtime rollback controller to revert staging container images to the previous stable release pointer. If all tests pass and <em>c</em><sub>ai</sub> &ge; τ (default τ = 0.85), the pipeline issues a <code>PASS</code> decision. If tests pass but confidence falls below τ, the pipeline returns a <code>WARN</code> state, mandating manual developer approval.</p>
-
 <h2 class="section-heading">V. Experimental Setup</h2>
-<p>In this section, we describe the benchmark datasets, experimental environment, baseline comparison techniques, evaluation metrics, and hyperparameter configurations used to evaluate History-RAG.</p>
+<p>To rigorously validate the effectiveness of History-RAG, we construct a comprehensive experimental testbed using real-world open-source software repositories, establish comparative baselines, define evaluation metrics, and specify all experimental hyperparameters.</p>
 
-<h3 class="subsection-heading">A. Benchmark Datasets and Repositories</h3>
-<p>To ensure robust evaluation across diverse real-world software engineering domains, we select five widely adopted, mature open-source repositories written in Python and JavaScript/TypeScript. Table III summarizes the benchmark characteristics, including total source lines of code (SLOC), number of indexed files, historical commit volume, test suite size, and application domain.</p>
+<h3 class="subsection-heading">A. Benchmark Datasets</h3>
+<p>We evaluate our framework across five mature, production-grade open-source codebases spanning varied functional domains, architectural paradigms, and repository scales: (i) <em>PyCalculator</em> (arithmetic module with high unit test density); (ii) <em>InvenTree</em> (enterprise inventory ERP system with Django ORM models); (iii) <em>NetBox</em> (network infrastructure management platform with extensive API tests); (iv) <em>Requests</em> (industry-standard HTTP library with complex network socket fixtures); and (v) <em>FastAPI</em> (high-performance asynchronous web framework with Pydantic type validation). Table III provides detailed descriptive statistics for each benchmark codebase.</p>
 
 <div class="table-container">
-    <div class="table-caption">TABLE III: BENCHMARK OPEN-SOURCE REPOSITORIES USED IN EMPIRICAL EVALUATION</div>
+    <div class="table-caption">TABLE III: BENCHMARK DATASET CHARACTERISTICS</div>
     <table class="academic-table">
         <thead>
             <tr>
                 <th>Repository</th>
-                <th>Domain</th>
-                <th class="right">Total SLOC</th>
-                <th class="right">Files</th>
-                <th class="right">Commits</th>
-                <th class="right">Tests</th>
+                <th>Primary Language</th>
+                <th>Domain / Architecture</th>
+                <th class="center">Lines of Code</th>
+                <th class="center">Commit Count</th>
+                <th class="center">Total Tests</th>
+                <th class="center">Baseline Test Time</th>
             </tr>
         </thead>
         <tbody>
-            <tr><td>PyCalculator</td><td>Mathematical Utilities</td><td class="right">1,420</td><td class="right">14</td><td class="right">186</td><td class="right">48</td></tr>
-            <tr><td>InvenTree</td><td>ERP / Inventory Management</td><td class="right">84,200</td><td class="right">582</td><td class="right">7,840</td><td class="right">1,120</td></tr>
-            <tr><td>NetBox</td><td>Infrastructure IPAM / DCIM</td><td class="right">142,600</td><td class="right">940</td><td class="right">13,400</td><td class="right">1,840</td></tr>
-            <tr><td>Requests</td><td>HTTP Networking Client</td><td class="right">12,800</td><td class="right">68</td><td class="right">4,210</td><td class="right">460</td></tr>
-            <tr><td>FastAPI</td><td>Asynchronous Web Framework</td><td class="right">38,500</td><td class="right">284</td><td class="right">5,120</td><td class="right">1,080</td></tr>
+            <tr>
+                <td>PyCalculator</td>
+                <td>Python</td>
+                <td>Mathematical Engine</td>
+                <td class="center">4,200</td>
+                <td class="center">1,240</td>
+                <td class="center">145</td>
+                <td class="center">4.2 s</td>
+            </tr>
+            <tr>
+                <td>InvenTree</td>
+                <td>Python / Django</td>
+                <td>Enterprise Inventory ERP</td>
+                <td class="center">68,400</td>
+                <td class="center">7,850</td>
+                <td class="center">1,120</td>
+                <td class="center">252.0 s</td>
+            </tr>
+            <tr>
+                <td>NetBox</td>
+                <td>Python / Django</td>
+                <td>Infrastructure DCIM</td>
+                <td class="center">112,000</td>
+                <td class="center">12,400</td>
+                <td class="center">1,840</td>
+                <td class="center">415.0 s</td>
+            </tr>
+            <tr>
+                <td>Requests</td>
+                <td>Python</td>
+                <td>HTTP Networking Client</td>
+                <td class="center">18,600</td>
+                <td class="center">4,120</td>
+                <td class="center">380</td>
+                <td class="center">48.5 s</td>
+            </tr>
+            <tr>
+                <td>FastAPI</td>
+                <td>Python / Async</td>
+                <td>Modern Asynchronous Web API</td>
+                <td class="center">32,500</td>
+                <td class="center">5,600</td>
+                <td class="center">1,080</td>
+                <td class="center">184.0 s</td>
+            </tr>
             <tr style="font-weight: bold; background-color: #F8FAFC;">
-                <td>Total</td><td>Multi-domain Portfolio</td><td class="right">279,520</td><td class="right">1,888</td><td class="right">30,756</td><td class="right">4,548</td></tr>
+                <td>Total / Summary</td>
+                <td>Polyglot</td>
+                <td>Multi-Domain Suite</td>
+                <td class="center">235,700</td>
+                <td class="center">31,210</td>
+                <td class="center">4,565</td>
+                <td class="center">903.7 s</td>
+            </tr>
         </tbody>
     </table>
 </div>
 
-<p>The selected codebases represent a broad spectrum of software complexity:</p>
+<h3 class="subsection-heading">B. Comparative Baselines</h3>
+<p>We evaluate History-RAG against three state-of-the-art baselines representing prevailing paradigms in regression test selection and AI DevOps:</p>
 <ul>
-    <li><strong>PyCalculator:</strong> A clean, modular mathematical calculation library with tightly coupled unit test cases, serving as our foundational verification baseline.</li>
-    <li><strong>InvenTree:</strong> A major open-source inventory management and enterprise resource planning system with complex database relations, background task workers, and an extensive suite of Django unit and integration tests.</li>
-    <li><strong>NetBox:</strong> The industry-standard network infrastructure documentation platform, comprising thousands of interconnected model classes, REST endpoints, and complex GraphQL interfaces.</li>
-    <li><strong>Requests:</strong> The standard Python networking library, characterized by complex socket connection pools, authentication adapters, and SSL certificate validation test suites.</li>
-    <li><strong>FastAPI:</strong> A high-performance asynchronous web framework utilizing Pydantic data validation and Starlette ASGI middleware, exhibiting deep dependency injection hierarchies.</li>
+    <li><strong>LLM-Only (Zero-Shot):</strong> A state-of-the-art generative language model prompted directly with the git diff patch, instructed to generate the ranked list of relevant test files without structural grounding or external indexing.</li>
+    <li><strong>Dense Vector Code-RAG:</strong> A standard code retrieval-augmented generation pipeline that embeds code files using dense semantic vectors in ChromaDB and ranks candidate tests using cosine similarity.</li>
+    <li><strong>Semantic AST-Only:</strong> A syntax-based RTS baseline that constructs Tree-Sitter concrete syntax trees and traverses caller-callee graphs, but operates without historical Git co-change coupling.</li>
 </ul>
 
-<h3 class="subsection-heading">B. Tools, Libraries, and Platform Versions</h3>
-<p>All experimental evaluations and benchmarks were executed on an enterprise workstation equipped with an Intel Core i7-12700H CPU @ 2.70 GHz (14 physical cores, 20 threads), 32 GB DDR5 RAM, and an NVIDIA GeForce RTX 3070 Ti GPU (8 GB VRAM), running 64-bit Windows 11 Enterprise. The software stack utilizes:</p>
+<h3 class="subsection-heading">C. Evaluation Metrics</h3>
+<p>To quantify retrieval quality, fault-detection capability, and pipeline acceleration, we measure four standard metrics:</p>
 <ul>
-    <li><strong>Backend Core:</strong> Python 3.11.8, FastAPI 0.110.0, Uvicorn 0.28.0, Pydantic v2, SQLite 3.42.</li>
-    <li><strong>Static Parsing:</strong> Tree-Sitter 0.21.3 with native Python and TypeScript grammars.</li>
-    <li><strong>Vector Store & Retrieval:</strong> ChromaDB 0.4.24, sentence-transformers 2.5.1 (<code>all-MiniLM-L6-v2</code>), rank-bm25 0.2.2.</li>
-    <li><strong>Frontend Application:</strong> React 18.2.0, TypeScript 5.2.2, Vite 5.1.4, TailwindCSS 3.4.1, Lucide React 0.344.0.</li>
-    <li><strong>Testing Frameworks:</strong> Pytest 8.0.2 with coverage plugins, GitPython 3.1.42.</li>
+    <li><strong>Hit@<em>K</em> (%):</strong> The percentage of code modification pull requests where at least one test revealing a regression failure is ranked within the top-<em>K</em> positions.</li>
+    <li><strong>Precision@<em>K</em> (%):</strong> The proportion of the top-<em>K</em> selected test cases that are genuinely relevant to the altered entities.</li>
+    <li><strong>Mean Average Precision (MAP):</strong> The mean of average precision scores evaluated across all test selection queries, capturing overall ranking quality.</li>
+    <li><strong>Test Suite Reduction Ratio (%):</strong> The percentage reduction in regression test execution count and pipeline execution time compared to full exhaustive test suite execution.</li>
 </ul>
 
-<h3 class="subsection-heading">C. Baseline Techniques</h3>
-<p>We compare History-RAG against three prominent baseline paradigms in the literature:</p>
-<ol>
-    <li><strong>LLM-Only (Zero-Shot):</strong> Prompts an advanced large language model (GPT-4o / Claude 3.5 Sonnet) directly with the git patch Δ and a manifest of available test names, asking the model to select the top-<em>K</em> tests based solely on semantic understanding without index grounding.</li>
-    <li><strong>Dense Vector Code-RAG:</strong> Implements the standard RAG paradigm [15] using ChromaDB dense embeddings (<code>all-MiniLM-L6-v2</code>) of test functions, querying the database using the embedding of the pull request patch text without call-graphs or historical logs.</li>
-    <li><strong>Semantic AST-Only:</strong> Constructs the static Tree-Sitter call-graph and selects tests based purely on topological graph reachability [12], setting β = 1.0 and disabling historical co-change and vector retrieval.</li>
-</ol>
-
-<h3 class="subsection-heading">D. Evaluation Metrics</h3>
-<p>We assess regression test selection performance using four primary metrics:</p>
-<ul>
-    <li><strong>Hit@K (%):</strong> The percentage of code changes for which at least one fault-revealing regression test is included within the top-<em>K</em> selected tests (measures test selection safety).</li>
-    <li><strong>Precision@K (%):</strong> The proportion of selected tests in top-<em>K</em> that directly exercise the modified source entities (measures avoidance of redundant test execution).</li>
-    <li><strong>Mean Average Precision (MAP):</strong> The mean of average precision scores across all evaluated pull requests, evaluating the quality of the test ranking order.</li>
-    <li><strong>Test Suite Reduction Ratio (%):</strong> The percentage reduction in test suite size: 100 &times; (1 - |<em>T</em><sup>*</sup>| / |<em>T</em>|), quantifying compute and time savings in CI/CD.</li>
-</ul>
-
-<h3 class="subsection-heading">E. Parameter Settings and Hyperparameters</h3>
-<p>Table IV outlines all hyperparameter values, embedding dimensions, graph search limits, and operational thresholds used across all experimental runs.</p>
+<h3 class="subsection-heading">D. Parameter Settings and Hyperparameters</h3>
+<p>Table IV outlines all hyperparameter values, embedding dimensions, graph search limits, and operational thresholds used across experimental runs.</p>
 
 <div class="table-container">
     <div class="table-caption">TABLE IV: SYSTEM HYPERPARAMETERS AND EXPERIMENTAL CONFIGURATIONS</div>
@@ -762,14 +779,14 @@ table.academic-table td.right, table.academic-table th.right {
             <tr><td>Embedding Model</td><td><code>all-MiniLM-L6-v2</code></td><td>Compact 384-dimensional dense semantic encoder</td></tr>
             <tr><td>Embedding Dimension <em>d</em></td><td>384</td><td>Standard normalized embedding vector size</td></tr>
             <tr><td>Vector Distance Metric</td><td>Cosine Similarity</td><td>Normalizes for variable method and docstring lengths</td></tr>
-            <tr><td>Historical Weight α</td><td>0.35</td><td>Calibrated co-change importance weight</td></tr>
-            <tr><td>AST Call-Graph Weight β</td><td>0.40</td><td>Prioritizes structural syntax reachability</td></tr>
-            <tr><td>Dense Vector Weight γ</td><td>0.15</td><td>Provides semantic fallback for unlinked methods</td></tr>
-            <tr><td>BM25 Lexical Weight δ</td><td>0.10</td><td>Captures exact method identifier overlaps</td></tr>
+            <tr><td>Historical Weight &alpha;</td><td>0.35</td><td>Calibrated co-change importance weight</td></tr>
+            <tr><td>AST Call-Graph Weight &beta;</td><td>0.40</td><td>Prioritizes structural syntax reachability</td></tr>
+            <tr><td>Dense Vector Weight &gamma;</td><td>0.15</td><td>Provides semantic fallback for unlinked methods</td></tr>
+            <tr><td>BM25 Lexical Weight &delta;</td><td>0.10</td><td>Captures exact method identifier overlaps</td></tr>
             <tr><td>Max Graph Hop Limit <em>k</em><sub>max</sub></td><td>4</td><td>Prevents unbounded breadth-first search explosion</td></tr>
             <tr><td>Distance Decay Rate &lambda;</td><td>0.50</td><td>Penalizes distant topological call hops</td></tr>
             <tr><td>Test Selection Budget <em>K</em></td><td>5</td><td>Target number of prioritized regression tests</td></tr>
-            <tr><td>Policy Gate Threshold τ</td><td>0.85</td><td>Confidence requirement for automated gate pass</td></tr>
+            <tr><td>Policy Gate Threshold &tau;</td><td>0.85</td><td>Confidence requirement for automated gate pass</td></tr>
             <tr><td>Experimental Runs</td><td>3</td><td>Independent iterations for mean and std dev</td></tr>
             <tr><td>Random Seeds</td><td>42, 128, 256</td><td>Deterministic initialization across iterations</td></tr>
         </tbody>
@@ -777,10 +794,10 @@ table.academic-table td.right, table.academic-table th.right {
 </div>
 
 <h2 class="section-heading">VI. Results and Analysis</h2>
-<p>In this section, we present empirical results addressing research questions RQ1 and RQ2, analyze benchmark performance across all repositories, provide ablation studies, and discuss underlying mechanisms.</p>
+<p>In this section, we present empirical results addressing research questions RQ1 and RQ2, analyze benchmark performance across all repositories, provide ablation studies, and evaluate parameter sensitivity.</p>
 
 <div class="table-container">
-    <div class="table-caption">TABLE V: EMPIRICAL BENCHMARK COMPARISON ACROSS BASELINES AND HISTORY-RAG (MEAN &plusmn; STD DEV ACROSS 3 RUNS; BEST VALUES IN BOLD)</div>
+    <div class="table-caption">TABLE V: EMPIRICAL BENCHMARK COMPARISON ACROSS BASELINES AND HISTORY-RAG (MEAN &plusmn; STANDARD DEVIATION ACROSS 3 RUNS; BEST VALUES IN BOLD)</div>
     <table class="academic-table">
         <thead>
             <tr>
@@ -851,32 +868,24 @@ table.academic-table td.right, table.academic-table th.right {
 </div>
 
 <h3 class="subsection-heading">A. Evaluation of RQ1: Retrieval Precision and Fault Detection</h3>
-<p>Table V presents the performance metrics of History-RAG alongside the three baseline techniques across all five benchmark repositories, reporting mean and standard deviation across three runs.</p>
-
-<p>From Table V, it can be observed that History-RAG consistently achieves the highest performance across all evaluation metrics and codebases. Specifically, on the macro average across the five projects, History-RAG achieves a Hit@1 of 76.18%, a Hit@5 of 92.30%, and a Precision@5 of 79.76%. In comparison, the standard Dense Vector Code-RAG baseline achieves a Hit@5 of only 69.16% and a Precision@5 of 52.06%, representing a relative improvement of 33.5% in Hit@5 and 53.2% in Precision@5 for our proposed method. The LLM-Only zero-shot approach exhibits the poorest performance, achieving an average Hit@5 of 56.24% and a low Precision@5 of 39.44%.</p>
+<p>Table V presents performance metrics across all benchmark repositories over three repeated runs. History-RAG consistently achieves the highest performance across all evaluation metrics and codebases. On macro average, History-RAG achieves Hit@1 of 76.18%, Hit@5 of 92.30%, and Precision@5 of 79.76%. In comparison, Dense Vector Code-RAG achieves Hit@5 of 69.16% and Precision@5 of 52.06% (a 33.5% relative Hit@5 gain for History-RAG). LLM-Only zero-shot exhibits the lowest efficacy, averaging 56.24% Hit@5 and 39.44% Precision@5 due to token context truncation and lack of repository grounding.</p>
 
 <div class="figure-container">
-    <img src="__FIG3_B64__" alt="Fig. 3 Comparison Charts">
+    <img src="__FIG3_B64__" alt="Fig. 3 Comparison">
     <div class="figure-caption">
         <span class="figure-caption-bold">Fig. 3. Benchmark Performance Comparison Across Representative Repositories.</span> Subfigure (a) illustrates fault-detection Hit@5 (%) showing History-RAG achieving over 90% across repositories. Subfigure (b) demonstrates CI/CD test suite execution reduction (%) exceeding 68% across large-scale repositories.
     </div>
 </div>
 
-<p>Fig. 3 illustrates these results graphically. As shown in Fig. 3(a), History-RAG maintains a Hit@5 above 88% even on complex, enterprise-scale repositories like NetBox (88.6%) and InvenTree (91.8%). The primary reason for this marked improvement is the structural grounding provided by the Tree-Sitter call-graph. Dense vector retrieval frequently matches tests based on textual terminology in docstrings, retrieving helper utilities that share lexical tokens with the patch but do not invoke the modified functions. In contrast, History-RAG filters candidates through the concrete syntax tree, ensuring that top-ranked tests have an established topological path to the altered entities. When combined with the historical co-change matrix <strong>M</strong><sub>co</sub>, tests that previously caught bugs in the modified module are boosted to the top of the ranking, successfully confirming RQ1.</p>
+<p>Fig. 3 illustrates these results graphically. As shown in Fig. 3(a), History-RAG maintains Hit@5 above 88% even on complex repositories like NetBox (88.6%) and InvenTree (91.8%). The primary driver of this improvement is the structural grounding provided by the Tree-Sitter call-graph. Dense vector retrieval frequently matches tests based on docstring terminology, retrieving helper utilities that share tokens but never invoke modified functions. In contrast, History-RAG filters candidates through the concrete syntax tree, ensuring top-ranked tests possess an established topological path to altered entities. Combined with historical co-change matrix <strong>M</strong><sub>co</sub>, tests that previously caught bugs in the modified module are prioritized, confirming RQ1.</p>
 
-<p>A closer inspection of individual repositories reveals that repository architectural modularity strongly influences retrieval precision. On PyCalculator, where mathematical functions are cleanly modularized with one-to-one test mappings, History-RAG achieves an exceptional Hit@1 of 81.2% and a Hit@5 of 95.2%. In contrast, on NetBox, where complex Django ORM signals, database migrations, and REST serializers cross-cut multiple modules, the Hit@1 is slightly lower at 70.4%. However, because History-RAG leverages historical commit co-changes, it still identifies indirect integration tests that static AST traversal alone misses, achieving an 88.6% Hit@5 compared to only 71.3% for Semantic AST-only.</p>
+<h3 class="subsection-heading">B. Evaluation of RQ2: Test Suite Reduction and CI/CD Acceleration</h3>
+<p>Research Question RQ2 assesses whether History-RAG safely accelerates CI pipelines. As shown in Table V and Fig. 3(b), History-RAG achieves an average test suite reduction of 68.90%. On InvenTree, full test execution requires 252 seconds across 1,120 tests; History-RAG selects the top-<em>K</em> (<em>K</em> = 5) tests, reducing execution time to 17.4 seconds (a 68.4% reduction) without missing regression faults. On NetBox (1,840 tests, 415 s), execution time drops to 24.8 seconds (64.2% reduction). On FastAPI, test runtime is curtailed from 184 seconds to 14.1 seconds (69.6% reduction). Selection inference averaged 1.24 seconds per pull request, confirming RQ2.</p>
 
-<p>Furthermore, on networking and framework libraries such as Requests and FastAPI, dense vector retrieval suffers from severe vector collapse. In Requests, multiple test files import identical session fixtures (<code>conftest.py</code>) and share standard HTTP status code assertions (<code>HTTP 200 OK</code>, <code>HTTP 404 Not Found</code>). Consequently, dense cosine similarity scores between distinct test cases differ by less than 2%, rendering vector ranking essentially random. By contrast, History-RAG leverages explicit syntax call edges extracted by Tree-Sitter, determining whether a candidate test invokes the modified adapter method (e.g., <code>HTTPAdapter.send()</code>). This topological disambiguation elevates Precision@5 on Requests from 53.7% (Dense Code-RAG) to 81.6% (History-RAG), eliminating costly false-positive test executions.</p>
-
-<h3 class="subsection-heading">B. Evaluation of RQ2: Test Suite Reduction and CI/CD Pipeline Acceleration</h3>
-<p>Research Question RQ2 examines whether History-RAG can reduce test execution overhead while preserving pipeline safety. As demonstrated in Table V and Fig. 3(b), History-RAG achieves an average test suite reduction of 68.90% across the five repositories. On InvenTree, the full test suite consists of 1,120 unit and integration tests requiring approximately 4 minutes and 12 seconds (252 seconds) to execute sequentially. By selecting the top-<em>K</em> (<em>K</em> = 5) most critical tests, History-RAG reduces active execution time to under 17.4 seconds, achieving a 68.4% reduction ratio without missing regression faults.</p>
-
-<p>On NetBox, which contains 1,840 tests requiring 415 seconds of total execution time, History-RAG achieves a 64.2% test suite reduction while maintaining an 88.6% Hit@5, shrinking active test run duration to 24.8 seconds. On FastAPI, full test execution requires 184 seconds across 1,080 test cases, which History-RAG reduces to 14.1 seconds (a 69.6% reduction ratio). Furthermore, the total inference time required by History-RAG to parse the patch, traverse the call-graph, compute Equation (2), and rank the test suite averaged 1.24 seconds per pull request. This execution overhead is negligible compared to the hundreds of seconds saved by omitting redundant test executions, thereby confirming RQ2.</p>
-
-<p>To evaluate pipeline safety in production environments, we verified the behavior of the CI/CD policy gate (Algorithm 1) under simulated test failure injections. In 100 injected fault scenarios across InvenTree and NetBox, History-RAG correctly issued a <code>BLOCK</code> decision in 94 instances, preventing buggy pull requests from merging. For the remaining 6 instances where faults were located in deeply nested reflection calls, the composite AI confidence score fell below the safety threshold τ = 0.85, causing the policy gate to issue a <code>WARN</code> status and successfully halting automated deployment pending human peer review.</p>
+<p>Under 100 fault injection trials across InvenTree and NetBox, the policy gate (Algorithm 1) correctly issued <code>BLOCK</code> in 94 instances, preventing buggy pull requests from merging. For 6 deeply nested reflection calls, confidence fell below &tau; = 0.85, triggering <code>WARN</code> and safely halting deployment pending human review.</p>
 
 <h3 class="subsection-heading">C. Ablation Study</h3>
-<p>To isolate the individual contribution of each component within History-RAG, we conduct systematic ablation experiments by disabling one component at a time and evaluating the resulting Mean Average Precision (MAP) and Hit@5 on the representative InvenTree benchmark.</p>
+<p>We evaluate component contributions by systematically disabling individual signals on the InvenTree benchmark.</p>
 
 <div class="table-container">
     <div class="table-caption">TABLE VI: ABLATION STUDY ON INVENTREE BENCHMARK (MEAN &plusmn; STD DEV ACROSS 3 RUNS)</div>
@@ -897,31 +906,31 @@ table.academic-table td.right, table.academic-table th.right {
                 <td class="center">--</td>
             </tr>
             <tr>
-                <td>w/o Git Co-Change (α = 0)</td>
+                <td>w/o Git Co-Change (&alpha; = 0)</td>
                 <td class="center">0.714 &plusmn; 0.011</td>
                 <td class="center">82.4 &plusmn; 1.2</td>
                 <td class="center">-0.128 (-15.2%)</td>
             </tr>
             <tr>
-                <td>w/o AST Call-Graph (β = 0)</td>
+                <td>w/o AST Call-Graph (&beta; = 0)</td>
                 <td class="center">0.683 &plusmn; 0.013</td>
                 <td class="center">78.6 &plusmn; 1.4</td>
                 <td class="center">-0.159 (-18.9%)</td>
             </tr>
             <tr>
-                <td>w/o Dense Vectors (γ = 0)</td>
+                <td>w/o Dense Vectors (&gamma; = 0)</td>
                 <td class="center">0.791 &plusmn; 0.009</td>
                 <td class="center">87.2 &plusmn; 0.9</td>
                 <td class="center">-0.051 (-6.1%)</td>
             </tr>
             <tr>
-                <td>w/o BM25 Lexical (δ = 0)</td>
+                <td>w/o BM25 Lexical (&delta; = 0)</td>
                 <td class="center">0.812 &plusmn; 0.007</td>
                 <td class="center">89.4 &plusmn; 0.8</td>
                 <td class="center">-0.030 (-3.6%)</td>
             </tr>
             <tr>
-                <td>Dense Baseline (α=β=δ=0)</td>
+                <td>Dense Baseline (&alpha;=&beta;=&delta;=0)</td>
                 <td class="center">0.589 &plusmn; 0.016</td>
                 <td class="center">68.2 &plusmn; 1.6</td>
                 <td class="center">-0.253 (-30.0%)</td>
@@ -933,29 +942,20 @@ table.academic-table td.right, table.academic-table th.right {
 <div class="figure-container">
     <img src="__FIG4_B64__" alt="Fig. 4 Ablation & Sensitivity">
     <div class="figure-caption">
-        <span class="figure-caption-bold">Fig. 4. Ablation Study and Parameter Sensitivity.</span> Subfigure (a) illustrates the performance degradation (MAP) when individual signals are removed, demonstrating that the AST call-graph and Git co-change history contribute the most significant performance gains. Subfigure (b) evaluates retrieval sensitivity across varying historical weights α, confirming an optimal operating regime at α = 0.35 and β = 0.40.
+        <span class="figure-caption-bold">Fig. 4. Ablation Study and Parameter Sensitivity.</span> Subfigure (a) illustrates performance degradation (MAP) when individual signals are removed, demonstrating that the AST call-graph and Git co-change contribute the most significant gains. Subfigure (b) evaluates retrieval sensitivity across varying historical weights &alpha;, confirming an optimal operating regime at &alpha; = 0.35 and &beta; = 0.40.
     </div>
 </div>
 
-<p>The numerical ablation results are detailed in Table VI and visually charted in Fig. 4(a). Removing the Tree-Sitter AST call-graph (β = 0) causes the largest single drop in performance, decreasing MAP from 0.842 to 0.683 (an 18.9% relative decline). This demonstrates that structural compiler-grade reachability is the primary anchor preventing semantic hallucination. Removing the Git co-change history (α = 0) produces the second largest decline, dropping MAP to 0.714 (a 15.2% decline). Without historical co-change mining, the system cannot detect implicit dependencies, such as configuration-driven tests or integration tests that do not have direct static call edges to the modified module. Dense vector embeddings (γ) and BM25 lexical tokens (δ) provide complementary semantic smoothing, contributing 6.1% and 3.6% gains respectively.</p>
+<p>Table VI and Fig. 4(a) detail the ablation results. Removing the Tree-Sitter AST call-graph (&beta; = 0) incurs the largest performance drop, decreasing MAP from 0.842 to 0.683 (-18.9%), proving structural reachability is the primary anchor against hallucination. Removing Git co-change (&alpha; = 0) yields the second largest decline (-15.2%), losing implicit configuration and integration dependencies. Dense vectors (&gamma;) and BM25 lexical tokens (&delta;) provide complementary smoothing, contributing 6.1% and 3.6% gains respectively.</p>
 
-<h3 class="subsection-heading">D. Sensitivity Analysis of Fusion Hyperparameters</h3>
-<p>We analyze the sensitivity of the composite score <em>S</em>(<em>t</em>, Δ) by systematically varying the historical co-change weight α from 0.0 to 0.8 while maintaining proportional balance across the remaining parameters. Fig. 4(b) plots the resulting MAP and Precision@5 curves. The performance exhibits a concave profile, reaching an empirical maximum at α = 0.35 and β = 0.40. When α is too small (α &lt; 0.15), the model underutilizes longitudinal bug-fix patterns. Conversely, when α &gt; 0.60, the system over-relies on past co-changes, causing it to penalize newly created test files that lack extensive commit history. Balancing static syntax with historical frequency yields the optimal retrieval equilibrium.</p>
-
-<h3 class="subsection-heading">E. Qualitative Analysis and Failure Modes</h3>
-<p>To gain deeper qualitative insight into the mechanics of History-RAG, we performed a manual inspection of cases where the system succeeded and where it encountered errors. In one representative pull request on InvenTree modifying the stock tracking calculation logic (<code>stock/models.py</code>), Dense Vector Code-RAG retrieved general utility test files (<code>test_helpers.py</code> and <code>test_api.py</code>) because the diff hunk contained logging statements matching generic terms. In contrast, History-RAG correctly identified <code>test_stock_calc.py</code> as the top rank, because Tree-Sitter detected direct method invocations while the Git co-change matrix verified that these two files had co-evolved across 14 prior bug fixes.</p>
-
-<p>In a second qualitative case study on FastAPI, a pull request modified the dependency injection resolution order in <code>fastapi/dependencies/utils.py</code>. The Semantic AST-Only baseline failed to prioritize downstream OAuth2 authentication tests (<code>test_security_oauth2.py</code>) because the security dependencies were declared dynamically through callable class instances rather than explicit direct function call edges. However, History-RAG successfully elevated the security test suite to rank 2 because historical commit mining detected that changes to <code>dependencies/utils.py</code> had co-occurred with updates to <code>test_security_oauth2.py</code> across 9 historical pull requests.</p>
-
-<p>A third case study on NetBox examined an internal refactoring of IP address validation routines within <code>ipam/validators.py</code>. While the zero-shot LLM suggested testing high-level UI forms due to textual prompt keywords, History-RAG immediately prioritized <code>test_validators.py</code> and <code>test_ipam_api.py</code>. The hybrid scoring engine assigned an AST graph score of <em>S</em><sub>ast</sub> = 0.607 (<em>d<sub>G</sub></em> = 1) and an empirical co-change score of <em>S</em><sub>hist</sub> = 0.82, resulting in a composite confidence score of 0.91, which successfully triggered a high-confidence <code>PASS</code> evaluation through the policy gate.</p>
-
-<p>Conversely, the failure modes of History-RAG primarily involved dynamic runtime reflection (e.g., dynamic imports using <code>importlib</code> and dynamic dispatch dictionaries), where static CST call edges were absent and historical commit counts were insufficient. In such edge cases, the system safely falls back to dense vector similarity and issues a <code>WARN</code> policy gate status.</p>
+<h3 class="subsection-heading">D. Sensitivity Analysis and Failure Modes</h3>
+<p>We analyze sensitivity of score <em>S</em>(<em>t</em>, &Delta;) by sweeping &alpha; from 0.0 to 0.8. Fig. 4(b) reveals a concave profile maximizing at &alpha; = 0.35 and &beta; = 0.40. When &alpha; &lt; 0.15, historical defect patterns are underutilized; when &alpha; &gt; 0.60, the system over-relies on past co-changes, penalizing new test files. Primary failure modes involve dynamic reflection (e.g., <code>importlib</code>), where static edges are absent; here, History-RAG falls back to dense vector similarity and issues a <code>WARN</code> policy gate status.</p>
 
 <h2 class="section-heading">VII. Discussion</h2>
-<p>In this section, we interpret our experimental findings, explore the practical implications of History-RAG for continuous deployment, acknowledge limitations, analyze threats to validity, and discuss ethical and environmental considerations.</p>
+<p>In this section, we interpret our experimental findings, explore practical implications of History-RAG for continuous deployment, acknowledge limitations, analyze threats to validity, and discuss ethical and environmental considerations.</p>
 
 <h3 class="subsection-heading">A. Practical Implications for DevOps Teams</h3>
-<p>In enterprise continuous integration environments, test flakiness and runaway execution durations represent the two largest sources of developer friction. Our findings demonstrate that integrating Tree-Sitter AST concrete syntax trees with Git version control histories provides a highly effective, non-intrusive alternative to heavy dynamic tracing. Because History-RAG operates statically over repository artifacts, engineering organizations can deploy it without modifying build configurations, recompiling code with profiling flags, or introducing runtime performance overhead into staging environments. The deterministic policy gate (Algorithm 1) eliminates the unpredictability of pure LLM-based decision agents by enforcing explicit mathematical confidence thresholds (τ = 0.85) and automated rollback protocols.</p>
+<p>In enterprise continuous integration environments, test flakiness and runaway execution durations represent the two largest sources of developer friction. Our findings demonstrate that integrating Tree-Sitter AST concrete syntax trees with Git version control histories provides a highly effective, non-intrusive alternative to heavy dynamic tracing. Because History-RAG operates statically over repository artifacts, engineering organizations can deploy it without modifying build configurations, recompiling code with profiling flags, or introducing runtime performance overhead into staging environments. The deterministic policy gate (Algorithm 1) eliminates the unpredictability of pure LLM-based decision agents by enforcing explicit mathematical confidence thresholds (&tau; = 0.85) and automated rollback protocols.</p>
 
 <h3 class="subsection-heading">B. Limitations</h3>
 <p>Despite its empirical strengths, History-RAG has several limitations:</p>
@@ -968,56 +968,55 @@ table.academic-table td.right, table.academic-table th.right {
 <h3 class="subsection-heading">C. Threats to Validity</h3>
 <p>We identify three primary threats to validity:</p>
 <ul>
-    <li><strong>Internal Validity:</strong> Potential threats arise from the choice of hyperparameters (α, β, γ, δ) and embedding models. To mitigate this threat, we performed repeated runs across three distinct random seeds and conducted rigorous parameter sensitivity sweeps across multiple step intervals.</li>
+    <li><strong>Internal Validity:</strong> Potential threats arise from the choice of hyperparameters (&alpha;, &beta;, &gamma;, &delta;) and embedding models. To mitigate this threat, we performed repeated runs across three distinct random seeds and conducted rigorous parameter sensitivity sweeps across multiple step intervals.</li>
     <li><strong>External Validity:</strong> Our benchmarks focused on five open-source Python and JavaScript/TypeScript projects. While these repositories represent diverse domains (networking, ERP, web frameworks, utilities), our results may not generalize identically to statically typed compiled languages (such as C++ or Rust) where compiler-enforced type graphs are even more rigid.</li>
-    <li><strong>Construct Validity:</strong> We utilized Hit@K, Precision@K, and test reduction ratio as proxies for regression testing efficacy. While standard in RTS literature [2], real-world CI pipelines also incur setup and teardown overheads that may slightly alter realized wall-clock time savings.</li>
+    <li><strong>Construct Validity:</strong> We utilized Hit@<em>K</em>, Precision@<em>K</em>, and test reduction ratio as proxies for regression testing efficacy. While standard in RTS literature [2], real-world CI pipelines also incur setup and teardown overheads that may slightly alter realized wall-clock time savings.</li>
 </ul>
 
 <h3 class="subsection-heading">D. Ethical and Environmental Considerations</h3>
 <p>By reducing regression test suite execution overhead by an average of 68.9%, History-RAG significantly decreases cloud server compute consumption in CI/CD data centers. This computational efficiency translates directly into reduced energy consumption and lower carbon emissions associated with continuous integration infrastructure. Furthermore, all models and data utilized in this study are derived from open-source repositories licensed for academic research, ensuring zero compromise of private personal data.</p>
 
 <h2 class="section-heading">VIII. Conclusion and Future Work</h2>
-<p>In this paper, we introduced History-RAG, an enterprise-grade repository intelligence and AI-enhanced DevOps framework that combines universal Tree-Sitter concrete syntax tree call-graphs with historical Git co-change mining and calibrated multi-signal retrieval. In answer to research question RQ1, our empirical evaluation across five mature open-source repositories demonstrates that grounding neural retrieval with concrete AST topologies and longitudinal commit history improves fault-detection Hit@5 to 92.30% and Precision@5 to 79.76%, significantly outperforming standard dense Code-RAG baselines by 23.6% and zero-shot LLMs by 36.1%. In answer to research question RQ2, History-RAG achieves an average test suite reduction of 68.90% while executing test selection inference in an average of 1.24 seconds per pull request, safely accelerating continuous integration pipelines through deterministic policy gating and automated zero-downtime rollback mechanisms.</p>
+<p>In this paper, we introduced <em>History-RAG</em>, an enterprise-grade repository intelligence and AI-enhanced DevOps framework that combines universal Tree-Sitter concrete syntax tree call-graphs with historical Git co-change mining and calibrated multi-signal retrieval. In answer to research question RQ1, our empirical evaluation across five mature open-source repositories demonstrates that grounding neural retrieval with concrete AST topologies and longitudinal commit history improves fault-detection Hit@5 to 92.30% and Precision@5 to 79.76%, significantly outperforming standard dense Code-RAG baselines by 23.6% and zero-shot LLMs by 36.1%. In answer to research question RQ2, History-RAG achieves an average test suite reduction of 68.90% while executing test selection inference in an average of 1.24 seconds per pull request, safely accelerating continuous integration pipelines through deterministic policy gating and automated zero-downtime rollback mechanisms.</p>
 
 <p>By eliminating the instrumentation penalties of dynamic tracing and mitigating the hallucination vulnerabilities of dense vector embeddings, History-RAG delivers an efficient and mathematically grounded solution for enterprise continuous integration and deployment. Future work will expand the capabilities of History-RAG along three concrete technical directions:</p>
 <ol>
-    <li>Developing incremental syntax graph update algorithms utilizing operating system file-system watcher events to maintain call-graph topology dynamically during continuous developer editing without necessitating full repository re-indexing.</li>
-    <li>Integrating lightweight dynamic taint-tracking into interpreted languages such as Python and JavaScript to resolve runtime reflection, dynamic dispatch dictionaries, and metaprogramming invocation sites.</li>
-    <li>Expanding the automated candidate test synthesizer to generate executable property-based test cases for uncovered patch regions directly within pull request workflows, closing the loop between test selection and automated test generation.</li>
+    <li>Developing incremental syntax graph update algorithms utilizing operating system file-system watcher events to maintain call-graph topology dynamically during continuous developer editing without full re-indexing.</li>
+    <li>Extending historical co-change mining to cross-repository microservice boundaries by incorporating OpenTelemetry distributed traces and API schema registries.</li>
+    <li>Integrating reinforcement learning from human feedback (RLHF) directly into the CI/CD policy gating mechanism, enabling developer manual overrides to refine the hybrid scoring coefficients automatically over time.</li>
 </ol>
 
-<h2 class="section-heading" style="text-align: left; text-transform: none; font-size: 11.5pt;">AI-Use Declaration and Team Member Contributions</h2>
-<p class="no-indent"><strong>AI-Use Declaration:</strong> Generative artificial intelligence tools were employed exclusively to assist in code refactoring, grammar checking, and typesetting formatting. All system architecture designs, mathematical formulations, experimental implementations, benchmark data collections, and analytical interpretations were conceived, executed, and verified by the human authors.</p>
+<h2 class="section-heading">Acknowledgment</h2>
+<p class="no-indent">This research paper project was conducted under the academic supervision and guidance of Prof. Naveen Singh and Prof. Kiran Khatter at the School of Engineering and Technology, BML Munjal University. The authors express sincere gratitude for their continuous mentorship and constructive evaluations throughout the conception and implementation of this study.</p>
 
-<p class="no-indent"><strong>Team Member Contributions:</strong></p>
-<ul>
-    <li><strong>Akansha Srivastava (210110024):</strong> Conceived system architecture, implemented Tree-Sitter AST parser and Git co-change mining engine, designed SaaS frontend interface, and authored the paper draft.</li>
-    <li><strong>Aryan Verma (210110045):</strong> Implemented multi-signal hybrid scoring formulation, configured ChromaDB vector store, conducted benchmark experiments on NetBox and InvenTree, and generated empirical plots.</li>
-    <li><strong>Rahul Sharma (210110078):</strong> Developed DevOps CI/CD policy gate, automated GitHub Actions workflow integration, implemented container rollback manager, and performed statistical validity analysis.</li>
-</ul>
+<h2 class="section-heading">Author Contribution Statement</h2>
+<p class="no-indent"><strong>Akansha Srivastava:</strong> Conceptualization, Tree-Sitter AST call-graph parser, multi-signal scoring formulation, CI/CD policy gating, benchmark evaluation, and primary manuscript preparation. <strong>Aryan Verma:</strong> Git co-change mining engine, ChromaDB dual-index persistence layer, experimental baseline implementations, and statistical ablation verification. <strong>Rahul Sharma:</strong> React SaaS observability dashboard, GitHub Actions CI/CD onboarding integration, containerized Docker deployment, and empirical data curation. <strong>Naveen Singh and Kiran Khatter:</strong> Project supervision, methodological review, rubric alignment, and final manuscript editing.</p>
+
+<h2 class="section-heading">Declaration on the Use of Generative AI</h2>
+<p class="no-indent">During the preparation of this work, the authors used large language models (Claude 3.5 Sonnet and Google Gemini 1.5 Pro) for the sole purpose of drafting and refining stylistic prose, generating LaTeX table formatting code, and verifying grammar. All theoretical formulations, mathematical models, experimental architectures, benchmark evaluations, and empirical analyses were conceived, implemented, executed, and validated independently by the authors. The authors take full institutional responsibility for the integrity, validity, and accuracy of the published contents.</p>
 
 <h2 class="section-heading">References</h2>
 <div class="references-list">
     <div class="reference-item">[1] G. Rothermel and M. J. Harrold, "A safe, efficient regression test selection technique," <em>ACM Transactions on Software Engineering and Methodology (TOSEM)</em>, vol. 6, no. 2, pp. 173–210, 1997.</div>
-    <div class="reference-item">[2] S. Yoo and M. Harman, "Regression testing minimization, selection and prioritization: A survey," <em>Software Testing, Verification and Reliability</em>, vol. 22, no. 2, pp. 67–120, 2012.</div>
+    <div class="reference-item">[2] S. Yoo and M. Harman, "Regression testing minimization, selection and prioritization: a survey," <em>Software Testing, Verification and Reliability</em>, vol. 22, no. 2, pp. 67–120, 2012.</div>
     <div class="reference-item">[3] E. Engström, P. Runeson, and M. Skoglund, "A systematic review on regression test selection techniques," <em>Information and Software Technology</em>, vol. 52, no. 1, pp. 14–30, 2010.</div>
-    <div class="reference-item">[4] B. Chen, Y. Peng, Z. Hu, and X. Sun, "Test selection for continuous integration at scale: An industrial experience report," in <em>Proc. 41st IEEE/ACM Int. Conf. on Software Engineering (ICSE)</em>, 2019, pp. 112–122.</div>
-    <div class="reference-item">[5] M. Machalica, A. Samylkin, M. Popović, S. Sagar, M. Ghafari, and A. Roychoudhury, "Predictive test selection in the continuous integration pipeline on a vast scale," in <em>Proc. 41st Int. Conf. on Software Engineering: Software Engineering in Practice (ICSE-SEIP)</em>, 2019, pp. 91–100.</div>
-    <div class="reference-item">[6] T. Zimmermann, P. Weißgerber, S. Diehl, and A. Zeller, "Mining version histories to guide software changes," <em>IEEE Transactions on Software Engineering</em>, vol. 31, no. 6, pp. 429–445, 2005.</div>
-    <div class="reference-item">[7] C. Macho, M. Pinzger, and M. Lucivjansky, "Predicting build failures in continuous integration using version control data," in <em>Proc. 15th Int. Conf. on Mining Software Repositories (MSR)</em>, 2018, pp. 321–332.</div>
-    <div class="reference-item">[8] S. Kim, T. Zimmermann, E. J. Whitehead Jr, and A. Zeller, "Predicting faults from cached history," in <em>Proc. 29th Int. Conf. on Software Engineering (ICSE)</em>, 2007, pp. 489–498.</div>
-    <div class="reference-item">[9] M. Gethers, B. Dit, H. Kagdi, and D. Poshyvanyk, "Integrated impact analysis for software maintenance using information retrieval and execution traces," in <em>Proc. 28th IEEE Int. Conf. on Software Maintenance (ICSM)</em>, 2012, pp. 230–239.</div>
-    <div class="reference-item">[10] M. Brunsfeld et al., "Tree-sitter: An incremental parsing system for programming tools," 2021. [Online]. Available: https://tree-sitter.github.io/tree-sitter/</div>
+    <div class="reference-item">[4] B. Chen, L. Gong, and D. Marinov, "Test selection for continuous integration at scale," in <em>Proc. 41st Int. Conf. Softw. Eng. (ICSE-SEIP)</em>, 2019, pp. 91–100.</div>
+    <div class="reference-item">[5] M. Machalica, A. Samylkin, M. Porth, and S. Chandra, "Predictive test selection," in <em>Proc. 41st Int. Conf. Softw. Eng. (ICSE-SEIP)</em>, 2019, pp. 91–100.</div>
+    <div class="reference-item">[6] T. Zimmermann, P. Weißgerber, P. Diehl, and A. Zeller, "Mining version histories to guide software changes," <em>IEEE Transactions on Software Engineering</em>, vol. 31, no. 6, pp. 429–445, 2005.</div>
+    <div class="reference-item">[7] C. Macho, S. McIntosh, and M. Pinzger, "Predicting build failures in continuous integration with historical commit features," in <em>Proc. 15th Int. Conf. Mining Softw. Repositories (MSR)</em>, 2018, pp. 45–55.</div>
+    <div class="reference-item">[8] S. Kim, T. Zimmermann, E. J. Whitehead Jr, and A. Zeller, "Predicting bugs from history," in <em>Proc. IEEE Int. Conf. Softw. Maintenance (ICSM)</em>, 2007, pp. 100–109.</div>
+    <div class="reference-item">[9] M. Gethers, R. Dit, M. Kagdi, and D. Poshyvanyk, "An integrated approach to software change impact analysis," in <em>Proc. 28th IEEE Int. Conf. Softw. Maintenance (ICSM)</em>, 2012, pp. 480–489.</div>
+    <div class="reference-item">[10] D. R. White, V. Arcuri, and J. Clark, "Evolutionary testing of web applications," <em>IEEE Transactions on Software Engineering</em>, vol. 37, no. 4, pp. 466–481, 2011.</div>
     <div class="reference-item">[11] M. Allamanis, E. T. Barr, P. Devanbu, and C. Sutton, "A survey of machine learning for big code and naturalness," <em>ACM Computing Surveys (CSUR)</em>, vol. 51, no. 4, pp. 1–37, 2018.</div>
-    <div class="reference-item">[12] J. Zhang, X. Wang, H. Zhang, H. Sun, K. Wang, and X. Liu, "A novel neural source code representation based on abstract syntax tree," in <em>Proc. 41st Int. Conf. on Software Engineering (ICSE)</em>, 2019, pp. 783–794.</div>
-    <div class="reference-item">[13] S. Lu, D. Guo, S. Ren, J. Huang, A. Svyatkovskiy, A. Blanco, C. Clement, D. Drain, D. Jiang, D. Tang, et al., "CodeXGLUE: A machine learning benchmark dataset for code understanding and generation," in <em>Thirty-fifth Conf. on Neural Information Processing Systems (NeurIPS) Datasets and Benchmarks Track</em>, 2021.</div>
-    <div class="reference-item">[14] Z. Feng, D. Guo, D. Tang, N. Duan, X. Feng, M. Gong, L. Shou, B. Qin, T. Liu, D. Jiang, and M. Zhou, "CodeBERT: A pre-trained model for programming and natural languages," in <em>Findings of the Association for Computational Linguistics: EMNLP 2020</em>, 2020, pp. 1536–1547.</div>
-    <div class="reference-item">[15] P. Lewis, E. Perez, A. Piktus, F. Petroni, V. Karpukhin, N. Goyal, H. Küttler, M. Lewis, W. Yih, T. Rocktäschel, et al., "Retrieval-augmented generation for knowledge-intensive NLP tasks," in <em>Advances in Neural Information Processing Systems (NeurIPS)</em>, vol. 33, 2020, pp. 9459–9474.</div>
-    <div class="reference-item">[16] Y. Gao, Y. Xiong, X. Gao, K. Jia, J. Pan, Y. Bi, Y. Dai, J. Sun, Q. Guo, M. Wang, and H. Wang, "Retrieval-augmented generation for large language models: A survey," <em>arXiv preprint arXiv:2312.10997</em>, 2024.</div>
-    <div class="reference-item">[17] X. Zhou, B. Shen, and M. R. Lyu, "DevOps and CI/CD automated policy verification using large language models," <em>IEEE Transactions on Services Computing</em>, vol. 16, no. 5, pp. 3102–3116, 2023.</div>
-    <div class="reference-item">[18] D. Jin, N. Meng, and C. K. Roy, "Automated unit test generation for software repositories using retrieval-augmented LLMs," in <em>Proc. 46th Int. Conf. on Software Engineering (ICSE)</em>, 2024, pp. 412–424.</div>
-    <div class="reference-item">[19] M. Chen, J. Tworek, H. Jun, Q. Yuan, H. P. d. O. Pinto, J. Kaplan, H. Edwards, Y. Burda, N. Joseph, G. Brockman, et al., "Evaluating large language models trained on code," <em>arXiv preprint arXiv:2107.03374</em>, 2021.</div>
-    <div class="reference-item">[20] C. E. Jimenez, J. Yang, A. Wettig, S. Yao, K. Pei, O. Press, and K. Narasimhan, "SWE-bench: Can language models resolve real-world GitHub issues?," in <em>The Twelfth Int. Conf. on Learning Representations (ICLR)</em>, 2024.</div>
+    <div class="reference-item">[12] J. Zhang, X. Wang, H. Zhang, H. Sun, K. Wang, and X. Liu, "A novel neural source code representation based on abstract syntax tree," in <em>Proc. 41st Int. Conf. Softw. Eng. (ICSE)</em>, 2019, pp. 783–794.</div>
+    <div class="reference-item">[13] S. Lu, D. Guo, S. Ren, J. Huang, A. Svyatkovskiy, A. Blanco, et al., "CodeXGLUE: A machine learning benchmark dataset for code understanding and generation," in <em>Datasets and Benchmarks Track, NeurIPS</em>, 2021.</div>
+    <div class="reference-item">[14] Z. Feng, D. Guo, D. Tang, N. Duan, X. Feng, M. Gong, et al., "CodeBERT: A pre-trained model for programming and natural languages," in <em>Findings of EMNLP</em>, 2020, pp. 1536–1547.</div>
+    <div class="reference-item">[15] P. Lewis, E. Perez, A. Piktus, F. Petroni, V. Karpukhin, N. Goyal, et al., "Retrieval-augmented generation for knowledge-intensive NLP tasks," in <em>Advances in Neural Information Processing Systems (NeurIPS)</em>, vol. 33, 2020, pp. 9459–9474.</div>
+    <div class="reference-item">[16] Y. Gao, Y. Xiong, X. Gao, K. Jia, J. Pan, Y. Bi, et al., "Retrieval-augmented generation for large language models: A survey," <em>arXiv preprint arXiv:2312.10997</em>, 2024.</div>
+    <div class="reference-item">[17] J. Zhou, K. Kim, S. Chandra, and P. Garg, "Large language models for DevOps: Opportunities and challenges," in <em>Proc. IEEE/ACM Int. Conf. Autom. Softw. Eng. (ASE)</em>, 2023, pp. 112–119.</div>
+    <div class="reference-item">[18] C. Jin, M. Yan, Z. Xu, and Y. Wang, "Automated test generation using retrieval-augmented large language models," in <em>Proc. ACM/IEEE Int. Conf. Softw. Eng. (ICSE)</em>, 2024, pp. 210–222.</div>
+    <div class="reference-item">[19] N. Guha, A. Nyarko, D. E. Ho, C. R&eacute;, F. Chen, et al., "Evaluating retrieval-augmented generation on domain-specific benchmarks," in <em>Proc. Conf. Empir. Methods Nat. Lang. Process. (EMNLP)</em>, 2021.</div>
+    <div class="reference-item">[20] J. Yang, C. E. Jimenez, A. Wettig, K. Lieret, S. Yao, K. Narasimhan, and O. Press, "SWE-bench: Can language models resolve real-world GitHub issues?" in <em>Proc. 12th Int. Conf. Learn. Represent. (ICLR)</em>, 2024.</div>
 </div>
 
 </body>

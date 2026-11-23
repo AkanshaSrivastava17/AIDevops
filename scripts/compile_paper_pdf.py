@@ -13,15 +13,18 @@ def get_base64_image(image_path):
         return "data:image/png;base64," + base64.b64encode(img_file.read()).decode('utf-8')
 
 def compile_pdf():
-    fig_dir = r"e:\aidevops prj\project\paper\figures"
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    paper_dir = os.path.join(base_dir, "paper")
+    fig_dir = os.path.join(paper_dir, "figures")
+    
     fig1_b64 = get_base64_image(os.path.join(fig_dir, "fig1_architecture.png"))
     fig2_b64 = get_base64_image(os.path.join(fig_dir, "fig2_workflow.png"))
     fig3_b64 = get_base64_image(os.path.join(fig_dir, "fig3_comparison.png"))
     fig4_b64 = get_base64_image(os.path.join(fig_dir, "fig4_ablation.png"))
 
-    template_path = r"e:\aidevops prj\project\paper\template.html"
-    output_html = r"e:\aidevops prj\project\paper\History_RAG_Research_Paper.html"
-    output_pdf = r"e:\aidevops prj\project\paper\History_RAG_Research_Paper.pdf"
+    template_path = os.path.join(paper_dir, "template.html")
+    output_html = os.path.join(paper_dir, "History_RAG_Research_Paper.html")
+    output_pdf = os.path.join(paper_dir, "History_RAG_Research_Paper.pdf")
 
     with open(template_path, "r", encoding="utf-8") as f:
         html = f.read()
@@ -35,7 +38,23 @@ def compile_pdf():
         f.write(html)
     print("HTML document generated at:", output_html)
 
-    chrome_path = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
+    chrome_candidates = [
+        r"C:\Program Files\Google\Chrome\Application\chrome.exe",
+        r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
+        r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
+        r"C:\Program Files\Microsoft\Edge\Application\msedge.exe"
+    ]
+    
+    chrome_path = None
+    for p in chrome_candidates:
+        if os.path.exists(p):
+            chrome_path = p
+            break
+
+    if not chrome_path:
+        raise FileNotFoundError("Could not find Chrome or Edge executable.")
+
+    print(f"Using browser at: {chrome_path}")
     cmd = [
         chrome_path,
         "--headless",
@@ -46,7 +65,7 @@ def compile_pdf():
         output_html
     ]
 
-    print("Running Chrome print-to-pdf...")
+    print("Running browser print-to-pdf...")
     res = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
     if res.returncode == 0 and os.path.exists(output_pdf):
         print(f"SUCCESS: PDF compiled at: {output_pdf}")
