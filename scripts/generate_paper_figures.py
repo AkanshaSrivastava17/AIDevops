@@ -1,7 +1,7 @@
 """
 Academic Figure Generation Script for History-RAG Research Paper
 Generates publication-quality 300+ DPI vector diagrams and empirical plots.
-Guarantees ZERO lines passing through any box or text.
+Guarantees ZERO lines passing through any box or text and ZERO heading/text overlaps.
 """
 
 import matplotlib
@@ -26,7 +26,7 @@ plt.rcParams['legend.fontsize'] = 9.5
 plt.rcParams['figure.titlesize'] = 13
 
 # -----------------------------------------------------------------------------
-# FIGURE 1: System Architecture Diagram (Completely Collision-Free)
+# FIGURE 1: System Architecture Diagram (Strict Collision-Free & Non-Overlapping)
 # -----------------------------------------------------------------------------
 def generate_fig1_architecture():
     fig, ax = plt.subplots(figsize=(10.8, 6.8), dpi=300)
@@ -40,14 +40,14 @@ def generate_fig1_architecture():
     ax.add_patch(bg)
 
     # Column Headers (Tier Titles)
-    ax.text(15, 96.2, "TIER 1: INGESTION & INTERFACES", fontsize=10.5, fontweight='bold', color='#1E293B', ha='center')
-    ax.text(50, 96.2, "TIER 2: DUAL ANALYSIS & PERSISTENT STORAGE", fontsize=10.5, fontweight='bold', color='#1E293B', ha='center')
-    ax.text(85, 96.2, "TIER 3: INFERENCE & DEVOPS POLICY GATE", fontsize=10.5, fontweight='bold', color='#1E293B', ha='center')
+    ax.text(15, 96.5, "TIER 1: INGESTION & INTERFACES", fontsize=10.5, fontweight='bold', color='#1E293B', ha='center', va='top')
+    ax.text(50, 96.5, "TIER 2: DUAL ANALYSIS & PERSISTENT STORAGE", fontsize=10.5, fontweight='bold', color='#1E293B', ha='center', va='top')
+    ax.text(84, 96.5, "TIER 3: INFERENCE & DEVOPS POLICY GATE", fontsize=10.5, fontweight='bold', color='#1E293B', ha='center', va='top')
 
     # Subtle column background panels to visually separate tiers
-    col1_bg = FancyBboxPatch((2, 3), 26, 91.5, boxstyle="round,pad=0.5,rounding_size=1.0", ec="#E2E8F0", fc="#F8FAFC", lw=0.8, linestyle=":")
-    col2_bg = FancyBboxPatch((35, 3), 30, 91.5, boxstyle="round,pad=0.5,rounding_size=1.0", ec="#E2E8F0", fc="#F8FAFC", lw=0.8, linestyle=":")
-    col3_bg = FancyBboxPatch((70, 3), 28, 91.5, boxstyle="round,pad=0.5,rounding_size=1.0", ec="#E2E8F0", fc="#F8FAFC", lw=0.8, linestyle=":")
+    col1_bg = FancyBboxPatch((2, 3), 26, 91.0, boxstyle="round,pad=0.5,rounding_size=1.0", ec="#E2E8F0", fc="#F8FAFC", lw=0.8, linestyle=":")
+    col2_bg = FancyBboxPatch((35, 3), 30, 91.0, boxstyle="round,pad=0.5,rounding_size=1.0", ec="#E2E8F0", fc="#F8FAFC", lw=0.8, linestyle=":")
+    col3_bg = FancyBboxPatch((70, 3), 28, 91.0, boxstyle="round,pad=0.5,rounding_size=1.0", ec="#E2E8F0", fc="#F8FAFC", lw=0.8, linestyle=":")
     ax.add_patch(col1_bg)
     ax.add_patch(col2_bg)
     ax.add_patch(col3_bg)
@@ -55,23 +55,25 @@ def generate_fig1_architecture():
     # =========================================================================
     # COLUMN 1: Ingestion & Interfaces (x: 4 to 26)
     # =========================================================================
-    # Box 1A: Pull Request / Commit Patch (y: 74 to 90.5)
-    box_pr = FancyBboxPatch((4, 74), 22, 16.5, boxstyle="round,pad=0.5,rounding_size=1.5", ec="#2563EB", fc="#EFF6FF", lw=1.4)
+    # Box 1A: Pull Request / Commit Patch (y: 73 to 91)
+    box_pr = FancyBboxPatch((4, 73), 22, 18, boxstyle="round,pad=0.5,rounding_size=1.5", ec="#2563EB", fc="#EFF6FF", lw=1.4)
     ax.add_patch(box_pr)
-    ax.text(15, 87, "Pull Request / Commit Patch", fontsize=9.5, fontweight='bold', ha='center', color='#1E40AF')
-    ax.text(15, 82.5, "• Incoming Git diff hunk $\\Delta$\n• Modified files $\\mathcal{F}_\\Delta$ & signatures\n• Author & issue metadata", fontsize=8, ha='center', color='#334155', linespacing=1.3)
+    ax.text(15, 89.2, "Pull Request / Commit Patch", fontsize=9.5, fontweight='bold', ha='center', va='top', color='#1E40AF')
+    ax.text(15, 83.5, "• Incoming Git diff hunk $\\Delta$\n• Modified files $\\mathcal{F}_\\Delta$ & signatures\n• Author & issue metadata",
+            fontsize=8.0, ha='center', va='top', color='#334155', linespacing=1.35)
 
-    # Box 1B: Repository Ingestion Engine (y: 51 to 68.5)
-    box_repo = FancyBboxPatch((4, 51), 22, 17.5, boxstyle="round,pad=0.5,rounding_size=1.5", ec="#4F46E5", fc="#EEF2FF", lw=1.4)
+    # Box 1B: Repository Ingestion Engine (y: 50 to 69)
+    box_repo = FancyBboxPatch((4, 50), 22, 19, boxstyle="round,pad=0.5,rounding_size=1.5", ec="#4F46E5", fc="#EEF2FF", lw=1.4)
     ax.add_patch(box_repo)
-    ax.text(15, 64.5, "Repository Ingestion Engine", fontsize=9.5, fontweight='bold', ha='center', color='#3730A3')
-    ax.text(15, 59, "• Git clone / ZIP archive reader\n• Polyglot tree discovery\n• Commit log extraction $\\mathcal{H}$", fontsize=8, ha='center', color='#334155', linespacing=1.3)
+    ax.text(15, 67.2, "Repository Ingestion Engine", fontsize=9.5, fontweight='bold', ha='center', va='top', color='#3730A3')
+    ax.text(15, 61.5, "• Git clone / ZIP archive reader\n• Polyglot tree discovery\n• Commit log extraction $\\mathcal{H}$",
+            fontsize=8.0, ha='center', va='top', color='#334155', linespacing=1.35)
 
-    # Box 1C: Interactive SaaS Observability UI (y: 6 to 45)
-    box_ui = FancyBboxPatch((4, 6), 22, 39, boxstyle="round,pad=0.5,rounding_size=1.5", ec="#0284C7", fc="#F0F9FF", lw=1.4)
+    # Box 1C: Interactive SaaS Observability UI (y: 6 to 46)
+    box_ui = FancyBboxPatch((4, 6), 22, 40, boxstyle="round,pad=0.5,rounding_size=1.5", ec="#0284C7", fc="#F0F9FF", lw=1.4)
     ax.add_patch(box_ui)
-    ax.text(15, 41.5, "Interactive SaaS UI", fontsize=10, fontweight='bold', ha='center', color='#0369A1')
-    ax.text(15, 37, "React 18 + Vite + Tailwind", fontsize=8.5, fontweight='bold', ha='center', color='#0284C7')
+    ax.text(15, 44.2, "Interactive SaaS UI", fontsize=10, fontweight='bold', ha='center', va='top', color='#0369A1')
+    ax.text(15, 39.5, "React 18 + Vite + Tailwind", fontsize=8.5, fontweight='bold', ha='center', va='top', color='#0284C7')
     ui_features = (
         "• Change Impact Explorer\n"
         "• Interactive Call-Graph View\n"
@@ -80,65 +82,71 @@ def generate_fig1_architecture():
         "• One-Click Rollback Manager\n"
         "• Verified Audit Trail Ledger"
     )
-    ax.text(15, 23.5, ui_features, fontsize=8, ha='center', color='#334155', linespacing=1.35)
+    ax.text(15, 34.2, ui_features, fontsize=7.8, ha='center', va='top', color='#334155', linespacing=1.35)
 
     # =========================================================================
     # COLUMN 2: Dual Analysis & Persistent Storage (x: 37 to 63)
     # =========================================================================
-    # Box 2A: Structural AST Analyzer (y: 73 to 91)
-    box_ast = FancyBboxPatch((37, 73), 26, 18, boxstyle="round,pad=0.5,rounding_size=1.5", ec="#059669", fc="#ECFDF5", lw=1.4)
+    # Box 2A: Structural AST Analyzer (y: 72 to 91)
+    box_ast = FancyBboxPatch((37, 72), 26, 19, boxstyle="round,pad=0.5,rounding_size=1.5", ec="#059669", fc="#ECFDF5", lw=1.4)
     ax.add_patch(box_ast)
-    ax.text(50, 87.2, "Structural AST Analyzer", fontsize=10, fontweight='bold', ha='center', color='#065F46')
-    ax.text(50, 80.8, "• Tree-Sitter Concrete Syntax Trees\n• Method & class declaration parser\n• Inter-procedural call-graph $\\mathcal{G}=(V, E)$\n• Shortest path reachability $d_\\mathcal{G}(u, t)$", fontsize=8, ha='center', color='#1F2937', linespacing=1.3)
+    ax.text(50, 89.2, "Structural AST Analyzer", fontsize=10, fontweight='bold', ha='center', va='top', color='#065F46')
+    ax.text(50, 83.5, "• Tree-Sitter Concrete Syntax Trees\n• Method & class declaration parser\n• Inter-procedural call-graph $\\mathcal{G}=(V, E)$\n• Shortest path reachability $d_\\mathcal{G}(u, t)$",
+            fontsize=8.0, ha='center', va='top', color='#1F2937', linespacing=1.35)
 
     # Box 2B: Historical Co-Change Miner (y: 49 to 68)
     box_git = FancyBboxPatch((37, 49), 26, 19, boxstyle="round,pad=0.5,rounding_size=1.5", ec="#D97706", fc="#FFFBEB", lw=1.4)
     ax.add_patch(box_git)
-    ax.text(50, 64.2, "Historical Co-Change Miner", fontsize=10, fontweight='bold', ha='center', color='#92400E')
-    ax.text(50, 56.8, "• Longitudinal commit mining $\\mathcal{H}$\n• Co-change matrix $\\mathbf{M}_{co} \\in \\mathbb{R}^{N \\times N}$\n• Defect-fix $2\\times$ correlation boost\n• Flakiness & failure history scoring", fontsize=8, ha='center', color='#1F2937', linespacing=1.3)
+    ax.text(50, 66.2, "Historical Co-Change Miner", fontsize=10, fontweight='bold', ha='center', va='top', color='#92400E')
+    ax.text(50, 60.5, "• Longitudinal commit mining $\\mathcal{H}$\n• Co-change matrix $\\mathbf{M}_{co} \\in \\mathbb{R}^{N \\times N}$\n• Defect-fix $2\\times$ correlation boost\n• Flakiness & failure history scoring",
+            fontsize=8.0, ha='center', va='top', color='#1F2937', linespacing=1.35)
 
-    # Box 2C: Dual-Index Persistent Storage Layer (y: 6 to 43)
-    box_store = FancyBboxPatch((37, 6), 26, 37, boxstyle="round,pad=0.5,rounding_size=1.5", ec="#475569", fc="#F1F5F9", lw=1.4, linestyle="--")
+    # Box 2C: Dual-Index Persistent Storage Layer (y: 6 to 45)
+    box_store = FancyBboxPatch((37, 6), 26, 39, boxstyle="round,pad=0.5,rounding_size=1.5", ec="#475569", fc="#F1F5F9", lw=1.4, linestyle="--")
     ax.add_patch(box_store)
-    ax.text(50, 39.5, "Dual-Index Persistent Storage", fontsize=10, fontweight='bold', ha='center', color='#1E293B')
+    ax.text(50, 43.5, "Dual-Index Persistent Storage", fontsize=10, fontweight='bold', ha='center', va='top', color='#1E293B')
     
-    # Inner sub-box for ChromaDB
-    sub_chroma = FancyBboxPatch((39, 23.5), 22, 12.5, boxstyle="round,pad=0.3,rounding_size=1.0", ec="#94A3B8", fc="#FFFFFF", lw=1.0)
+    # Inner sub-box for ChromaDB (y: 25 to 38.5)
+    sub_chroma = FancyBboxPatch((39, 25), 22, 13.5, boxstyle="round,pad=0.3,rounding_size=1.0", ec="#94A3B8", fc="#FFFFFF", lw=1.0)
     ax.add_patch(sub_chroma)
-    ax.text(50, 32.5, "ChromaDB Dense Vector Index", fontsize=8.5, fontweight='bold', ha='center', color='#0F172A')
-    ax.text(50, 27.2, "• 384-d normalized embeddings\n• Cosine semantic search ($S_{dense}$)", fontsize=7.5, ha='center', color='#475569')
+    ax.text(50, 36.8, "ChromaDB Dense Vector Index", fontsize=8.5, fontweight='bold', ha='center', va='top', color='#0F172A')
+    ax.text(50, 31.8, "• 384-d normalized embeddings\n• Cosine semantic search ($S_{dense}$)",
+            fontsize=7.5, ha='center', va='top', color='#475569', linespacing=1.3)
 
-    # Inner sub-box for SQLite
-    sub_sqlite = FancyBboxPatch((39, 9.0), 22, 12.5, boxstyle="round,pad=0.3,rounding_size=1.0", ec="#94A3B8", fc="#FFFFFF", lw=1.0)
+    # Inner sub-box for SQLite (y: 8.5 to 22.0)
+    sub_sqlite = FancyBboxPatch((39, 8.5), 22, 13.5, boxstyle="round,pad=0.3,rounding_size=1.0", ec="#94A3B8", fc="#FFFFFF", lw=1.0)
     ax.add_patch(sub_sqlite)
-    ax.text(50, 18, "SQLite Relational Database", fontsize=8.5, fontweight='bold', ha='center', color='#0F172A')
-    ax.text(50, 12.8, "• Call-graph topology & edges $E$\n• Co-change matrix $\\mathbf{M}_{co}$ & audit log", fontsize=7.5, ha='center', color='#475569')
+    ax.text(50, 20.3, "SQLite Relational Database", fontsize=8.5, fontweight='bold', ha='center', va='top', color='#0F172A')
+    ax.text(50, 15.3, "• Call-graph topology & edges $E$\n• Co-change matrix $\\mathbf{M}_{co}$ & audit log",
+            fontsize=7.5, ha='center', va='top', color='#475569', linespacing=1.3)
 
     # =========================================================================
     # COLUMN 3: Inference Engine & Policy Gate (x: 72 to 96)
     # =========================================================================
-    # Box 3A: Multi-Signal Scoring Engine (y: 56 to 91)
-    box_engine = FancyBboxPatch((72, 56), 24, 35, boxstyle="round,pad=0.5,rounding_size=1.5", ec="#7C3AED", fc="#F5F3FF", lw=1.5)
+    # Box 3A: Multi-Signal Scoring Engine (y: 54 to 91)
+    box_engine = FancyBboxPatch((72, 54), 24, 37, boxstyle="round,pad=0.5,rounding_size=1.5", ec="#7C3AED", fc="#F5F3FF", lw=1.5)
     ax.add_patch(box_engine)
-    ax.text(84, 87.2, "Multi-Signal Evidence\nScoring Engine", fontsize=10, fontweight='bold', ha='center', color='#5B21B6', linespacing=1.2)
+    ax.text(84, 89.2, "Multi-Signal Evidence\nScoring Engine", fontsize=9.5, fontweight='bold', ha='center', va='top', color='#5B21B6', linespacing=1.2)
     
-    # Formula box inside Engine
-    formula_box = FancyBboxPatch((73.5, 71.5), 21, 11, boxstyle="round,pad=0.3,rounding_size=1.0", ec="#C4B5FD", fc="#EDE9FE", lw=1.0)
+    # Formula box inside Engine (y: 69 to 80.5)
+    formula_box = FancyBboxPatch((73.5, 69), 21, 11.5, boxstyle="round,pad=0.3,rounding_size=1.0", ec="#C4B5FD", fc="#EDE9FE", lw=1.0)
     ax.add_patch(formula_box)
-    ax.text(84, 78.8, "Calibrated Scoring Formula:", fontsize=7.5, fontweight='bold', ha='center', color='#5B21B6')
-    ax.text(84, 74.2, "$S(t, \\Delta) = \\alpha S_{hist} + \\beta S_{ast}$\n$+\\,\\gamma S_{dense} + \\delta S_{bm25}$", fontsize=8, ha='center', color='#4C1D95', linespacing=1.2)
+    ax.text(84, 79.0, "Calibrated Scoring Formula:", fontsize=7.5, fontweight='bold', ha='center', va='top', color='#5B21B6')
+    ax.text(84, 74.8, "$S(t, \\Delta) = \\alpha S_{hist} + \\beta S_{ast}$\n$+\\,\\gamma S_{dense} + \\delta S_{bm25}$",
+            fontsize=8.0, ha='center', va='top', color='#4C1D95', linespacing=1.2)
 
-    ax.text(84, 65.5, "• Top-$K$ Regression Test Ranker\n• Latency constraint: $< 1.5$ s\n• Confidence score calculation", fontsize=7.8, ha='center', color='#1E1E24', linespacing=1.3)
+    ax.text(84, 66.5, "• Top-$K$ Regression Test Ranker\n• Latency constraint: $< 1.5$ s\n• Confidence score calculation",
+            fontsize=7.8, ha='center', va='top', color='#1E1E24', linespacing=1.3)
 
-    # Box 3B: DevOps CI/CD Policy Gate (y: 6 to 48)
-    box_cicd = FancyBboxPatch((72, 6), 24, 42, boxstyle="round,pad=0.5,rounding_size=1.5", ec="#DC2626", fc="#FEF2F2", lw=1.4)
+    # Box 3B: DevOps CI/CD Policy Gate (y: 6 to 50)
+    box_cicd = FancyBboxPatch((72, 6), 24, 44, boxstyle="round,pad=0.5,rounding_size=1.5", ec="#DC2626", fc="#FEF2F2", lw=1.4)
     ax.add_patch(box_cicd)
-    ax.text(84, 44.5, "DevOps CI/CD Policy Gate", fontsize=10, fontweight='bold', ha='center', color='#991B1B')
+    ax.text(84, 48.0, "DevOps CI/CD Policy Gate", fontsize=10, fontweight='bold', ha='center', va='top', color='#991B1B')
     
-    # Decisions badge inside Gate
-    decision_box = FancyBboxPatch((74, 37.0), 20, 5, boxstyle="round,pad=0.2,rounding_size=0.8", ec="#FCA5A5", fc="#FEE2E2", lw=1.0)
+    # Decisions badge inside Gate (y: 38.5 to 44.0)
+    decision_box = FancyBboxPatch((74, 38.5), 20, 5.5, boxstyle="round,pad=0.2,rounding_size=0.8", ec="#FCA5A5", fc="#FEE2E2", lw=1.0)
     ax.add_patch(decision_box)
-    ax.text(84, 39.2, "PASS  |  WARN  |  BLOCK", fontsize=8.5, fontweight='bold', ha='center', color='#991B1B')
+    ax.text(84, 42.5, "PASS  |  WARN  |  BLOCK", fontsize=8.5, fontweight='bold', ha='center', va='center', color='#991B1B')
 
     gate_desc = (
         "• Confidence threshold $\\tau = 0.85$\n"
@@ -147,7 +155,7 @@ def generate_fig1_architecture():
         "• Zero-Downtime Rollback Trigger\n"
         "• OpenTelemetry & Prometheus Export"
     )
-    ax.text(84, 22.0, gate_desc, fontsize=8, ha='center', color='#334155', linespacing=1.3)
+    ax.text(84, 35.5, gate_desc, fontsize=7.8, ha='center', va='top', color='#334155', linespacing=1.35)
 
     # =========================================================================
     # CONNECTING ARROWS - ROUTED CLEANLY WITHOUT OVERLAPS
@@ -162,44 +170,31 @@ def generate_fig1_architecture():
                     bbox=dict(boxstyle="round,pad=0.25", fc=label_bg, ec=color, lw=0.6))
 
     # 1. Pull Request Patch (1A) -> Structural AST Analyzer (2A)
-    # Direct horizontal connection between (26, 82) and (37, 82)
     draw_arrow(26, 82, 37, 82, color="#2563EB", lw=1.6, label="Code Diff $\\Delta$", label_pos=(0.5, 0.5))
 
     # 2. Repository Ingestion (1B) -> Structural AST (2A) & Historical Miner (2B)
-    # Clear angled arrows in the open horizontal channel between col 1 and col 2
     draw_arrow(26, 64, 37, 75, color="#059669", lw=1.5, label="Source Code", label_pos=(0.5, 0.5))
     draw_arrow(26, 56, 37, 56, color="#D97706", lw=1.5, label="Git Logs $\\mathcal{H}$", label_pos=(0.5, 0.5))
 
     # 3. Inter-Tier 2 Internal Persistence:
-    # Downward arrow from 2A to 2B:
-    draw_arrow(50, 73, 50, 68, color="#059669", lw=1.5, label="Symbol Map", label_pos=(0.5, 0.5))
-    # Downward arrow from 2B to 2C:
-    draw_arrow(50, 49, 50, 43, color="#D97706", lw=1.5, label="Persist $\\mathbf{M}_{co}$", label_pos=(0.5, 0.5))
+    draw_arrow(50, 72, 50, 68, color="#059669", lw=1.5, label="Symbol Map", label_pos=(0.5, 0.5))
+    draw_arrow(50, 49, 50, 45, color="#D97706", lw=1.5, label="Persist $\\mathbf{M}_{co}$", label_pos=(0.5, 0.5))
 
     # 4. Tier 2 -> Tier 3 (Inference Engine)
-    # Structural AST (2A) -> Scoring Engine (3A) [Direct horizontal connection]
     draw_arrow(63, 82, 72, 82, color="#059669", lw=1.6, label="Call Graph $S_{ast}$", label_pos=(0.5, 0.5))
-
-    # Historical Miner (2B) -> Scoring Engine (3A) [Angled upward in open channel between cols 2 & 3]
     draw_arrow(63, 62, 72, 65, color="#D97706", lw=1.6, label="Co-Changes $S_{hist}$", label_pos=(0.5, 0.5))
+    draw_arrow(63, 40, 72, 57, color="#475569", lw=1.4, label="Dense Vectors $S_{dense}$", label_pos=(0.5, 0.5))
 
-    # Storage (2C) -> Scoring Engine (3A): Cached Embeddings
-    # Routed cleanly through the open corridor between (63, 40) and (72, 58)
-    draw_arrow(63, 38, 72, 58, color="#475569", lw=1.4, label="Dense Vectors $S_{dense}$", label_pos=(0.5, 0.5))
-
-    # 5. Scoring Engine (3A) -> DevOps CI/CD Policy Gate (3B) [Direct vertical downward]
-    draw_arrow(84, 56, 84, 48, color="#7C3AED", lw=1.8, label="Ranked Tests $T^*$", label_pos=(0.5, 0.5))
+    # 5. Scoring Engine (3A) -> DevOps CI/CD Policy Gate (3B)
+    draw_arrow(84, 54, 84, 50, color="#7C3AED", lw=1.8, label="Ranked Tests $T^*$", label_pos=(0.5, 0.5))
 
     # 6. DevOps Policy Gate (3B) -> Persistent Storage (2C) [Audit Log & Ledger]
-    # Direct horizontal connection between (72, 16) and (63, 16)
     draw_arrow(72, 16, 63, 16, color="#DC2626", lw=1.5, label="Audit Trail & Logs", label_pos=(0.5, 0.5))
 
     # 7. Persistent Storage (2C) -> Interactive SaaS UI (1C) [Telemetry & State Stream]
-    # Direct horizontal connection between (37, 16) and (26, 16)
     draw_arrow(37, 16, 26, 16, color="#0284C7", lw=1.5, label="REST API & Telemetry", label_pos=(0.5, 0.5))
 
     # 8. SaaS UI (1C) -> DevOps Policy Gate (3B) [Manual Override Trigger]
-    # Routed cleanly along the bottom margin corridor (y = 2.0) with orthogonal points
     ax.annotate('', xy=(84, 6), xytext=(84, 2.0),
                 arrowprops=dict(arrowstyle="-|>", color="#D97706", lw=1.4, mutation_scale=11))
     ax.plot([15, 84], [2.0, 2.0], color="#D97706", lw=1.4, linestyle="--")
@@ -216,7 +211,7 @@ def generate_fig1_architecture():
     print("Fig 1 Architecture generated successfully.")
 
 # -----------------------------------------------------------------------------
-# FIGURE 2: Workflow Diagram (Completely Collision-Free Orthogonal Routing)
+# FIGURE 2: Workflow Diagram (Strict Collision-Free & Non-Overlapping)
 # -----------------------------------------------------------------------------
 def generate_fig2_workflow():
     fig, ax = plt.subplots(figsize=(10.8, 5.8), dpi=300)
@@ -229,7 +224,7 @@ def generate_fig2_workflow():
     ax.add_patch(bg)
 
     # Upper Track: Repository Offline Ingestion Phase
-    ax.text(5, 94.5, "PHASE A: REPOSITORY OFFLINE INGESTION & GRAPH INDEXING", fontsize=10.5, fontweight='bold', color='#1E3A8A')
+    ax.text(5, 95.0, "PHASE A: REPOSITORY OFFLINE INGESTION & GRAPH INDEXING", fontsize=10.5, fontweight='bold', color='#1E3A8A', va='top')
     
     stages_a = [
         ("1. Source Ingestion", "Clone Git Repo or\nUpload ZIP Archive\nDetect Language", "#EFF6FF", "#1D4ED8", 5),
@@ -242,8 +237,8 @@ def generate_fig2_workflow():
     for title, desc, fc, ec, x in stages_a:
         box = FancyBboxPatch((x, 58), 14.5, 33, boxstyle="round,pad=0.5,rounding_size=1.2", ec=ec, fc=fc, lw=1.3)
         ax.add_patch(box)
-        ax.text(x + 7.25, 86, title, fontsize=8.5, fontweight='bold', ha='center', color=ec)
-        ax.text(x + 7.25, 71, desc, fontsize=7.5, ha='center', color='#334155', linespacing=1.25)
+        ax.text(x + 7.25, 88.0, title, fontsize=8.5, fontweight='bold', ha='center', va='top', color=ec)
+        ax.text(x + 7.25, 78.5, desc, fontsize=7.5, ha='center', va='top', color='#334155', linespacing=1.25)
 
     # Connecting arrows for Phase A (horizontal between adjacent stages)
     for i in range(4):
@@ -253,7 +248,7 @@ def generate_fig2_workflow():
                     arrowprops=dict(arrowstyle="-|>", color="#64748B", lw=1.6, mutation_scale=12))
 
     # Lower Track: Online Regression Test Selection & Policy Gate
-    ax.text(5, 43.5, "PHASE B: ONLINE PULL REQUEST IMPACT ANALYSIS & CI/CD GATE", fontsize=10.5, fontweight='bold', color='#831843')
+    ax.text(5, 43.5, "PHASE B: ONLINE PULL REQUEST IMPACT ANALYSIS & CI/CD GATE", fontsize=10.5, fontweight='bold', color='#831843', va='top')
 
     stages_b = [
         ("1. Code Diff Input", "Incoming PR Patch $\\Delta$\nParse Added/Modified\nLines & Signatures", "#FDF2F8", "#BE185D", 5),
@@ -266,8 +261,8 @@ def generate_fig2_workflow():
     for title, desc, fc, ec, x in stages_b:
         box = FancyBboxPatch((x, 7), 14.5, 33, boxstyle="round,pad=0.5,rounding_size=1.2", ec=ec, fc=fc, lw=1.3)
         ax.add_patch(box)
-        ax.text(x + 7.25, 35, title, fontsize=8.5, fontweight='bold', ha='center', color=ec)
-        ax.text(x + 7.25, 20.5, desc, fontsize=7.5, ha='center', color='#334155', linespacing=1.25)
+        ax.text(x + 7.25, 37.0, title, fontsize=8.5, fontweight='bold', ha='center', va='top', color=ec)
+        ax.text(x + 7.25, 27.5, desc, fontsize=7.5, ha='center', va='top', color='#334155', linespacing=1.25)
 
     # Connecting arrows for Phase B (horizontal between adjacent stages)
     for i in range(4):
@@ -276,24 +271,16 @@ def generate_fig2_workflow():
         ax.annotate('', xy=(x2, 23.5), xytext=(x1, 23.5),
                     arrowprops=dict(arrowstyle="-|>", color="#9D174D", lw=1.6, mutation_scale=12))
 
-    # =========================================================================
-    # CROSS-PHASE BUS: Dual Storage (Stage A5) feeds Stage B2 & Stage B3
-    # Routed in the OPEN corridor between y=40 and y=58 with ZERO box collisions!
-    # =========================================================================
-    # From bottom of Stage A5 at (88.25, 58) drop down to y=49.0
+    # Cross-phase bus in open corridor (y=49.0)
     ax.plot([88.25, 88.25], [58, 49.0], color="#059669", lw=1.5, linestyle="--")
-    # Horizontal bus running leftward from x=88.25 to x=31.25 at y=49.0
     ax.plot([31.25, 88.25], [49.0, 49.0], color="#059669", lw=1.5, linestyle="--")
     
-    # Downward drop arrow into Stage B2 (Impact Traversal) at (31.25, 40)
     ax.annotate('', xy=(31.25, 40), xytext=(31.25, 49.0),
                 arrowprops=dict(arrowstyle="-|>", color="#059669", lw=1.5, mutation_scale=12))
     
-    # Downward drop arrow into Stage B3 (Historical Scoring) at (50.25, 40)
     ax.annotate('', xy=(50.25, 40), xytext=(50.25, 49.0),
                 arrowprops=dict(arrowstyle="-|>", color="#D97706", lw=1.5, mutation_scale=12))
 
-    # Clean centered label badge on the bus in the open whitespace
     ax.text(68, 49.0, "Index Queries: CST Graph $\\mathcal{G}$ & Co-Change Matrix $\\mathbf{M}_{co}$",
             fontsize=7.5, fontweight='bold', color="#065F46", ha='center', va='center',
             bbox=dict(boxstyle="round,pad=0.25", fc="#ECFDF5", ec="#059669", lw=0.8))
