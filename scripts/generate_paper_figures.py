@@ -223,8 +223,9 @@ def generate_fig2_workflow():
                         ec="#CBD5E1", fc="#FFFFFF", lw=1.2)
     ax.add_patch(bg)
 
-    # Upper Track: Repository Offline Ingestion Phase
-    ax.text(5, 95.0, "PHASE A: REPOSITORY OFFLINE INGESTION & GRAPH INDEXING", fontsize=10.5, fontweight='bold', color='#1E3A8A', va='top')
+    # Upper Track Header (Phase A)
+    ax.text(5, 96.5, "PHASE A: REPOSITORY OFFLINE INGESTION & GRAPH INDEXING",
+            fontsize=10.5, fontweight='bold', color='#1E3A8A', va='top')
     
     stages_a = [
         ("1. Source Ingestion", "Clone Git Repo or\nUpload ZIP Archive\nDetect Language", "#EFF6FF", "#1D4ED8", 5),
@@ -235,20 +236,21 @@ def generate_fig2_workflow():
     ]
 
     for title, desc, fc, ec, x in stages_a:
-        box = FancyBboxPatch((x, 58), 14.5, 33, boxstyle="round,pad=0.5,rounding_size=1.2", ec=ec, fc=fc, lw=1.3)
+        box = FancyBboxPatch((x, 60), 14.5, 32, boxstyle="round,pad=0.5,rounding_size=1.2", ec=ec, fc=fc, lw=1.3)
         ax.add_patch(box)
-        ax.text(x + 7.25, 88.0, title, fontsize=8.5, fontweight='bold', ha='center', va='top', color=ec)
-        ax.text(x + 7.25, 78.5, desc, fontsize=7.5, ha='center', va='top', color='#334155', linespacing=1.25)
+        ax.text(x + 7.25, 89.0, title, fontsize=8.5, fontweight='bold', ha='center', va='top', color=ec)
+        ax.text(x + 7.25, 80.5, desc, fontsize=7.5, ha='center', va='top', color='#334155', linespacing=1.25)
 
-    # Connecting arrows for Phase A (horizontal between adjacent stages)
+    # Connecting arrows for Phase A (horizontal between adjacent stages at y=76.0)
     for i in range(4):
         x1 = stages_a[i][4] + 14.5
         x2 = stages_a[i+1][4]
-        ax.annotate('', xy=(x2, 74.5), xytext=(x1, 74.5),
+        ax.annotate('', xy=(x2, 76.0), xytext=(x1, 76.0),
                     arrowprops=dict(arrowstyle="-|>", color="#64748B", lw=1.6, mutation_scale=12))
 
-    # Lower Track: Online Regression Test Selection & Policy Gate
-    ax.text(5, 43.5, "PHASE B: ONLINE PULL REQUEST IMPACT ANALYSIS & CI/CD GATE", fontsize=10.5, fontweight='bold', color='#831843', va='top')
+    # Lower Track Header (Phase B) - Positioned at y=54.5 with ample vertical clearance
+    ax.text(5, 54.5, "PHASE B: ONLINE PULL REQUEST IMPACT ANALYSIS & CI/CD GATE",
+            fontsize=10.5, fontweight='bold', color='#831843', va='top')
 
     stages_b = [
         ("1. Code Diff Input", "Incoming PR Patch $\\Delta$\nParse Added/Modified\nLines & Signatures", "#FDF2F8", "#BE185D", 5),
@@ -259,29 +261,39 @@ def generate_fig2_workflow():
     ]
 
     for title, desc, fc, ec, x in stages_b:
-        box = FancyBboxPatch((x, 7), 14.5, 33, boxstyle="round,pad=0.5,rounding_size=1.2", ec=ec, fc=fc, lw=1.3)
+        box = FancyBboxPatch((x, 6), 14.5, 32, boxstyle="round,pad=0.5,rounding_size=1.2", ec=ec, fc=fc, lw=1.3)
         ax.add_patch(box)
-        ax.text(x + 7.25, 37.0, title, fontsize=8.5, fontweight='bold', ha='center', va='top', color=ec)
-        ax.text(x + 7.25, 27.5, desc, fontsize=7.5, ha='center', va='top', color='#334155', linespacing=1.25)
+        ax.text(x + 7.25, 35.0, title, fontsize=8.5, fontweight='bold', ha='center', va='top', color=ec)
+        ax.text(x + 7.25, 26.5, desc, fontsize=7.5, ha='center', va='top', color='#334155', linespacing=1.25)
 
-    # Connecting arrows for Phase B (horizontal between adjacent stages)
+    # Connecting arrows for Phase B (horizontal between adjacent stages at y=22.0)
     for i in range(4):
         x1 = stages_b[i][4] + 14.5
         x2 = stages_b[i+1][4]
-        ax.annotate('', xy=(x2, 23.5), xytext=(x1, 23.5),
+        ax.annotate('', xy=(x2, 22.0), xytext=(x1, 22.0),
                     arrowprops=dict(arrowstyle="-|>", color="#9D174D", lw=1.6, mutation_scale=12))
 
-    # Cross-phase bus in open corridor (y=49.0)
-    ax.plot([88.25, 88.25], [58, 49.0], color="#059669", lw=1.5, linestyle="--")
-    ax.plot([31.25, 88.25], [49.0, 49.0], color="#059669", lw=1.5, linestyle="--")
+    # =========================================================================
+    # CROSS-PHASE BUS: Dual Storage (Stage A5) -> Stage B2 & B3
+    # Bus runs at y=45.0, STRICTLY BELOW Header B (which ends at y=51.5).
+    # Downward drops occur from y=45.0 down to y=38.0 (top of Phase B boxes).
+    # GUARANTEED ZERO INTERSECTION WITH ANY HEADING OR TEXT!
+    # =========================================================================
+    # Vertical drop from Stage A5 (x=88.25, y=60.0) down to y=45.0
+    ax.plot([88.25, 88.25], [60.0, 45.0], color="#059669", lw=1.5, linestyle="--")
+    # Horizontal bus at y=45.0 running from x=88.25 leftward to x=31.25
+    ax.plot([31.25, 88.25], [45.0, 45.0], color="#059669", lw=1.5, linestyle="--")
     
-    ax.annotate('', xy=(31.25, 40), xytext=(31.25, 49.0),
+    # Downward drop arrow into Stage B2 (Impact Traversal) at (31.25, 38.0)
+    ax.annotate('', xy=(31.25, 38.0), xytext=(31.25, 45.0),
                 arrowprops=dict(arrowstyle="-|>", color="#059669", lw=1.5, mutation_scale=12))
     
-    ax.annotate('', xy=(50.25, 40), xytext=(50.25, 49.0),
+    # Downward drop arrow into Stage B3 (Historical Scoring) at (50.25, 38.0)
+    ax.annotate('', xy=(50.25, 38.0), xytext=(50.25, 45.0),
                 arrowprops=dict(arrowstyle="-|>", color="#D97706", lw=1.5, mutation_scale=12))
 
-    ax.text(68, 49.0, "Index Queries: CST Graph $\\mathcal{G}$ & Co-Change Matrix $\\mathbf{M}_{co}$",
+    # Centered query badge on the horizontal bus
+    ax.text(72.0, 45.0, "Index Queries: CST Graph $\\mathcal{G}$ & Co-Change Matrix $\\mathbf{M}_{co}$",
             fontsize=7.5, fontweight='bold', color="#065F46", ha='center', va='center',
             bbox=dict(boxstyle="round,pad=0.25", fc="#ECFDF5", ec="#059669", lw=0.8))
 
