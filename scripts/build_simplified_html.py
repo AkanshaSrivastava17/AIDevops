@@ -1,5 +1,7 @@
 """
-Full script to generate paper/template.html using the simplified, natural academic text.
+Script to synchronize ultra-simple, non-mathematical academic text into paper/template.html.
+Preserves professional A4 single-column styling, Times 12pt, justified text, academic tables,
+and clean figure containers while completely removing formal mathematical equations and Greek symbols.
 """
 
 import os
@@ -148,27 +150,18 @@ li {
     margin-bottom: 4pt;
 }
 
-/* Equations */
-.equation-block {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 10pt 0;
-    padding: 0 10pt;
-    page-break-inside: avoid;
-}
-
-.equation-math {
-    flex-grow: 1;
+/* Formula Box */
+.formula-box {
+    background-color: #F8FAFC;
+    border: 1px solid #CBD5E1;
+    border-radius: 4px;
+    padding: 8pt 12pt;
+    margin: 12pt 0;
     text-align: center;
-    font-style: italic;
-}
-
-.equation-number {
-    font-style: normal;
-    font-weight: normal;
-    min-width: 40px;
-    text-align: right;
+    font-size: 11pt;
+    font-weight: bold;
+    color: #1E293B;
+    page-break-inside: avoid;
 }
 
 /* Figures */
@@ -304,7 +297,7 @@ table.academic-table tr.mid-rule td {
 </div>
 
 <div class="abstract-container">
-    <span class="abstract-heading">Abstract—</span>Continuous Integration and Continuous Deployment (CI/CD) pipelines help software teams test and release code quickly. However, as software projects grow, running every automated test on every pull request takes too long and wastes computing resources. Regression Test Selection (RTS) addresses this by running only the tests affected by a code change. Traditional static approaches often select too many tests due to conservative call estimates, dynamic tracing adds heavy runtime execution overhead, and recent Retrieval-Augmented Generation (RAG) approaches frequently select irrelevant tests due to semantic hallucination. In this paper, we present <em>History-RAG</em>, a practical regression test selection system designed for CI/CD pipelines. History-RAG combines static Concrete Syntax Tree (CST) call-graphs from Tree-Sitter with historical file co-change mining from Git commit logs and dense code embeddings. When a pull request is submitted, our system computes a balanced multi-signal relevance score across past co-changes, static graph distance, semantic embedding similarity, and keyword matching. We evaluated History-RAG on five mature open-source Python codebases totaling over 235,000 lines of code and 4,500 tests. History-RAG achieved a fault-detection Hit@5 of 92.30% and a Precision@5 of 79.76%, improving upon standard dense Code-RAG by 33.5% in Hit@5 and substantially outperforming zero-shot Large Language Models. Furthermore, History-RAG reduced test execution time by an average of 68.90% while ranking candidate tests in only 1.24 seconds per pull request. These results demonstrate that combining code structure with version control history provides a dependable, lightweight solution for regression testing.
+    <span class="abstract-heading">Abstract—</span>Continuous Integration and Continuous Deployment (CI/CD) pipelines help software teams test and release code quickly. However, running every automated test on every pull request takes too long and wastes computing resources. Regression Test Selection (RTS) addresses this by running only tests affected by a code change. Traditional static approaches often select too many tests, dynamic tracing adds heavy runtime execution overhead, and recent Retrieval-Augmented Generation (RAG) methods frequently select irrelevant tests due to semantic hallucination. In this paper, we present History-RAG, a practical regression test selection system for CI/CD pipelines. History-RAG combines static syntax tree call-graphs from Tree-Sitter with historical file co-change mining from Git commit logs and dense code embeddings. When a pull request arrives, our system computes a balanced multi-signal score combining past co-changes, static call-graph distance, semantic similarity, and keyword matching. We evaluated History-RAG on five mature open-source Python codebases totaling 235,700 lines of code and 4,565 tests. History-RAG achieved a fault-detection Hit@5 of 92.30% and a Precision@5 of 79.76%, improving upon dense Code-RAG by 33.5% in Hit@5 and substantially outperforming zero-shot Large Language Models. Furthermore, History-RAG reduced test execution time by an average of 68.90% while ranking tests in only 1.24 seconds per pull request. These results demonstrate that combining code structure with version control history provides a dependable, lightweight solution for regression testing.
 </div>
 
 <div class="index-terms">
@@ -335,12 +328,12 @@ table.academic-table tr.mid-rule td {
 <p>The primary contributions of this paper are:</p>
 <ul>
     <li>We propose a hybrid regression test selection architecture that combines static concrete syntax call-graphs, historical Git commit co-changes, dense semantic vectors, and keyword matching into a unified ranking engine.</li>
-    <li>We formulate a multi-signal scoring equation that balances static reachability with historical bug-fix evidence, enabling accurate test prioritization in under two seconds.</li>
+    <li>We formulate a multi-signal scoring method that balances static reachability with historical bug-fix evidence, enabling accurate test prioritization in under two seconds.</li>
     <li>We evaluate History-RAG across five mature open-source Python repositories (235,700 lines of code, 31,210 commits, 4,565 tests), showing a 33.5% relative improvement in Hit@5 over dense Code-RAG and an average test execution time reduction of 68.90%.</li>
     <li>We release an end-to-end open-source implementation, including GitHub Actions integration and an interactive React-based observability dashboard for continuous DevOps monitoring.</li>
 </ul>
 
-<p>The remainder of this paper is structured as follows. Section II reviews related literature in test selection, repository mining, and code intelligence. Section III formalizes the problem and defines mathematical notations. Section IV explains the proposed methodology, architecture, and algorithms. Section V details our experimental setup and benchmarks. Section VI presents experimental results and ablation findings. Section VII discusses practical implications, limitations, and threats to validity. Finally, Section VIII concludes the paper and outlines future directions.</p>
+<p>The remainder of this paper is structured as follows. Section II reviews related literature in test selection, repository mining, and code intelligence. Section III describes background concepts and defines the problem. Section IV explains the proposed methodology, architecture, and algorithms. Section V details our experimental setup and benchmarks. Section VI presents experimental results and ablation findings. Section VII discusses practical implications, limitations, and threats to validity. Finally, Section VIII concludes the paper and outlines future directions.</p>
 
 <h2 class="section-heading">II. Related Work</h2>
 
@@ -356,7 +349,7 @@ table.academic-table tr.mid-rule td {
 <h3 class="subsection-heading">B. Mining Version Control Repositories and Co-Change History</h3>
 <p>Version control systems such as Git maintain rich records of how software components evolve together over time [6]. In early seminal work, Zimmermann et al. [6] showed that mining historical commit logs can uncover hidden dependencies between source files that are completely invisible to static source code parsers. For example, if changing a database model file historically coincided with edits to a specific migration test in 90% of past commits, that historical co-occurrence provides strong empirical evidence of a functional dependency.</p>
 
-<p>Subsequent research expanded on this insight. Kim et al. [8] developed defect prediction models based on bug-fix caches, showing that code components that have experienced defects recently are significantly more likely to contain regressions in subsequent revisions. Hassan [9] proposed measuring code change complexity using entropy over modification histories, demonstrating that files with scattered, cross-cutting change histories have higher defect rates. Similarly, Beller et al. [10] conducted an extensive empirical study of continuous integration testing across thousands of open-source projects, finding that the vast majority of CI builds pass and that failure-prone tests are concentrated in a small fraction of frequently edited files.</p>
+<p>Subsequent research expanded on this insight. Kim et al. [8] developed defect prediction models based on bug-fix caches, showing that code components that have experienced defects recently are significantly more likely to contain regressions in subsequent revisions. Hassan [9] proposed measuring code change complexity using entropy over modification histories, demonstrating that files with scattered, cross-cutting change histories have higher defect rates. Similarly, Beller et al. conducted an extensive empirical study of continuous integration testing across thousands of open-source projects, finding that the vast majority of CI builds pass and that failure-prone tests are concentrated in a small fraction of frequently edited files.</p>
 
 <p>Despite the demonstrated value of commit history, historical co-change mining is rarely used as a standalone solution for test selection. A purely history-based system fails on newly created files (the cold-start problem) and cannot account for recent architectural refactorings. In this paper, we demonstrate that combining historical co-change mining with static call-graph reachability directly overcomes these individual limitations.</p>
 
@@ -413,10 +406,10 @@ table.academic-table tr.mid-rule td {
             </tr>
             <tr style="font-weight: bold; background-color: #F8FAFC;">
                 <td>History-RAG (Ours)</td>
-                <td>CST call-graph + Git co-changes + RAG</td>
+                <td>Call-graph + Git co-changes + RAG</td>
                 <td>High precision / High recall</td>
-                <td>Sub-second evaluation (1.24 s)</td>
-                <td>Requires modest Git history (&gt;50 commits)</td>
+                <td>Fast response (1.24 s)</td>
+                <td>Needs modest Git history (&gt;50 commits)</td>
                 <td>Proposed Architecture</td>
             </tr>
         </tbody>
@@ -428,77 +421,74 @@ table.academic-table tr.mid-rule td {
 
 <h2 class="section-heading">III. Background and Problem Formulation</h2>
 
-<p>In this section, we present the formal definitions, mathematical notation, and system constraints governing regression test selection.</p>
+<p>In this section, we define the key concepts used in our system, explain the structure of a software repository, and state the regression test selection problem in straightforward engineering terms.</p>
 
-<h3 class="subsection-heading">A. Formal Definitions and Notation</h3>
-<p>Let a software repository be defined as a tuple <em>R</em> = (<em>F</em>, <em>T</em>, <em>H</em>, <em>G</em>), where <em>F</em> = {<em>f</em><sub>1</sub>, <em>f</em><sub>2</sub>, ..., <em>f</em><sub><em>n</em></sub>} is the set of production source code files, <em>T</em> = {<em>t</em><sub>1</sub>, <em>t</em><sub>2</sub>, ..., <em>t</em><sub><em>m</em></sub>} is the automated test suite, <em>H</em> = {<em>c</em><sub>1</sub>, <em>c</em><sub>2</sub>, ..., <em>c</em><sub><em>p</em></sub>} is the sequence of historical Git commits, and <em>G</em> = (<em>V</em>, <em>E</em>) is the static inter-procedural call-graph. In graph <em>G</em>, vertices <em>V</em> represent functions, methods, and classes, while directed edges (<em>u</em>, <em>v</em>) &in; <em>E</em> represent caller-callee invocation relationships.</p>
+<h3 class="subsection-heading">A. Key Concepts and Repository Elements</h3>
+<p>A modern software repository consists of several core elements that our system analyzes:</p>
+<ul>
+    <li><strong>Production Source Code:</strong> The collection of source code files containing application logic, helper utilities, and service classes.</li>
+    <li><strong>Automated Test Suite:</strong> The set of automated unit, integration, and functional tests written to verify software correctness.</li>
+    <li><strong>Version Control History:</strong> The chronological record of Git commits, containing author information, commit messages, and line diffs.</li>
+    <li><strong>Function Call-Graph:</strong> A directed map of function and method calls across files, showing which functions call or invoke other functions.</li>
+</ul>
 
-<p>A pull request or code change is represented as a patch diff &Delta;. The diff modifies a subset of source files <em>F</em><sub>&Delta;</sub> &sube; <em>F</em> and alters a specific set of syntactic entities <em>V</em><sub>&Delta;</sub> &sube; <em>V</em>. Table II summarizes the core mathematical notations used throughout this paper.</p>
+<p>Table II summarizes the key concepts and operational terms used throughout this paper.</p>
 
 <div class="table-container">
-    <div class="table-caption">TABLE II: MATHEMATICAL NOTATIONS AND DEFINITIONS</div>
+    <div class="table-caption">TABLE II: KEY CONCEPTS AND SYSTEM ELEMENTS</div>
     <table class="academic-table" style="max-width: 650px;">
         <thead>
             <tr>
-                <th>Symbol</th>
-                <th>Description</th>
+                <th>Concept / Element</th>
+                <th>Operational Description</th>
             </tr>
         </thead>
         <tbody>
-            <tr><td><em>R</em></td><td>Target software repository (<em>F</em>, <em>T</em>, <em>H</em>, <em>G</em>)</td></tr>
-            <tr><td><em>F</em>, <em>T</em></td><td>Set of production source code files and automated test files</td></tr>
-            <tr><td><em>H</em></td><td>Historical Git commit log sequence {<em>c</em><sub>1</sub>, ..., <em>c</em><sub><em>p</em></sub>}</td></tr>
-            <tr><td><em>G</em> = (<em>V</em>, <em>E</em>)</td><td>Static call-graph of functions <em>V</em> and invocation edges <em>E</em></td></tr>
-            <tr><td>&Delta;, <em>V</em><sub>&Delta;</sub></td><td>Incoming code diff patch and set of modified syntactic entities</td></tr>
-            <tr><td><strong>M</strong><sub>co</sub></td><td>Symmetric historical co-change matrix in &reals;<sup>|<em>F</em>&cup;<em>T</em>| &times; |<em>F</em>&cup;<em>T</em>|</sup></td></tr>
-            <tr><td><em>d</em><sub><em>G</em></sub>(<em>u</em>, <em>t</em>)</td><td>Shortest path distance between function <em>u</em> and test <em>t</em> in call-graph <em>G</em></td></tr>
-            <tr><td><strong>e</strong>(&middot;)</td><td>384-dimensional dense semantic embedding vector</td></tr>
-            <tr><td><em>S</em>(<em>t</em>, &Delta;)</td><td>Composite relevance score for candidate test <em>t</em> given patch &Delta;</td></tr>
-            <tr><td><em>K</em>, &tau;</td><td>Maximum test execution budget (<em>K</em>=5) and safety threshold (&tau;=0.85)</td></tr>
+            <tr><td>Target Repository</td><td>Software codebase containing source files, test suites, and Git history</td></tr>
+            <tr><td>Pull Request Diff</td><td>The code patch containing added, modified, or removed lines</td></tr>
+            <tr><td>Call-Graph</td><td>Directed map showing caller-to-callee relationships between functions</td></tr>
+            <tr><td>Co-Change Frequency</td><td>Count of how often two files were edited together in past commits</td></tr>
+            <tr><td>Dense Embeddings</td><td>384-dimensional numerical vectors capturing semantic meaning of code</td></tr>
+            <tr><td>Composite Test Score</td><td>Number between 0 and 1 estimating test relevance to the code change</td></tr>
+            <tr><td>Test Execution Budget</td><td>Maximum number of tests executed per pull request (Top 5 tests)</td></tr>
+            <tr><td>Safety Threshold</td><td>Minimum confidence percentage (85%) required for automated merge approval</td></tr>
         </tbody>
     </table>
 </div>
 
-<h3 class="subsection-heading">B. Problem Formulation and Constraints</h3>
-<p>Given repository <em>R</em>, incoming patch &Delta;, a maximum execution budget <em>K</em>, and a confidence threshold &tau;, the goal of regression test selection is to find an optimal ranked subset of tests <em>T</em><sup>*</sup> &sube; <em>T</em> such that:</p>
+<h3 class="subsection-heading">B. Problem Statement and Operational Goals</h3>
+<p>When a developer submits a pull request, running every single automated test in the repository takes too long. The goal of regression test selection is to identify the small subset of tests that are genuinely affected by the code change.</p>
 
-<div class="equation-block">
-    <div class="equation-math">
-        <em>T</em><sup>*</sup> = argmax<sub><em>T</em>' &sube; <em>T</em>, |<em>T</em>'| &le; <em>K</em></sub> &sum;<sub><em>t</em> &in; <em>T</em>'</sub> <em>S</em>(<em>t</em>, &Delta;)
-    </div>
-    <div class="equation-number">(1)</div>
-</div>
-
-<p class="no-indent">subject to the following operational constraints:</p>
+<p>Specifically, given an incoming pull request diff and the existing repository, History-RAG must select the top 5 most relevant tests that have the highest likelihood of catching regressions, while meeting three practical goals:</p>
 <ol>
-    <li><strong>Latency Constraint:</strong> The test selection and ranking time must be less than 2.0 seconds per pull request so that pipeline latency remains minimal.</li>
-    <li><strong>Non-Intrusive Execution:</strong> The system must operate without requiring runtime bytecode instrumentation, VM agents, or modified language interpreters.</li>
-    <li><strong>Policy Safety:</strong> If any test in <em>T</em><sup>*</sup> fails, the CI/CD gate must immediately block the pull request and prevent automated deployment.</li>
+    <li><strong>Fast Selection Time:</strong> The test selection and scoring process must complete in under 2.0 seconds per pull request so developers do not experience delays in their build pipelines.</li>
+    <li><strong>Non-Intrusive Operation:</strong> The tool must run statically using code syntax and Git logs, without requiring runtime profiling tools, byte-code instrumentation, or language interpreter modifications.</li>
+    <li><strong>Safe Deployment Gating:</strong> If any selected test fails during execution, the system must immediately block the pull request and prevent broken code from being deployed.</li>
 </ol>
 
 <h2 class="section-heading">IV. Proposed Methodology</h2>
 
-<p>In this section, we describe the design, architecture, and step-by-step algorithms behind History-RAG.</p>
+<p>In this section, we describe the architecture, operational workflow, and algorithmic scoring logic behind History-RAG.</p>
 
 <div class="figure-container">
     <img src="__FIG1_B64__" alt="Fig. 1 System Architecture">
     <div class="figure-caption">
-        <span class="figure-caption-bold">Fig. 1. End-to-End System Architecture of History-RAG.</span> The framework is structured into three integrated tiers: Tier 1 handles repository ingestion and developer interfaces (React UI); Tier 2 performs dual static analysis (Tree-Sitter Concrete Syntax Tree parser) and historical commit mining (Git co-change engine), storing data in ChromaDB and SQLite; Tier 3 executes multi-signal test scoring and enforces CI/CD policy decisions.
+        <span class="figure-caption-bold">Fig. 1. End-to-End System Architecture of History-RAG.</span> The framework is organized into three tiers: Tier 1 handles repository ingestion and developer interfaces (React dashboard); Tier 2 performs static code analysis (Tree-Sitter syntax parser) and historical commit mining (Git co-change engine), storing data in ChromaDB and SQLite; Tier 3 executes multi-signal test scoring and enforces CI/CD policy decisions.
     </div>
 </div>
 
 <h3 class="subsection-heading">A. System Architecture Overview</h3>
-<p>As shown in Fig. 1, History-RAG is structured into three clear tiers:</p>
+<p>As shown in Fig. 1, History-RAG is structured into three integrated tiers:</p>
 <ol>
-    <li><strong>Tier 1: Ingestion and User Interfaces.</strong> When a developer connects a repository or submits a pull request patch &Delta;, this tier extracts modified files, line diffs, and commit metadata. It also connects to our React-based web dashboard. Through this dashboard, developers can visually inspect which functions were modified, view the candidate tests chosen by the system, and manually review confidence scores before approving a deployment.</li>
-    <li><strong>Tier 2: Dual Analysis and Storage.</strong> In this tier, Tree-Sitter parses source files into concrete syntax trees to build the function call-graph <em>G</em>, while the Git miner reads commit history to build the co-change matrix <strong>M</strong><sub>co</sub>. Extracted graph structures and commit indices are stored in a relational SQLite database, while 384-dimensional dense vector embeddings of code docstrings are stored in ChromaDB.</li>
-    <li><strong>Tier 3: Inference and DevOps Policy Gate.</strong> When a pull request arrives, the scoring engine calculates relevance scores for all candidate tests, ranks them, selects the top-<em>K</em> tests to execute, and applies policy rules (Pass, Warn, or Block) based on test outcomes and model confidence.</li>
+    <li><strong>Tier 1: Ingestion and User Interfaces.</strong> When a developer connects a repository or submits a pull request, this tier reads the modified files, line diffs, and commit metadata. It also connects to our React-based web dashboard. Through this dashboard, developers can inspect which functions were modified, view the candidate tests chosen by the system, and manually review confidence scores before approving a deployment.</li>
+    <li><strong>Tier 2: Dual Analysis and Storage.</strong> In this tier, Tree-Sitter parses source files into syntax trees to build the function call-graph, while the Git miner reads commit history to build the file co-change table. Extracted call connections and commit counts are stored in a relational SQLite database, while 384-dimensional dense vector embeddings of code docstrings are stored in ChromaDB.</li>
+    <li><strong>Tier 3: Inference and DevOps Policy Gate.</strong> When a pull request arrives, the scoring engine calculates relevance scores for all candidate tests, ranks them, selects the top 5 tests to execute, and applies policy rules (Pass, Warn, or Block) based on test outcomes and model confidence.</li>
 </ol>
 
 <div class="figure-container">
     <img src="__FIG2_B64__" alt="Fig. 2 Execution Workflow">
     <div class="figure-caption">
-        <span class="figure-caption-bold">Fig. 2. Detailed Step-by-Step Execution Workflow.</span> Phase A illustrates offline repository ingestion, including AST parsing, call-graph construction, Git commit mining, and dual-index storage. Phase B depicts online pull request evaluation, executing graph traversal, historical lookup, hybrid score aggregation, and CI/CD policy gating.
+        <span class="figure-caption-bold">Fig. 2. Detailed Step-by-Step Execution Workflow.</span> Phase A illustrates offline repository ingestion, including syntax parsing, call-graph construction, Git commit mining, and dual-index storage. Phase B depicts online pull request evaluation, executing graph traversal, historical lookup, hybrid score aggregation, and CI/CD policy gating.
     </div>
 </div>
 
@@ -506,96 +496,66 @@ table.academic-table tr.mid-rule td {
 <p>The operational workflow in Fig. 2 is divided into two distinct operational phases:</p>
 <ul>
     <li><strong>Phase A: Offline Repository Ingestion and Indexing.</strong> First, the repository is scanned to identify all source and test files. Tree-Sitter parses each file to extract function declarations, method signatures, class definitions, and function calls, constructing the global call-graph. In parallel, the Git miner scans past commits, identifying pairs of files that were modified together. The resulting call-graph and co-change weights are saved to SQLite, and text embeddings are indexed in ChromaDB.</li>
-    <li><strong>Phase B: Online Change Impact Analysis and CI Gating.</strong> When a pull request is submitted, History-RAG parses the diff hunk to identify modified functions <em>V</em><sub>&Delta;</sub>. It then searches the call-graph to find all tests that can reach these functions within a maximum of <em>k</em><sub>max</sub>=4 hops. Next, it looks up historical co-change frequencies from <strong>M</strong><sub>co</sub> for the modified files. Finally, our scoring formula computes a composite score for each test, selects the top-<em>K</em> tests (<em>K</em>=5), executes them in an isolated test runner, and determines whether the pull request passes, issues a warning, or blocks the merge.</li>
+    <li><strong>Phase B: Online Change Impact Analysis and CI Gating.</strong> When a pull request is submitted, History-RAG parses the diff hunk to identify modified functions. It then searches the call-graph to find all tests that can reach these functions within a maximum of 4 hops. Next, it looks up historical co-change frequencies from the database for the modified files. Finally, our scoring formula computes a composite score for each test, selects the top 5 tests, executes them in an isolated test runner, and determines whether the pull request passes, issues a warning, or blocks the merge.</li>
 </ul>
 
-<h3 class="subsection-heading">C. Call-Graph Construction Using Tree-Sitter</h3>
-<p>We chose Tree-Sitter because it is fast (parsing over 50,000 lines of code per second), incremental, and supports multiple programming languages using consistent syntax nodes. For every source file, we extract: (i) function and method definitions; (ii) caller-callee invocation sites; and (iii) import statements. By tracking import aliases back to their original module definitions, we resolve function calls across file boundaries. For instance, if <code>views.py</code> imports <code>calculate_tax</code> from <code>utils.py</code>, Tree-Sitter links call sites in <code>views.py</code> directly to the definition in <code>utils.py</code>. To ensure fast lookups during CI runs, we precompute transitive call paths up to depth <em>k</em><sub>max</sub>=4 and cache shortest-path distances in the relational database. This produces the directed call-graph <em>G</em> = (<em>V</em>, <em>E</em>), where an edge (<em>u</em>, <em>v</em>) indicates that entity <em>u</em> calls entity <em>v</em>. Furthermore, test cases that cannot reach modified functions via explicit static edges are routed to the semantic embedding store as secondary candidates.</p>
+<h3 class="subsection-heading">C. Constructing the Call-Graph Using Tree-Sitter</h3>
+<p>We chose Tree-Sitter because it is fast (parsing over 50,000 lines of code per second), incremental, and supports multiple programming languages using consistent syntax nodes. For every source file, we extract: (i) function and method definitions; (ii) caller-callee invocation sites; and (iii) import statements. By tracking import aliases back to their original module definitions, we resolve function calls across file boundaries. For instance, if <code>views.py</code> imports <code>calculate_tax</code> from <code>utils.py</code>, Tree-Sitter links call sites in <code>views.py</code> directly to the definition in <code>utils.py</code>. To ensure fast lookups during CI runs, we precompute transitive call paths up to a maximum depth of 4 hops and cache shortest-path distances in the relational database. Furthermore, test cases that cannot reach modified functions via explicit static edges are routed to the semantic embedding store as secondary candidates.</p>
 
-<h3 class="subsection-heading">D. Historical Co-Change Mining Engine</h3>
-<p>While static call-graphs capture explicit function invocations, they miss indirect dependencies such as database schema changes, configuration files, or REST API endpoints where code is decoupled. To capture these relationships, we mine the Git commit log <em>H</em>.</p>
+<h3 class="subsection-heading">D. Mining Historical Git Commit Co-Changes</h3>
+<p>While static call-graphs capture explicit function calls, they miss indirect dependencies such as database schema changes, configuration files, or REST API endpoints where code is decoupled. To capture these relationships, we mine the Git commit log.</p>
 
-<p>For each historical commit <em>c</em>, let <em>F</em><sub><em>c</em></sub> be the set of files touched by that commit. Commits that touch more than 50 files are ignored because they typically represent large mechanical refactorings (such as renaming a package) rather than regular feature changes. For every pair of co-modified files (<em>f</em><sub><em>i</em></sub>, <em>f</em><sub><em>j</em></sub>) &in; <em>F</em><sub><em>c</em></sub> &times; <em>F</em><sub><em>c</em></sub>, we increment their co-change count: <strong>M</strong><sub>co</sub>[<em>f</em><sub><em>i</em></sub>, <em>f</em><sub><em>j</em></sub>] &larr; <strong>M</strong><sub>co</sub>[<em>f</em><sub><em>i</em></sub>, <em>f</em><sub><em>j</em></sub>] + 1. Furthermore, if a commit message contains bug-fix keywords like "fix", "defect", "bug", or "patch", we add a 2&times; weight boost because historical bug-fix commits provide stronger evidence of regression test relationships.</p>
+<p>For each past commit, our tool records which files were touched together. Commits that touch more than 50 files are ignored because they typically represent large mechanical refactorings (such as renaming a package) rather than regular feature changes. For every pair of files modified together in a regular commit, we increment their co-change count. Furthermore, if a commit message contains bug-fix keywords like "fix", "defect", "bug", or "patch", we count that co-change twice (2&times; weight boost) because historical bug-fix commits provide stronger evidence of regression test relationships. The raw count is then normalized between 0 and 1 by dividing by the highest co-change count for that file.</p>
 
-<h3 class="subsection-heading">E. Multi-Signal Scoring Formulation</h3>
-<p>To rank tests accurately, History-RAG combines four complementary signals into a composite score <em>S</em>(<em>t</em>, &Delta;) &in; [0, 1]:</p>
+<h3 class="subsection-heading">E. Multi-Signal Scoring Logic</h3>
+<p>To rank tests accurately, History-RAG combines four complementary signals into a single composite score between 0 and 1:</p>
 
-<div class="equation-block">
-    <div class="equation-math">
-        <em>S</em>(<em>t</em>, &Delta;) = &alpha; &middot; <em>S</em><sub>hist</sub>(<em>t</em>, &Delta;) + &beta; &middot; <em>S</em><sub>ast</sub>(<em>t</em>, &Delta;) + &gamma; &middot; <em>S</em><sub>dense</sub>(<em>t</em>, &Delta;) + &delta; &middot; <em>S</em><sub>bm25</sub>(<em>t</em>, &Delta;)
-    </div>
-    <div class="equation-number">(2)</div>
+<div class="formula-box">
+    Combined Score = 0.35 &times; HistoryScore + 0.40 &times; GraphScore + 0.15 &times; SemanticScore + 0.10 &times; KeywordScore
 </div>
 
-<p class="no-indent">where &alpha; + &beta; + &gamma; + &delta; = 1.0 and each weight is non-negative. The individual signals are calculated as follows:</p>
+<p class="no-indent">The four weights (0.35 + 0.40 + 0.15 + 0.10 = 1.0) balance empirical history with program structure:</p>
+<ol>
+    <li><strong>Historical Co-Change Score (Weight: 35%):</strong> Measures how often the candidate test file was edited together with the modified source files in past commits. If a test file has historically changed whenever this module was updated, it receives a high historical score.</li>
+    <li><strong>Call-Graph Reachability Score (Weight: 40%):</strong> Evaluates the shortest connection distance between the modified function and the candidate test. Tests that directly invoke the modified function receive a score of 1.0. For tests that invoke it through intermediate helper functions, the score decreases by roughly half for each additional hop in the call graph (up to 4 hops). Tests with no call-graph path receive a graph score of 0.</li>
+    <li><strong>Dense Semantic Vector Score (Weight: 15%):</strong> Measures cosine similarity between 384-dimensional dense embeddings of the pull request diff and the test docstring. This allows the model to match tests that describe similar business logic even when static call edges are missing.</li>
+    <li><strong>BM25 Keyword Matching Score (Weight: 10%):</strong> Measures exact keyword matching between function names, parameter identifiers, and variable names appearing in both the pull request and the test file.</li>
+</ol>
 
-<p class="no-indent">1) <em>Historical Co-Change Score S<sub>hist</sub>:</em> Calculates the normalized co-change frequency between candidate test file <em>f</em><sub><em>t</em></sub> and the modified files <em>F</em><sub>&Delta;</sub>:</p>
-<div class="equation-block">
-    <div class="equation-math">
-        <em>S</em><sub>hist</sub>(<em>t</em>, &Delta;) = (1 / |<em>F</em><sub>&Delta;</sub>|) &sum;<sub><em>f</em> &in; <em>F</em><sub>&Delta;</sub></sub> ( <strong>M</strong><sub>co</sub>[<em>f</em>, <em>f</em><sub><em>t</em></sub>] / max(1, max<sub><em>j</em></sub> <strong>M</strong><sub>co</sub>[<em>f</em>, <em>j</em>]) )
-    </div>
-    <div class="equation-number">(3)</div>
-</div>
-
-<p class="no-indent">2) <em>AST Call-Graph Reachability Score S<sub>ast</sub>:</em> Evaluates the shortest graph distance <em>d</em><sub><em>G</em></sub>(<em>u</em>, <em>t</em>) between modified functions <em>u</em> &in; <em>V</em><sub>&Delta;</sub> and test function <em>t</em> with exponential distance decay:</p>
-<div class="equation-block">
-    <div class="equation-math">
-        <em>S</em><sub>ast</sub>(<em>t</em>, &Delta;) = max<sub><em>u</em> &in; <em>V</em><sub>&Delta;</sub></sub> [ exp(-&lambda; &middot; <em>d</em><sub><em>G</em></sub>(<em>u</em>, <em>t</em>)) &nbsp; if <em>d</em><sub><em>G</em></sub>(<em>u</em>, <em>t</em>) &le; <em>k</em><sub>max</sub>, else 0 ]
-    </div>
-    <div class="equation-number">(4)</div>
-</div>
-<p class="no-indent">where &lambda; = 0.50 is the decay constant and <em>k</em><sub>max</sub> = 4 limits breadth-first search depth.</p>
-
-<p class="no-indent">3) <em>Dense Vector Semantic Similarity S<sub>dense</sub>:</em> Measures cosine similarity between the 384-dimensional dense embedding of the patch diff <strong>e</strong>(&Delta;) and the test docstring embedding <strong>e</strong>(<em>t</em>):</p>
-<div class="equation-block">
-    <div class="equation-math">
-        <em>S</em><sub>dense</sub>(<em>t</em>, &Delta;) = max(0, (<strong>e</strong>(&Delta;) &middot; <strong>e</strong>(<em>t</em>)) / (||<strong>e</strong>(&Delta;)|| &middot; ||<strong>e</strong>(<em>t</em>)||))
-    </div>
-    <div class="equation-number">(5)</div>
-</div>
-
-<p class="no-indent">4) <em>BM25 Lexical Score S<sub>bm25</sub>:</em> Measures exact keyword matching of function names and variable identifiers between the patch and test:</p>
-<div class="equation-block">
-    <div class="equation-math">
-        <em>S</em><sub>bm25</sub>(<em>t</em>, &Delta;) = &sum;<sub><em>q</em> &in; Tokens(&Delta;) &cap; Tokens(<em>t</em>)</sub> IDF(<em>q</em>) &middot; ( <em>f</em>(<em>q</em>, <em>t</em>) &middot; (<em>k</em><sub>1</sub> + 1) ) / ( <em>f</em>(<em>q</em>, <em>t</em>) + <em>k</em><sub>1</sub> &middot; (1 - <em>b</em> + <em>b</em> &middot; (|<em>t</em>| / avgdl)) )
-    </div>
-    <div class="equation-number">(6)</div>
-</div>
-
-<h3 class="subsection-heading">F. Algorithmic Implementation and CI Policy Gate</h3>
-<p>Algorithm 1 describes the complete procedure executed by History-RAG for every pull request.</p>
+<h3 class="subsection-heading">F. Algorithmic Execution and Policy Decisions</h3>
+<p>Algorithm 1 outlines the complete procedure executed by History-RAG for every incoming pull request.</p>
 
 <div class="algorithm-box">
     <div class="algorithm-title">Algorithm 1: History-RAG Test Selection and Policy Gating</div>
     <div class="algorithm-io">
-        <strong>Input:</strong> Repository <em>R</em>, pull request patch &Delta;, budget <em>K</em>, threshold &tau;, call-graph <em>G</em>, co-change matrix <strong>M</strong><sub>co</sub><br>
-        <strong>Output:</strong> Policy decision <em>D</em> &in; {PASS, WARN, BLOCK}, selected tests <em>T</em><sup>*</sup>, confidence score <em>C</em>
+        <strong>Input:</strong> Repository files, pull request diff, commit history, test budget (Top 5 tests), safety threshold (85%)<br>
+        <strong>Output:</strong> Policy decision (PASS, WARN, or BLOCK), selected tests, confidence score
     </div>
-    <div class="algo-line">1: <em>V</em><sub>&Delta;</sub> &larr; ExtractModifiedEntities(TreeSitterParse(&Delta;))</div>
-    <div class="algo-line">2: <em>T</em><sub>candidates</sub> &larr; DiscoverTests(<em>R</em>)</div>
-    <div class="algo-line">3: <strong>for each</strong> test <em>t</em> &in; <em>T</em><sub>candidates</sub> <strong>do</strong></div>
-    <div class="algo-line algo-indent">4: <em>S</em><sub>hist</sub> &larr; ComputeCoChangeScore(<em>t</em>, &Delta;, <strong>M</strong><sub>co</sub>)</div>
-    <div class="algo-line algo-indent">5: <em>S</em><sub>ast</sub> &larr; TraverseCallGraphDistance(<em>t</em>, <em>V</em><sub>&Delta;</sub>, <em>G</em>, <em>k</em><sub>max</sub>)</div>
-    <div class="algo-line algo-indent">6: <em>S</em><sub>dense</sub> &larr; QueryChromaCosine(<strong>e</strong>(<em>t</em>), <strong>e</strong>(&Delta;))</div>
-    <div class="algo-line algo-indent">7: <em>S</em><sub>bm25</sub> &larr; ComputeLexicalScore(<em>t</em>, &Delta;)</div>
-    <div class="algo-line algo-indent">8: <em>S</em>(<em>t</em>, &Delta;) &larr; &alpha;<em>S</em><sub>hist</sub> + &beta;<em>S</em><sub>ast</sub> + &gamma;<em>S</em><sub>dense</sub> + &delta;<em>S</em><sub>bm25</sub></div>
+    <div class="algo-line">1: Identify modified functions and changed files from the pull request diff</div>
+    <div class="algo-line">2: Find all existing test files in the repository</div>
+    <div class="algo-line">3: <strong>for each</strong> candidate test file <strong>do</strong></div>
+    <div class="algo-line algo-indent">4: Calculate historical co-change score from Git history</div>
+    <div class="algo-line algo-indent">5: Calculate call-graph distance to modified functions</div>
+    <div class="algo-line algo-indent">6: Calculate semantic vector similarity using ChromaDB</div>
+    <div class="algo-line algo-indent">7: Calculate keyword match score between diff and test</div>
+    <div class="algo-line algo-indent">8: Combine scores: Score = 0.35 &times; History + 0.40 &times; Graph + 0.15 &times; Vector + 0.10 &times; Keyword</div>
     <div class="algo-line">9: <strong>end for</strong></div>
-    <div class="algo-line">10: <em>T</em><sup>*</sup> &larr; TopKTests(<em>T</em><sub>candidates</sub>, <em>S</em>, <em>K</em>)</div>
-    <div class="algo-line">11: <em>C</em> &larr; (1 / <em>K</em>) &sum;<sub><em>t</em> &in; <em>T</em><sup>*</sup></sub> <em>S</em>(<em>t</em>, &Delta;)</div>
-    <div class="algo-line">12: <em>results</em> &larr; ExecuteTestSuiteInIsolatedWorker(<em>T</em><sup>*</sup>)</div>
-    <div class="algo-line">13: <strong>if</strong> &exist; <em>r</em> &in; <em>results</em> such that <em>r.status</em> == FAILED <strong>then</strong></div>
-    <div class="algo-line algo-indent">14: TriggerAutomatedRollback(<em>R</em>, &Delta;)</div>
-    <div class="algo-line algo-indent">15: <strong>return</strong> (BLOCK, <em>T</em><sup>*</sup>, <em>C</em>)</div>
+    <div class="algo-line">10: Select the Top 5 tests with the highest combined scores</div>
+    <div class="algo-line">11: Calculate confidence as the average score of the Top 5 tests</div>
+    <div class="algo-line">12: Execute the selected Top 5 tests in an isolated test runner</div>
+    <div class="algo-line">13: <strong>if</strong> any selected test fails <strong>then</strong></div>
+    <div class="algo-line algo-indent">14: Trigger automatic rollback in Git</div>
+    <div class="algo-line algo-indent">15: <strong>return</strong> (BLOCK, selected tests, confidence)</div>
     <div class="algo-line">16: <strong>else</strong></div>
-    <div class="algo-line algo-indent">17: <strong>if</strong> <em>C</em> &ge; &tau; <strong>then</strong></div>
-    <div class="algo-line algo-indent-2">18: <strong>return</strong> (PASS, <em>T</em><sup>*</sup>, <em>C</em>)</div>
+    <div class="algo-line algo-indent">17: <strong>if</strong> confidence &ge; 85% <strong>then</strong></div>
+    <div class="algo-line algo-indent-2">18: <strong>return</strong> (PASS, selected tests, confidence)</div>
     <div class="algo-line algo-indent">19: <strong>else</strong></div>
-    <div class="algo-line algo-indent-2">20: <strong>return</strong> (WARN, <em>T</em><sup>*</sup>, <em>C</em>)</div>
+    <div class="algo-line algo-indent-2">20: <strong>return</strong> (WARN, selected tests, confidence)</div>
     <div class="algo-line algo-indent">21: <strong>end if</strong></div>
     <div class="algo-line">22: <strong>end if</strong></div>
 </div>
 
-<p>If any selected test fails, the policy gate marks the pull request as <code>BLOCK</code> and prevents deployment. If all tests pass and the average confidence score <em>C</em> is at least &tau; = 0.85, the decision is <code>PASS</code>. If tests pass but confidence is below &tau;, the gate issues a <code>WARN</code> status, requesting a senior developer to manually review the pull request before merging.</p>
+<p>If any selected test fails, the policy gate marks the pull request as <code>BLOCK</code> and prevents deployment. If all tests pass and the average confidence score is at least 85%, the decision is <code>PASS</code>. If tests pass but confidence is below 85%, the gate issues a <code>WARN</code> status, requesting a senior developer to manually review the pull request before merging.</p>
 
 <h2 class="section-heading">V. Experimental Setup</h2>
 
@@ -642,9 +602,9 @@ table.academic-table tr.mid-rule td {
 <h3 class="subsection-heading">B. Baseline Techniques</h3>
 <p>We compared History-RAG against three baseline methods:</p>
 <ol>
-    <li><strong>LLM-Only (Zero-Shot):</strong> The patch diff and a list of all candidate test file names are passed directly into an LLM prompt (using Google Gemini 2.5 Flash), prompting the model to output the top-<em>K</em> most relevant tests without external tool grounding.</li>
+    <li><strong>LLM-Only (Zero-Shot):</strong> The patch diff and a list of all candidate test file names are passed directly into an LLM prompt (using Google Gemini 2.5 Flash), prompting the model to output the top 5 most relevant tests without external tool grounding.</li>
     <li><strong>Dense Vector Code-RAG:</strong> A standard RAG pipeline where code diffs and test docstrings are embedded using sentence-transformers (<code>all-MiniLM-L6-v2</code>) and ranked solely by cosine vector similarity [15].</li>
-    <li><strong>Semantic AST-Only:</strong> A static syntax baseline that ranks tests strictly by call-graph distance <em>d</em><sub><em>G</em></sub>(<em>u</em>, <em>t</em>) without historical commit mining or dense vector retrieval.</li>
+    <li><strong>Semantic AST-Only:</strong> A static syntax baseline that ranks tests strictly by call-graph distance without historical commit mining or dense vector retrieval.</li>
 </ol>
 
 <h3 class="subsection-heading">C. Evaluation Metrics and Experimental Environment</h3>
@@ -657,21 +617,19 @@ table.academic-table tr.mid-rule td {
     <table class="academic-table" style="max-width: 650px;">
         <thead>
             <tr>
-                <th>Component / Parameter</th>
-                <th>Notation</th>
-                <th>Selected Value</th>
-                <th>Design Justification</th>
+                <th>Component / Setting</th>
+                <th>Value</th>
+                <th>Practical Justification</th>
             </tr>
         </thead>
         <tbody>
-            <tr><td>Historical Co-Change Weight</td><td>&alpha;</td><td>0.35</td><td>Balances empirical bug history without penalizing new files</td></tr>
-            <tr><td>AST Call-Graph Weight</td><td>&beta;</td><td>0.40</td><td>Primary anchor; ensures valid topological invocation paths</td></tr>
-            <tr><td>Dense Vector Embedding Weight</td><td>&gamma;</td><td>0.15</td><td>Provides fallback semantic matching for docstring intent</td></tr>
-            <tr><td>BM25 Lexical Weight</td><td>&delta;</td><td>0.10</td><td>Enforces exact matching on variable and method identifiers</td></tr>
-            <tr><td>Max Call-Graph Hop Depth</td><td><em>k</em><sub>max</sub></td><td>4 hops</td><td>Captures transitive dependencies while limiting BFS explosion</td></tr>
-            <tr><td>AST Distance Decay Constant</td><td>&lambda;</td><td>0.50</td><td>Exponentially discounts tests located farther in call-graph</td></tr>
-            <tr><td>Selected Test Suite Budget</td><td><em>K</em></td><td>5 tests</td><td>Balances high fault detection (&gt;90%) with fast execution (&lt;30 s)</td></tr>
-            <tr><td>Policy Confidence Threshold</td><td>&tau;</td><td>0.85</td><td>Minimum confidence required to issue an automated PASS</td></tr>
+            <tr><td>Historical Co-Change Weight</td><td>0.35</td><td>Balances empirical bug history without penalizing new files</td></tr>
+            <tr><td>AST Call-Graph Weight</td><td>0.40</td><td>Primary anchor; ensures valid invocation connections</td></tr>
+            <tr><td>Dense Vector Embedding Weight</td><td>0.15</td><td>Provides fallback semantic matching for docstring intent</td></tr>
+            <tr><td>BM25 Lexical Keyword Weight</td><td>0.10</td><td>Enforces exact matching on variable and method identifiers</td></tr>
+            <tr><td>Maximum Call-Graph Hop Depth</td><td>4 hops</td><td>Captures indirect dependencies while keeping search fast</td></tr>
+            <tr><td>Selected Test Suite Budget</td><td>5 tests</td><td>Balances high fault detection (&gt;90%) with fast execution (&lt;30 s)</td></tr>
+            <tr><td>Policy Confidence Threshold</td><td>85%</td><td>Minimum confidence required to issue an automated PASS</td></tr>
         </tbody>
     </table>
 </div>
@@ -766,7 +724,7 @@ table.academic-table tr.mid-rule td {
 <h3 class="subsection-heading">B. Evaluation of RQ2: Test Suite Reduction and Pipeline Speedup</h3>
 <p>Research Question RQ2 asks whether History-RAG can significantly reduce test execution time without missing regression failures. As shown in Table V and Fig. 3(b), History-RAG reduced test execution time by an average of 68.90% across the five repositories. On InvenTree, full test execution takes 252 seconds; top-5 selected tests execute in 17.4 seconds (68.4% reduction). On NetBox, test time drops from 415 to 24.8 seconds (64.2% reduction). On FastAPI, selected tests run in 14.1 seconds instead of 184 seconds (69.6% reduction). Test ranking takes only 1.24 seconds per pull request, which is negligible compared to minutes saved in test runs, confirming RQ2.</p>
 
-<p>We also tested pipeline safety by injecting 100 simulated faults into InvenTree and NetBox. The policy gate correctly issued a <code>BLOCK</code> decision in 94 cases, preventing broken code from merging. In the remaining 6 cases where bugs involved dynamic reflection calls, the confidence score dropped below &tau; = 0.85, causing the gate to issue a <code>WARN</code> status and pausing automated deployment for human review.</p>
+<p>We also tested pipeline safety by injecting 100 simulated faults into InvenTree and NetBox. The policy gate correctly issued a <code>BLOCK</code> decision in 94 cases, preventing broken code from merging. In the remaining 6 cases where bugs involved dynamic reflection calls, the confidence score dropped below 85%, causing the gate to issue a <code>WARN</code> status and pausing automated deployment for human review.</p>
 
 <h3 class="subsection-heading">C. Component Ablation Study</h3>
 <p>To understand how much each component contributes, we ran an ablation study on InvenTree by turning off one feature at a time.</p>
@@ -790,31 +748,31 @@ table.academic-table tr.mid-rule td {
                 <td class="center">--</td>
             </tr>
             <tr>
-                <td>w/o Git Co-Change (&alpha; = 0)</td>
+                <td>Without Git History</td>
                 <td class="center">0.714 &plusmn; 0.011</td>
                 <td class="center">82.4 &plusmn; 1.2</td>
                 <td class="center">-0.128 (-15.2%)</td>
             </tr>
             <tr>
-                <td>w/o AST Call-Graph (&beta; = 0)</td>
+                <td>Without Call-Graph</td>
                 <td class="center">0.683 &plusmn; 0.013</td>
                 <td class="center">78.6 &plusmn; 1.4</td>
                 <td class="center">-0.159 (-18.9%)</td>
             </tr>
             <tr>
-                <td>w/o Dense Vectors (&gamma; = 0)</td>
+                <td>Without Dense Vectors</td>
                 <td class="center">0.791 &plusmn; 0.009</td>
                 <td class="center">87.2 &plusmn; 0.9</td>
                 <td class="center">-0.051 (-6.1%)</td>
             </tr>
             <tr>
-                <td>w/o BM25 Lexical (&delta; = 0)</td>
+                <td>Without BM25 Keywords</td>
                 <td class="center">0.812 &plusmn; 0.007</td>
                 <td class="center">89.4 &plusmn; 0.8</td>
                 <td class="center">-0.030 (-3.6%)</td>
             </tr>
             <tr>
-                <td>Dense Baseline (&alpha;=&beta;=&delta;=0)</td>
+                <td>Dense Baseline</td>
                 <td class="center">0.589 &plusmn; 0.016</td>
                 <td class="center">68.2 &plusmn; 1.6</td>
                 <td class="center">-0.253 (-30.0%)</td>
@@ -826,14 +784,14 @@ table.academic-table tr.mid-rule td {
 <div class="figure-container">
     <img src="__FIG4_B64__" alt="Fig. 4 Ablation & Sensitivity">
     <div class="figure-caption">
-        <span class="figure-caption-bold">Fig. 4. Ablation Study and Parameter Sensitivity.</span> Subfigure (a) illustrates performance degradation (MAP) when individual signals are removed, demonstrating that the AST call-graph and Git co-change contribute the most significant gains. Subfigure (b) evaluates retrieval sensitivity across varying historical weights &alpha;, confirming an optimal operating regime at &alpha; = 0.35 and &beta; = 0.40.
+        <span class="figure-caption-bold">Fig. 4. Ablation Study and Parameter Sensitivity.</span> Subfigure (a) illustrates performance degradation (MAP) when individual signals are removed, demonstrating that the AST call-graph and Git co-change contribute the most significant gains. Subfigure (b) evaluates retrieval sensitivity across varying historical weights, confirming an optimal operating regime at 35% history weight and 40% call-graph weight.
     </div>
 </div>
 
-<p>Table VI and Fig. 4(a) summarize the ablation findings. Removing the Tree-Sitter call-graph (&beta; = 0) causes the largest single drop in performance, decreasing MAP from 0.842 to 0.683 (-18.9%), showing that static call structure is the most critical anchor. Removing Git co-change history (&alpha; = 0) produces the second largest decline (-15.2%), showing that past commit patterns help catch indirect dependencies that do not have direct static call edges. Dense vector embeddings and BM25 keywords provide smaller, complementary improvements of 6.1% and 3.6% respectively.</p>
+<p>Table VI and Fig. 4(a) summarize the ablation findings. Removing the Tree-Sitter call-graph causes the largest single drop in performance, decreasing MAP from 0.842 to 0.683 (-18.9%), showing that static call structure is the most critical anchor. Removing Git co-change history produces the second largest decline (-15.2%), showing that past commit patterns help catch indirect dependencies that do not have direct static call edges. Dense vector embeddings and BM25 keywords provide smaller, complementary improvements of 6.1% and 3.6% respectively.</p>
 
 <h3 class="subsection-heading">D. Parameter Sensitivity and Failure Cases</h3>
-<p>We evaluated sensitivity by sweeping the historical weight &alpha; from 0.0 to 0.8 while keeping the remaining weights balanced. As shown in Fig. 4(b), retrieval performance follows a concave curve, peaking at &alpha; = 0.35 and &beta; = 0.40. When &alpha; &lt; 0.15, the model underutilizes useful bug-fix history; when &alpha; &gt; 0.60, it over-relies on past commits, unfairly penalizing newly created test files.</p>
+<p>We evaluated sensitivity by sweeping the historical weight from 0.0 to 0.8 while keeping the remaining weights balanced. As shown in Fig. 4(b), retrieval performance follows a concave curve, peaking at 35% historical weight and 40% call-graph weight. When historical weight is below 15%, the model underutilizes useful bug-fix history; when above 60%, it over-relies on past commits, unfairly penalizing newly created test files.</p>
 
 <p>Qualitative inspection showed that failure cases primarily involve dynamic runtime reflection (such as Python's <code>importlib</code>), where static call edges are missing and past commit counts are low. In these edge cases, History-RAG safely falls back to dense vector similarity and triggers a <code>WARN</code> policy decision.</p>
 
@@ -842,12 +800,12 @@ table.academic-table tr.mid-rule td {
 <p>In this section, we discuss practical takeaways for engineering teams, acknowledge system limitations, and examine threats to validity.</p>
 
 <h3 class="subsection-heading">A. Practical Takeaways for Development Teams</h3>
-<p>In fast-moving development teams, long test execution times and flaky test failures create developer friction. Our experiments show that combining Tree-Sitter concrete syntax trees with Git version control history provides an effective, lightweight alternative to heavy dynamic tracing. Because History-RAG works statically over code files and Git logs, teams can adopt it without modifying their build scripts, adding profiling tools, or slowing down local developer machines. Setting an explicit confidence threshold (&tau; = 0.85) in the CI policy gate gives teams predictable safety, avoiding the unreliability of pure generative LLM decisions. In practice, teams can set the test budget <em>K</em> depending on their build limits; for example, <em>K</em>=5 caught over 92% of regressions in our tests while keeping pipeline duration under 30 seconds.</p>
+<p>In fast-moving development teams, long test execution times and flaky test failures create developer friction. Our experiments show that combining Tree-Sitter syntax trees with Git version control history provides an effective, lightweight alternative to heavy dynamic tracing. Because History-RAG works statically over code files and Git logs, teams can adopt it without modifying their build scripts, adding profiling tools, or slowing down local developer machines. Setting an explicit confidence threshold (85%) in the CI policy gate gives teams predictable safety, avoiding the unreliability of pure generative LLM decisions. In practice, teams can set the test budget depending on their build limits; for example, running the top 5 selected tests caught over 92% of regressions in our tests while keeping pipeline duration under 30 seconds.</p>
 
 <h3 class="subsection-heading">B. System Limitations</h3>
 <p>History-RAG has several practical limitations:</p>
 <ul>
-    <li><strong>New Repositories (Cold Start):</strong> Brand-new repositories with fewer than 50 commits lack sufficient Git history, meaning the co-change score <em>S</em><sub>hist</sub> is zero and the tool must rely entirely on the call-graph and vector embeddings.</li>
+    <li><strong>New Repositories (Cold Start):</strong> Brand-new repositories with fewer than 50 commits lack sufficient Git history, meaning the historical co-change score is zero and the tool must rely entirely on the call-graph and vector embeddings.</li>
     <li><strong>Dynamic Metaprogramming and Reflection:</strong> In dynamically interpreted languages like Python, features like <code>getattr</code>, dynamic imports, and plugin registries can hide function calls from static Tree-Sitter parsers.</li>
     <li><strong>Memory Usage on Very Large Codebases:</strong> While SQLite easily handles millions of commit rows, storing dense vector embeddings in ChromaDB requires additional memory on very large repositories.</li>
 </ul>
@@ -855,14 +813,14 @@ table.academic-table tr.mid-rule td {
 <h3 class="subsection-heading">C. Threats to Validity</h3>
 <p>We identified three potential threats to validity:</p>
 <ul>
-    <li><strong>Internal Validity:</strong> Hyperparameter choices (&alpha;, &beta;, &gamma;, &delta;) could bias performance. We mitigated this by conducting parameter sensitivity sweeps and evaluating across three independent random seeds.</li>
+    <li><strong>Internal Validity:</strong> Scoring weight choices could bias performance. We mitigated this by conducting parameter sensitivity sweeps and evaluating across three independent random seeds.</li>
     <li><strong>External Validity:</strong> Our benchmarks focused on five Python projects. While these codebases represent different domains (networking, web APIs, inventory ERP), results may vary slightly in compiled languages like C++ or Java where compilers enforce strict static type graphs.</li>
     <li><strong>Construct Validity:</strong> We used Hit@<em>K</em>, Precision@<em>K</em>, and test reduction ratio as evaluation metrics following standard RTS literature [2]. In real CI/CD pipelines, container startup and dependency download times also affect total wall-clock pipeline duration.</li>
 </ul>
 
 <h2 class="section-heading">VIII. Conclusion and Future Work</h2>
 
-<p>In this paper, we introduced History-RAG, an open-source regression test selection framework that combines Tree-Sitter concrete syntax tree call-graphs with historical Git co-change mining and calibrated multi-signal retrieval. Addressing research question RQ1, our experiments on five mature open-source Python codebases show that grounding test retrieval in code call structure and Git bug-fix history achieves a fault-detection Hit@5 of 92.30% and a Precision@5 of 79.76%, clearly outperforming dense vector Code-RAG (69.16% Hit@5) and zero-shot LLMs (56.24% Hit@5). Addressing research question RQ2, History-RAG reduces test execution time by an average of 68.90% while completing test ranking in only 1.24 seconds per pull request, safely accelerating continuous integration pipelines through automated policy gating and rollback triggers.</p>
+<p>In this paper, we introduced History-RAG, an open-source regression test selection framework that combines Tree-Sitter syntax tree call-graphs with historical Git co-change mining and calibrated multi-signal retrieval. Addressing research question RQ1, our experiments on five mature open-source Python codebases show that grounding test retrieval in code call structure and Git bug-fix history achieves a fault-detection Hit@5 of 92.30% and a Precision@5 of 79.76%, clearly outperforming dense vector Code-RAG (69.16% Hit@5) and zero-shot LLMs (56.24% Hit@5). Addressing research question RQ2, History-RAG reduces test execution time by an average of 68.90% while completing test ranking in only 1.24 seconds per pull request, safely accelerating continuous integration pipelines through automated policy gating and rollback triggers.</p>
 
 <p>By avoiding the runtime instrumentation overhead of dynamic tracing and preventing the semantic hallucinations of pure vector search, History-RAG provides a practical, lightweight solution for continuous integration testing. In future work, we plan to expand History-RAG along three directions:</p>
 <ol>
@@ -872,7 +830,7 @@ table.academic-table tr.mid-rule td {
 </ol>
 
 <div style="margin-top: 18pt; border-top: 1px solid #CCCCCC; padding-top: 10pt; font-size: 10.5pt;">
-    <p class="no-indent"><strong>AI-Use Declaration:</strong> Generative artificial intelligence tools were employed exclusively to assist in code refactoring, grammar checking, and typesetting formatting. All system architecture designs, mathematical formulations, experimental implementations, benchmark data collections, and analytical interpretations were conceived, executed, and verified by the human authors.</p>
+    <p class="no-indent"><strong>AI-Use Declaration:</strong> Generative artificial intelligence tools were employed exclusively to assist in code refactoring, grammar checking, and typesetting formatting. All system architecture designs, empirical implementations, benchmark data collections, and analytical interpretations were conceived, executed, and verified by the human authors.</p>
 
     <p class="no-indent"><strong>Team Member Contributions:</strong></p>
     <ul>
