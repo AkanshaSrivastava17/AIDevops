@@ -23,8 +23,8 @@ def main():
 <h1 class="paper-title">History-Aware Repository Intelligence and Call-Graph Grounded Retrieval for Regression Test Selection in DevOps</h1>
 
 <div class="authors-block">
-    <div class="authors-names">Group 14: Akansha Srivastava (210110024), Aryan Verma (210110045), Rahul Sharma (210110078), Naveen Singh/Kiran Khatter</div>
-    <div class="authors-affil">School of Engineering & Technology, BML Munjal University</div>
+    <div class="authors-names">Akansha Srivastava (230742), Radhika Goel (230744), Naveen Singh, and Kiran Khatter</div>
+    <div class="authors-affil">School of Engineering &amp; Technology, BML Munjal University</div>
 </div>
 
 <div class="abstract-container">
@@ -689,7 +689,7 @@ def main():
 <p class="no-indent">This research paper project was conducted under the academic supervision and guidance of Prof. Naveen Singh and Prof. Kiran Khatter at the School of Engineering and Technology, BML Munjal University. The authors express sincere gratitude for their continuous mentorship and constructive evaluations throughout the conception and implementation of this study.</p>
 
 <h2 class="section-heading">Author Contribution Statement</h2>
-<p class="no-indent"><strong>Akansha Srivastava:</strong> Conceptualization, Tree-Sitter AST call-graph parser, multi-signal scoring formulation, CI/CD policy gating, benchmark evaluation, and primary manuscript preparation. <strong>Aryan Verma:</strong> Git co-change mining engine, ChromaDB dual-index persistence layer, experimental baseline implementations, and statistical ablation verification. <strong>Rahul Sharma:</strong> React SaaS observability dashboard, GitHub Actions CI/CD onboarding integration, containerized Docker deployment, and empirical data curation. <strong>Naveen Singh and Kiran Khatter:</strong> Project supervision, methodological review, rubric alignment, and final manuscript editing.</p>
+<p class="no-indent"><strong>Akansha Srivastava (230742):</strong> Conceived system architecture, implemented Tree-Sitter AST call-graph parser, formulated multi-signal scoring equations, executed benchmark experiments, and prepared primary manuscript draft. <strong>Radhika Goel (230744):</strong> Implemented Git longitudinal co-change mining engine, ChromaDB and SQLite dual-index persistence layer, developed React-based SaaS observability dashboard, integrated CI/CD policy gating, and performed empirical ablation validations. <strong>Naveen Singh and Kiran Khatter:</strong> Project supervision, academic mentorship, rubric alignment, methodology review, and final manuscript verification.</p>
 
 <h2 class="section-heading">Declaration on the Use of Generative AI</h2>
 <p class="no-indent">During the preparation of this work, the authors used large language models (Claude 3.5 Sonnet and Google Gemini 1.5 Pro) for the sole purpose of drafting and refining stylistic prose, generating LaTeX table formatting code, and verifying grammar. All theoretical formulations, mathematical models, experimental architectures, benchmark evaluations, and empirical analyses were conceived, implemented, executed, and validated independently by the authors. The authors take full institutional responsibility for the integrity, validity, and accuracy of the published contents.</p>

@@ -16,7 +16,7 @@ def get_base64_image(image_path):
 # Content definitions with strict word counts targeting ~4,950 total words
 TITLE = "History-Aware Repository Intelligence and Call-Graph Grounded Retrieval for Regression Test Selection in DevOps"
 
-AUTHORS = "Group 14: Akansha Srivastava (210110024), Aryan Verma (210110045), Rahul Sharma (210110078), Naveen Singh/Kiran Khatter"
+AUTHORS = "Akansha Srivastava (230742), Radhika Goel (230744), Naveen Singh, Kiran Khatter"
 AFFIL = "School of Engineering & Technology, BML Munjal University"
 
 ABSTRACT = (

@@ -453,7 +453,7 @@ By eliminating the instrumentation penalties of dynamic tracing and mitigating t
 
 \\title{{History-Aware Repository Intelligence and Call-Graph Grounded Retrieval for Regression Test Selection in DevOps}}
 
-\\author{{Group 14: Akansha Srivastava (210110024), Aryan Verma (210110045), Rahul Sharma (210110078), Naveen Singh/Kiran Khatter\\\\
+\\author{{Akansha Srivastava (230742), Radhika Goel (230744), Naveen Singh, Kiran Khatter\\\\
 School of Engineering \\& Technology, BML Munjal University}}
 
 \\maketitle
@@ -498,9 +498,9 @@ Continuous integration, DevOps, Regression test selection, Repository intelligen
 
 \\noindent\\textbf{{Team Member Contributions:}}
 \\begin{{itemize}}
-    \\item \\textbf{{Akansha Srivastava (210110024):}} Conceived system architecture, implemented Tree-Sitter AST parser and Git co-change mining engine, designed SaaS frontend interface, and authored the paper draft.
-    \\item \\textbf{{Aryan Verma (210110045):}} Implemented multi-signal hybrid scoring formulation, configured ChromaDB vector store, conducted benchmark experiments on NetBox and InvenTree, and generated empirical plots.
-    \\item \\textbf{{Rahul Sharma (210110078):}} Developed DevOps CI/CD policy gate, automated GitHub Actions workflow integration, implemented container rollback manager, and performed statistical validity analysis.
+    \\item \\textbf{{Akansha Srivastava (230742):}} Conceived system architecture, implemented Tree-Sitter AST call-graph parser, formulated multi-signal scoring equations, executed benchmark experiments, and prepared primary manuscript draft.
+    \\item \\textbf{{Radhika Goel (230744):}} Implemented Git longitudinal co-change mining engine, ChromaDB and SQLite dual-index persistence layer, developed React-based SaaS observability dashboard, integrated CI/CD policy gating, and performed empirical ablation validations.
+    \\item \\textbf{{Naveen Singh and Kiran Khatter:}} Project supervision, academic mentorship, rubric alignment, methodology review, and final manuscript verification.
 \\end{{itemize}}
 
 \\bibliographystyle{{IEEEtran}}
